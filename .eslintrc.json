@@ -1,3 +1,17 @@
 {
-  "extends": "next/core-web-vitals"
+  "plugins": ["sonarjs"],
+  "extends": ["airbnb-base", "airbnb", "airbnb/hooks", "plugin:sonarjs/recommended","next/core-web-vitals"],
+    "rules": {
+        "consistent-return": 2,
+        "indent"           : [1, 4],
+        "no-else-return"   : 1,
+        "semi"             : [1, "always"],
+        "space-unary-ops"  : 2,
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+        "react/jsx-props-no-spreading": "off",
+        "react/jsx-indent": "off",
+        "react/jsx-indent-props": "off",
+        "object-curly-spacing": ["error", "always"],
+        "react/jsx-one-expression-per-line": "off"
+      }
 }
