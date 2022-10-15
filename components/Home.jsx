@@ -1,5 +1,7 @@
+import { Empty } from 'antd';
+
 export default function Home() {
     return (
-        <p>Home Page</p>
+        <Empty description="No Company Data" />
     );
 }

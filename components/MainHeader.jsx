@@ -5,15 +5,9 @@ import styles from '../styles/Home.module.css';
 
 const { Header } = Layout;
 
-export default function MainHeader() {
-    const [companyName, setCompanyName] = useState('');
-
-    if (!companyName) {
-        setCompanyName('Jack');
-    }
-
+export default function MainHeader({ companyName }) {
     return (
-        <Header className={styles.title}>
+        <Header className={`${styles.title} ${styles.header}`}>
             Welcome {companyName}
         </Header>
     );

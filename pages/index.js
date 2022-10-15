@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { Layout, Menu } from 'antd';
 import styles from '../styles/Home.module.css';
 import {
-    Home, MainHeader, Products, Settings,
+    Home, MainHeader, Products, SettingsPanel,
 } from '../components';
 
 const {
@@ -14,6 +14,8 @@ const {
 export default function MainComponent() {
     const [collapsed, setCollapsed] = useState(false);
     const [view, setView] = useState('1');
+    const [repContact, setRepContact] = useState('');
+    const [companyName, setCompanyName] = useState('');
 
     function getItem(label, key, icon, children) {
         return {
@@ -32,7 +34,7 @@ export default function MainComponent() {
 
     return (
         <>
-            <MainHeader />
+            <MainHeader companyName={companyName} />
             <Layout>
                 <Head>
                     <title>Text Service | Automate Distributor Contact</title>
@@ -63,16 +65,17 @@ export default function MainComponent() {
                     <Content className={styles.main}>
 
                         {view === '1' ? <Home /> : ''}
-                        {view === '2' ? <Products /> : ''}
-                        {view === '3' ? <Settings /> : ''}
+                        {view === '2' ? <Products repContact={repContact} /> : ''}
+                        {view === '3' ? <SettingsPanel setRepContact={setRepContact} setCompanyName={setCompanyName} repContact={repContact} companyName={companyName} /> : ''}
 
                     </Content>
 
-                    <Footer className={styles.footer}>
-                        <p>Footer Component</p>
-                    </Footer>
                 </Layout>
+
             </Layout>
+            <Footer className={styles.footer}>
+                <p>Footer Component</p>
+            </Footer>
         </>
     );
 }

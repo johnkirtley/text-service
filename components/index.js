@@ -2,8 +2,8 @@ import Home from './Home';
 import MainHeader from './MainHeader';
 import Products from './Products';
 import QRCode from './QRCode';
-import Settings from './Settings';
+import SettingsPanel from './SettingsPanel';
 
 export {
-    Home, MainHeader, Products, QRCode, Settings,
+    Home, MainHeader, Products, QRCode, SettingsPanel,
 };
