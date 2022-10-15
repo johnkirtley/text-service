@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
     Layout, Input, PageHeader, Space, Button, Checkbox,
 } from 'antd';
@@ -10,12 +10,12 @@ const { Content } = Layout;
 const sampleProducts = ['Windshield Fluid', 'Oil', 'Paper Towels', 'Gasoline', 'Wax', 'Water Bottles'];
 
 export default function Products({ repContact }) {
-    const [products, setProducts] = useState(sampleProducts);
+    const [products] = useState(sampleProducts);
     const [newProduct, setNewProduct] = useState('');
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [customerName, setCustomerName] = useState('');
     const [qrCodes, setQRCodes] = useState([]);
-    const [qrLinks, setQrLinks] = useState([]);
+    const [qrLinks] = useState([]);
 
     const handleChange = (e) => {
         setNewProduct(e.target.value);
