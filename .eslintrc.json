@@ -14,6 +14,7 @@
         "react/jsx-indent-props": "off",
         "object-curly-spacing": ["error", "always"],
         "react/jsx-one-expression-per-line": "off",
+        "react/jsx-no-constructed-context-values": "off",
         "css-modules/no-unused-class": "off",
         "react/no-array-index-key": "off",
         "object-curly-newline": ["error", {

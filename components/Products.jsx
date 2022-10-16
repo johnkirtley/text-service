@@ -1,21 +1,24 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import {
     Layout, Input, PageHeader, Space, Button, Checkbox,
 } from 'antd';
 
 import Image from 'next/image';
+import { RepContext } from '../Context/Context';
 
 const { Content } = Layout;
 
 const sampleProducts = ['Windshield Fluid', 'Oil', 'Paper Towels', 'Gasoline', 'Wax', 'Water Bottles'];
 
-export default function Products({ repContact }) {
+export default function Products() {
     const [products] = useState(sampleProducts);
     const [newProduct, setNewProduct] = useState('');
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [customerName, setCustomerName] = useState('');
     const [qrCodes, setQRCodes] = useState([]);
     const [qrLinks] = useState([]);
+
+    const { repInfo } = useContext(RepContext);
 
     const handleChange = (e) => {
         setNewProduct(e.target.value);
@@ -60,7 +63,7 @@ export default function Products({ repContact }) {
             return;
         }
 
-        if (repContact.length < 1) {
+        if (repInfo.length < 1) {
             alert('Head To Settings To Add Contact Number');
             return;
         }
@@ -69,7 +72,7 @@ export default function Products({ repContact }) {
             const trimmedCustomerName = customerName.replace(' ', '%20');
             const message = `${product}%20to%20${trimmedCustomerName}`;
             const trimmed = message.replace(' ', '%20');
-            const data = { name: product, src: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=SMSTO:${repContact}:${trimmed}` };
+            const data = { name: product, src: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=SMSTO:${repInfo}:${trimmed}` };
             qrLinks.push(data.src);
             return data;
         });
@@ -93,10 +96,7 @@ export default function Products({ repContact }) {
                 </Space>
             </Content>
             <Button type="primary" onClick={generateCodes} style={{ marginBottom: '2rem' }}>Generate QR Codes</Button>
-            <Content style={{
-                display: 'flex', justifyContent: 'flex-start', flexFlow: 'column', marginBottom: '6rem',
-            }}
-            >
+            <Content style={{ display: 'flex', justifyContent: 'flex-start', flexFlow: 'column', marginBottom: '6rem' }}>
                 {products.map((product, idx) => (
                     <Space key={idx} style={{ justifyContent: 'space-between', marginBottom: '1rem' }} size="large">
                         <Checkbox
@@ -111,10 +111,7 @@ export default function Products({ repContact }) {
             <div>
             Generated Codes
             </div>
-            <Content style={{
-                display: 'grid', margin: '0 2rem', gridTemplateColumns: 'repeat(3, 1fr)', marginBottom: '2rem',
-            }}
-            >
+            <Content style={{ display: 'grid', margin: '0 2rem', gridTemplateColumns: 'repeat(3, 1fr)', marginBottom: '2rem' }}>
                 {qrCodes.map((codeInfo, idx) => (
                     <Space key={idx} style={{ justifyContent: 'space-between', marginBottom: '1rem', marginTop: '2rem' }} size="large">
                         <div

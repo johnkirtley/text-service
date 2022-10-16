@@ -1,16 +1,18 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Head from 'next/head';
 import { Layout, Menu } from 'antd';
-import styles from '../styles/Home.module.css';
+import { CustomerContext } from '../Context/Context';
 import { Home, MainHeader, Products, SettingsPanel } from '../components';
+
+import styles from '../styles/Home.module.css';
 
 const { Content, Footer, Sider } = Layout;
 
 export default function MainComponent() {
     const [collapsed, setCollapsed] = useState(false);
     const [view, setView] = useState('1');
-    const [repContact, setRepContact] = useState('');
-    const [companyName, setCompanyName] = useState('');
+
+    const { customerInfo } = useContext(CustomerContext);
 
     function getItem(label, key, icon, children) {
         return { key, icon, children, label };
@@ -24,7 +26,7 @@ export default function MainComponent() {
 
     return (
         <>
-            <MainHeader companyName={companyName} />
+            <MainHeader companyName={customerInfo} />
             <Layout>
                 <Head>
                     <title>Text Service | Automate Distributor Contact</title>
@@ -55,8 +57,8 @@ export default function MainComponent() {
                     <Content className={styles.main}>
 
                         {view === '1' ? <Home /> : ''}
-                        {view === '2' ? <Products repContact={repContact} /> : ''}
-                        {view === '3' ? <SettingsPanel setRepContact={setRepContact} setCompanyName={setCompanyName} repContact={repContact} companyName={companyName} /> : ''}
+                        {view === '2' ? <Products /> : ''}
+                        {view === '3' ? <SettingsPanel /> : ''}
 
                     </Content>
 
