@@ -1,15 +1,10 @@
 import { useState } from 'react';
 import Head from 'next/head';
-// import Image from 'next/image';
 import { Layout, Menu } from 'antd';
 import styles from '../styles/Home.module.css';
-import {
-    Home, MainHeader, Products, SettingsPanel,
-} from '../components';
+import { Home, MainHeader, Products, SettingsPanel } from '../components';
 
-const {
-    Content, Footer, Sider,
-} = Layout;
+const { Content, Footer, Sider } = Layout;
 
 export default function MainComponent() {
     const [collapsed, setCollapsed] = useState(false);
@@ -18,11 +13,7 @@ export default function MainComponent() {
     const [companyName, setCompanyName] = useState('');
 
     function getItem(label, key, icon, children) {
-        return {
-            key,
-            icon,
-            children,
-            label,
+        return { key, icon, children, label,
         };
     }
 

@@ -1,6 +1,7 @@
 {
-  "plugins": ["sonarjs", "css-modules"],
-  "extends": ["airbnb-base", "airbnb", "airbnb/hooks", "plugin:sonarjs/recommended","plugin:css-modules/recommended", "next/core-web-vitals"],
+  "plugins": ["sonarjs"],
+  "extends": ["airbnb-base", "airbnb", "airbnb/hooks", "plugin:sonarjs/recommended", "next/core-web-vitals"],
+  "ignorePatterns": ["*/styles", "**/*.css", "**/vendor/*.css", "node_modules/*"],
     "rules": {
         "consistent-return": 2,
         "indent"           : [1, 4],
@@ -14,8 +15,7 @@
         "object-curly-spacing": ["error", "always"],
         "react/jsx-one-expression-per-line": "off",
         "css-modules/no-unused-class": "off",
-        "react/no-array-index-key": "off"
-
-      },
-      "ignorePatterns": ["*/styles", "*.css", "**/vendor/*.css"]
+        "react/no-array-index-key": "off",
+        "object-curly-newline": 0
+      }
 }
