@@ -1,50 +1,26 @@
-import { useState } from 'react';
-import Head from 'next/head';
-// import Image from 'next/image';
+import { useState, useContext } from 'react';
 import { Layout, Menu } from 'antd';
-import styles from '../styles/Home.module.css';
-import {
-    Home, MainHeader, Products, SettingsPanel,
-} from '../components';
+import { CustomerContext } from '../Context/Context';
+import { MetaHead, MainHeader, MainFooter } from '../components';
+import MainView from '../components/MainView';
 
-const {
-    Content, Footer, Sider,
-} = Layout;
+// Helper Functions
+import { items } from '../utils/helpers';
+
+// Styles
+
+const { Sider } = Layout;
 
 export default function MainComponent() {
     const [collapsed, setCollapsed] = useState(false);
     const [view, setView] = useState('1');
-    const [repContact, setRepContact] = useState('');
-    const [companyName, setCompanyName] = useState('');
-
-    function getItem(label, key, icon, children) {
-        return {
-            key,
-            icon,
-            children,
-            label,
-        };
-    }
-
-    const items = [
-        getItem('Home', '1'),
-        getItem('Products and QR Codes', '2'),
-        getItem('Settings', '3'),
-    ];
+    const { customerInfo } = useContext(CustomerContext);
 
     return (
         <>
-            <MainHeader companyName={companyName} />
+            <MainHeader companyName={customerInfo} />
             <Layout>
-                <Head>
-                    <title>Text Service | Automate Distributor Contact</title>
-                    <meta
-                        name="description"
-                        content="Text Service | Automate Distributor Contact"
-                    />
-                    <link rel="icon" href="/favicon.ico" />
-                </Head>
-
+                <MetaHead />
                 <Sider
                     collapsible
                     collapsed={collapsed}
@@ -60,22 +36,9 @@ export default function MainComponent() {
                         onSelect={(key) => setView(key.key)}
                     />
                 </Sider>
-                <Layout className={styles.container}>
-
-                    <Content className={styles.main}>
-
-                        {view === '1' ? <Home /> : ''}
-                        {view === '2' ? <Products repContact={repContact} /> : ''}
-                        {view === '3' ? <SettingsPanel setRepContact={setRepContact} setCompanyName={setCompanyName} repContact={repContact} companyName={companyName} /> : ''}
-
-                    </Content>
-
-                </Layout>
-
+                <MainView view={view} />
             </Layout>
-            <Footer className={styles.footer}>
-                <p>Footer Component</p>
-            </Footer>
+            <MainFooter />
         </>
     );
 }
