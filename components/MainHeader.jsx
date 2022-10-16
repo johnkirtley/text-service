@@ -1,5 +1,6 @@
 import { Layout } from 'antd';
 
+// Styles
 import styles from '../styles/Home.module.css';
 
 const { Header } = Layout;

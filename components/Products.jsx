@@ -2,9 +2,11 @@ import { useState, useContext } from 'react';
 import {
     Layout, Input, PageHeader, Space, Button, Checkbox,
 } from 'antd';
+import { RepContext, ClientContext } from '../Context/Context';
 
-import Image from 'next/image';
-import { RepContext } from '../Context/Context';
+// Helper Functions
+import { handleTextChange } from '../utils/helpers';
+import QRCode from './QRCode';
 
 const { Content } = Layout;
 
@@ -14,15 +16,12 @@ export default function Products() {
     const [products] = useState(sampleProducts);
     const [newProduct, setNewProduct] = useState('');
     const [selectedProducts, setSelectedProducts] = useState([]);
-    const [customerName, setCustomerName] = useState('');
+    // const [customerName, setCustomerName] = useState('');
     const [qrCodes, setQRCodes] = useState([]);
     const [qrLinks] = useState([]);
 
     const { repInfo } = useContext(RepContext);
-
-    const handleChange = (e) => {
-        setNewProduct(e.target.value);
-    };
+    const { clientInfo, setClientInfo } = useContext(ClientContext);
 
     const addProduct = () => {
         if (newProduct.length > 0) {
@@ -34,10 +33,6 @@ export default function Products() {
                 alert('Product Already Added');
             }
         }
-    };
-
-    const handleCustomerChange = (e) => {
-        setCustomerName(e.target.value);
     };
 
     const onCheckChange = (e) => {
@@ -53,7 +48,7 @@ export default function Products() {
         // setCheckAll(list.length === products.length);
     };
     const generateCodes = () => {
-        if (customerName.length < 1) {
+        if (clientInfo.length < 1) {
             alert('Please Add Customer Name');
             return;
         }
@@ -69,7 +64,7 @@ export default function Products() {
         }
 
         const links = selectedProducts.map((product) => {
-            const trimmedCustomerName = customerName.replace(' ', '%20');
+            const trimmedCustomerName = clientInfo.replace(' ', '%20');
             const message = `${product}%20to%20${trimmedCustomerName}`;
             const trimmed = message.replace(' ', '%20');
             const data = { name: product, src: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=SMSTO:${repInfo}:${trimmed}` };
@@ -88,9 +83,9 @@ export default function Products() {
             <PageHeader title="Product and QR Code Page" />
             <Content style={{ width: '100%' }}>
                 <Space direction="vertical" size="large">
-                    <Input placeholder="Enter Customer Name" name="customerName" onChange={handleCustomerChange} type="text" value={customerName} />
+                    <Input placeholder="Enter Customer Name" name="customerName" onChange={(e) => handleTextChange(e, setClientInfo)} type="text" value={clientInfo} />
                     <Space>
-                        <Input placeholder="Enter Product Name" name="newProduct" onChange={handleChange} type="text" value={newProduct} />
+                        <Input placeholder="Enter Product Name" name="newProduct" onChange={(e) => handleTextChange(e, setNewProduct)} type="text" value={newProduct} />
                         <Button type="primary" onClick={addProduct}>Add</Button>
                     </Space>
                 </Space>
@@ -108,28 +103,7 @@ export default function Products() {
                     </Space>
                 ))}
             </Content>
-            <div>
-            Generated Codes
-            </div>
-            <Content style={{ display: 'grid', margin: '0 2rem', gridTemplateColumns: 'repeat(3, 1fr)', marginBottom: '2rem' }}>
-                {qrCodes.map((codeInfo, idx) => (
-                    <Space key={idx} style={{ justifyContent: 'space-between', marginBottom: '1rem', marginTop: '2rem' }} size="large">
-                        <div
-                            className="qr-code-container"
-                            style={{
-                                display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', margin: '0 2rem',
-                            }}
-                        >
-                            {codeInfo.name}
-                            <div>
-                                <a href={codeInfo.src} target="_blank" download={`${codeInfo.name}.jpg`} rel="noreferrer">
-                                    <Image layout="intrinsic" width={150} height={150} src={codeInfo.src} alt={codeInfo.name} />
-                                </a>
-                            </div>
-                        </div>
-                    </Space>
-                ))}
-            </Content>
+            <QRCode qrCodes={qrCodes} />
         </>
     );
 }

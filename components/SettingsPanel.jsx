@@ -2,17 +2,12 @@ import { useContext } from 'react';
 import { Layout, Input, Button, Space } from 'antd';
 import { RepContext, CustomerContext } from '../Context/Context';
 
+// Helper Functions
+import { handleTextChange } from '../utils/helpers';
+
 export default function SettingsPanel() {
     const { repInfo, setRepInfo } = useContext(RepContext);
     const { customerInfo, setCustomerInfo } = useContext(CustomerContext);
-
-    const handleNumberChange = (e) => {
-        setRepInfo(e.target.value);
-    };
-
-    const handleNameChange = (e) => {
-        setCustomerInfo(e.target.value);
-    };
 
     const saveContact = (num) => {
         // backend api call to store phone number in DB
@@ -30,11 +25,11 @@ export default function SettingsPanel() {
             <Layout>
                 <Space style={{ display: 'flex', flexFlow: 'column' }}>
                     <Space>
-                        <Input placeholder="Company Name" value={customerInfo} name="companyname" onChange={handleNameChange} />
+                        <Input placeholder="Company Name" value={customerInfo} name="companyname" onChange={(e) => handleTextChange(e, setCustomerInfo)} />
                         <Button onClick={() => saveName(customerInfo)}>Update</Button>
                     </Space>
                     <Space>
-                        <Input placeholder="Enter Rep Number" value={repInfo} name="repContact" onChange={handleNumberChange} />
+                        <Input placeholder="Enter Rep Number" value={repInfo} name="repContact" onChange={(e) => handleTextChange(e, setRepInfo)} />
                         <Button onClick={() => saveContact(repInfo)}>Save</Button>
                     </Space>
                 </Space>

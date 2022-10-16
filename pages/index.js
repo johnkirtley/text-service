@@ -1,42 +1,26 @@
 import { useState, useContext } from 'react';
-import Head from 'next/head';
 import { Layout, Menu } from 'antd';
 import { CustomerContext } from '../Context/Context';
-import { Home, MainHeader, Products, SettingsPanel } from '../components';
+import { MetaHead, MainHeader, MainFooter } from '../components';
+import MainView from '../components/MainView';
 
-import styles from '../styles/Home.module.css';
+// Helper Functions
+import { items } from '../utils/helpers';
 
-const { Content, Footer, Sider } = Layout;
+// Styles
+
+const { Sider } = Layout;
 
 export default function MainComponent() {
     const [collapsed, setCollapsed] = useState(false);
     const [view, setView] = useState('1');
-
     const { customerInfo } = useContext(CustomerContext);
-
-    function getItem(label, key, icon, children) {
-        return { key, icon, children, label };
-    }
-
-    const items = [
-        getItem('Home', '1'),
-        getItem('Products and QR Codes', '2'),
-        getItem('Settings', '3'),
-    ];
 
     return (
         <>
             <MainHeader companyName={customerInfo} />
             <Layout>
-                <Head>
-                    <title>Text Service | Automate Distributor Contact</title>
-                    <meta
-                        name="description"
-                        content="Text Service | Automate Distributor Contact"
-                    />
-                    <link rel="icon" href="/favicon.ico" />
-                </Head>
-
+                <MetaHead />
                 <Sider
                     collapsible
                     collapsed={collapsed}
@@ -52,22 +36,9 @@ export default function MainComponent() {
                         onSelect={(key) => setView(key.key)}
                     />
                 </Sider>
-                <Layout className={styles.container}>
-
-                    <Content className={styles.main}>
-
-                        {view === '1' ? <Home /> : ''}
-                        {view === '2' ? <Products /> : ''}
-                        {view === '3' ? <SettingsPanel /> : ''}
-
-                    </Content>
-
-                </Layout>
-
+                <MainView view={view} />
             </Layout>
-            <Footer className={styles.footer}>
-                <p>Footer Component</p>
-            </Footer>
+            <MainFooter />
         </>
     );
 }
