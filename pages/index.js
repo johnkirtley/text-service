@@ -13,8 +13,7 @@ export default function MainComponent() {
     const [companyName, setCompanyName] = useState('');
 
     function getItem(label, key, icon, children) {
-        return { key, icon, children, label,
-        };
+        return { key, icon, children, label };
     }
 
     const items = [
