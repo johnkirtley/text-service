@@ -5,7 +5,7 @@ import {
 import { RepContext, ClientContext } from '../Context/Context';
 
 // Helper Functions
-import { handleTextChange } from '../utils/helpers';
+import { handleTextChange, generateCanvasImg } from '../utils/helpers';
 import QRCode from './QRCode';
 
 const { Content } = Layout;
@@ -18,7 +18,6 @@ export default function Products() {
     const [selectedProducts, setSelectedProducts] = useState([]);
     // const [customerName, setCustomerName] = useState('');
     const [qrCodes, setQRCodes] = useState([]);
-    const [qrLinks] = useState([]);
 
     const { repInfo } = useContext(RepContext);
     const { clientInfo, setClientInfo } = useContext(ClientContext);
@@ -67,12 +66,15 @@ export default function Products() {
             const trimmedCustomerName = clientInfo.replace(' ', '%20');
             const message = `${product}%20to%20${trimmedCustomerName}`;
             const trimmed = message.replace(' ', '%20');
-            const data = { name: product, src: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=SMSTO:${repInfo}:${trimmed}` };
-            qrLinks.push(data.src);
-            return data;
+            const codeString = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=SMSTO:${repInfo}:${trimmed}`;
+            return { name: product, src: codeString };
         });
 
         setQRCodes(links);
+
+        links.forEach((link) => {
+            generateCanvasImg(link.src, link.name);
+        });
     };
 
     // api call for QR Code
