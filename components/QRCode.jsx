@@ -1,11 +1,16 @@
 /* eslint-disable max-len */
+import { useContext } from 'react';
 import JSZip from 'jszip';
 import { Layout, Space, Empty, Button } from 'antd';
 import { saveAs } from 'file-saver';
+import ClientContext from '../Context/ClientContext';
 
 const { Content } = Layout;
 
 export default function QRCode({ qrCodes }) {
+    const { clientInfo } = useContext(ClientContext);
+
+    const sanitizedFileName = clientInfo.replace(' ', '-');
     const zipImages = () => {
         const zip = new JSZip();
         const codeFolder = zip.folder('QR-Codes');
@@ -22,7 +27,7 @@ export default function QRCode({ qrCodes }) {
 
         fileGeneration().then(() => {
             setTimeout(() => {
-                codeFolder.generateAsync({ type: 'blob' }).then((content) => saveAs(content, 'test.zip'));
+                codeFolder.generateAsync({ type: 'blob' }).then((content) => saveAs(content, `${sanitizedFileName}-Codes.zip`));
             }, 2000);
         });
     };
