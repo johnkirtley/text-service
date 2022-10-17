@@ -1,10 +1,32 @@
 /* eslint-disable max-len */
-// import Image from 'next/image';
-import { Layout, Space, Empty } from 'antd';
+import JSZip from 'jszip';
+import { Layout, Space, Empty, Button } from 'antd';
+import { saveAs } from 'file-saver';
 
 const { Content } = Layout;
 
 export default function QRCode({ qrCodes }) {
+    const zipImages = () => {
+        const zip = new JSZip();
+        const codeFolder = zip.folder('QR-Codes');
+        const canvas = Array.from(document.querySelector('.qr-code-container').children);
+
+        const fileGeneration = () => new Promise((resolve) => {
+            qrCodes.forEach((code, idx) => {
+                canvas[idx].toBlob((data) => {
+                    codeFolder.file(`Code-${idx}.png`, data);
+                });
+            });
+            resolve();
+        });
+
+        fileGeneration().then(() => {
+            setTimeout(() => {
+                codeFolder.generateAsync({ type: 'blob' }).then((content) => saveAs(content, 'test.zip'));
+            }, 2000);
+        });
+    };
+
     return (
         <div>
             {qrCodes.length > 0
@@ -13,6 +35,9 @@ export default function QRCode({ qrCodes }) {
                         <p>
                             Generated Codes
                         </p>
+                        <Button onClick={zipImages}>
+                            Download All
+                        </Button>
                         <Content style={{ marginBottom: '2rem' }}>
                             <Space style={{ justifyContent: 'space-between', marginBottom: '1rem', marginTop: '2rem' }} size="large">
                                 <div
