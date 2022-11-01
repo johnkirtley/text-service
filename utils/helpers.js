@@ -12,4 +12,30 @@ const handleTextChange = (e, cb) => {
     cb(e.target.value);
 };
 
-export { items, handleTextChange };
+const generateCanvasImg = (imgSrc, text) => {
+    setTimeout(() => {
+        document.querySelector('.qr-code-container').innerHTML = '';
+
+        const canvas = document.createElement('canvas');
+        const image = new Image();
+
+        canvas.width = 150;
+        canvas.height = 165;
+        image.setAttribute('crossorigin', 'anonymous');
+        image.src = imgSrc;
+
+        const x = canvas.width / 2;
+
+        let ctx;
+        image.onload = function generate() {
+            ctx = canvas.getContext('2d');
+            ctx.drawImage(image, 0, 0, 140, 140);
+            ctx.textAlign = 'center';
+            ctx.font = '12px arial';
+            ctx.fillText(text, x, 160);
+            document.querySelector('.qr-code-container').appendChild(canvas);
+        };
+    }, 1000);
+};
+
+export { items, handleTextChange, generateCanvasImg };
