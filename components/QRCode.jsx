@@ -1,17 +1,24 @@
 /* eslint-disable max-len */
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 import JSZip from 'jszip';
-import { Layout, Space, Empty, Button } from 'antd';
-import { saveAs } from 'file-saver';
+import {
+    Layout, Space, Empty, Button, Modal,
+} from 'antd';
+// import { saveAs } from 'file-saver';
+import axios from 'axios';
 import ClientContext from '../Context/ClientContext';
 
 const { Content } = Layout;
 
 export default function QRCode({ qrCodes }) {
     const { clientInfo } = useContext(ClientContext);
+    const [showModal, setShowModal] = useState(false);
+    const [sending, setSending] = useState(false);
+    const [sendingComplete, setSendingComplete] = useState(false);
 
     const sanitizedFileName = clientInfo.replace(' ', '-');
     const zipImages = () => {
+        setSending(true);
         const zip = new JSZip();
         const codeFolder = zip.folder('QR-Codes');
         const canvas = Array.from(document.querySelector('.qr-code-container').children);
@@ -27,9 +34,36 @@ export default function QRCode({ qrCodes }) {
 
         fileGeneration().then(() => {
             setTimeout(() => {
-                codeFolder.generateAsync({ type: 'blob' }).then((content) => saveAs(content, `${sanitizedFileName}-Codes.zip`));
+                codeFolder.generateAsync({ type: 'base64' }).then((content) => {
+                    console.log(content, `${sanitizedFileName}-Codes.zip`);
+                    const data = {
+                        base64Codes: content,
+                        clientName: `${sanitizedFileName}`,
+                    };
+                    axios.post('https://text-service-mailer.herokuapp.com/api/code_submission/send', data)
+                        .then((res) => console.log(res))
+                        .catch((err) => console.log(err));
+                });
+                setSending(false);
+                setSendingComplete(true);
+                setTimeout(() => {
+                    setShowModal(false);
+                    setSendingComplete(false);
+                }, 2000);
             }, 2000);
         });
+    };
+
+    const handleOk = () => {
+        zipImages();
+    };
+
+    const handleCancel = () => {
+        setShowModal(false);
+    };
+
+    const sendEmail = () => {
+        setShowModal(true);
     };
 
     return (
@@ -40,8 +74,21 @@ export default function QRCode({ qrCodes }) {
                         <p>
                             Generated Codes
                         </p>
-                        <Button onClick={zipImages}>
-                            Download All
+                        <Modal title="QR Code Confirmation" open={showModal} onOk={handleOk} onCancel={handleCancel}>
+                            {sendingComplete ? <p>Sent Successfully</p> : ''}
+                            {sending ? <p>Sending...</p>
+                                : (
+                                    <>
+                                        <p>Total Codes: {qrCodes.length}</p>
+                                        <p>Selected Products:</p>
+                                        {qrCodes.map((code, idx) => (
+                                            <p key={idx}>{code.name}</p>
+                                        ))}
+                                    </>
+                                ) }
+                        </Modal>
+                        <Button onClick={sendEmail}>
+                            Confirm and Send For Printing
                         </Button>
                         <Content style={{ marginBottom: '2rem' }}>
                             <Space style={{ justifyContent: 'space-between', marginBottom: '1rem', marginTop: '2rem' }} size="large">
