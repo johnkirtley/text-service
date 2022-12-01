@@ -63,6 +63,11 @@ export default function Products() {
             return;
         }
 
+        if (customerInfo.length < 1) {
+            alert('Please Add Your Business Name Under Settings');
+            return;
+        }
+
         const links = selectedProducts.map((product) => {
             const trimmedCustomerName = clientInfo.replace(' ', '%20');
             const message = `${product}%20to%20${trimmedCustomerName}`;
