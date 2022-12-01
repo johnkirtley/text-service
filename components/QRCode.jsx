@@ -87,7 +87,7 @@ export default function QRCode({ qrCodes }) {
                                     </>
                                 ) }
                         </Modal>
-                        <Button onClick={sendEmail}>
+                        <Button onClick={sendEmail} type="primary">
                             Confirm and Send For Printing
                         </Button>
                         <Content style={{ marginBottom: '2rem' }}>
@@ -95,7 +95,7 @@ export default function QRCode({ qrCodes }) {
                                 <div
                                     className="qr-code-container"
                                     style={{
-                                        display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gridGap: '1rem', width: '75%', margin: 'auto',
+                                        display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gridGap: '3rem', width: '100%', margin: 'auto', scale: '70%',
                                     }}
                                 >
                                     {/* {codeInfo.name} */}

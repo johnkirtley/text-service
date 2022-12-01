@@ -14,6 +14,19 @@ a {
   box-sizing: border-box;
 }
 
+canvas {
+  margin: 1rem 0;
+}
+
+.ant-page-header-heading-title {
+  white-space: normal !important;
+}
+
+.ant-btn {
+  white-space: normal !important;
+  height: fit-content !important;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
@@ -21,5 +34,26 @@ a {
   body {
     color: white;
     background: black;
+  }
+}
+
+.qr-code-container {
+  margin-top: -3rem !important;
+}
+
+@media (max-width: 600px) {
+
+  aside {
+    flex: 0 0 105px !important;
+    min-width: 150px !important
+  }
+
+  .ant-layout-sider-trigger {
+    width: 150px !important;
+  }
+
+  .qr-code-container {
+    display: block !important;
+    margin-top: -13rem !important;
   }
 }

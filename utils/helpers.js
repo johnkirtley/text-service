@@ -19,8 +19,8 @@ const generateCanvasImg = (imgSrc, productText, customerName) => {
         const canvas = document.createElement('canvas');
         const image = new Image();
 
-        canvas.width = 150;
-        canvas.height = 190;
+        canvas.width = 250;
+        canvas.height = 310;
         image.setAttribute('crossorigin', 'anonymous');
         image.src = imgSrc;
 
@@ -29,11 +29,14 @@ const generateCanvasImg = (imgSrc, productText, customerName) => {
         let ctx;
         image.onload = function generate() {
             ctx = canvas.getContext('2d');
-            ctx.drawImage(image, 0, 20, 140, 140);
+            ctx.drawImage(image, 0, 30, 240, 240);
             ctx.textAlign = 'center';
-            ctx.font = '12px arial';
-            ctx.fillText(productText, x, 175);
-            ctx.fillText(customerName, x, 10);
+            ctx.font = '25px arial';
+            ctx.fillText(productText, x, 300);
+            ctx.fillText(customerName, x, 20);
+            ctx.canvas.style.imageRendering = 'high';
+            ctx.imageSmoothingEnabled = 'true';
+            ctx.scale(1, 2);
             document.querySelector('.qr-code-container').appendChild(canvas);
         };
     }, 1000);

@@ -72,7 +72,7 @@ export default function Products() {
             const trimmedCustomerName = clientInfo.replace(' ', '%20');
             const message = `${product}%20to%20${trimmedCustomerName}`;
             const trimmed = message.replace(' ', '%20');
-            const codeString = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=SMSTO:${repInfo}:${trimmed}`;
+            const codeString = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=SMSTO:${repInfo}:${trimmed}`;
             return { name: product, src: codeString };
         });
 
