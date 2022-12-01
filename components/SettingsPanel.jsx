@@ -31,6 +31,8 @@ export default function SettingsPanel() {
                     <Space>
                         <Input placeholder="Enter Rep Number" value={repInfo} name="repContact" onChange={(e) => handleTextChange(e, setRepInfo)} />
                         <Button onClick={() => saveContact(repInfo)}>Save</Button>
+                        {/* input to add additional reps to contact list
+                        iterate and show all added reps + numbers */}
                     </Space>
                 </Space>
             </Layout>
