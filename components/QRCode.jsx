@@ -95,7 +95,7 @@ export default function QRCode({ qrCodes }) {
                                 <div
                                     className="qr-code-container"
                                     style={{
-                                        display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gridGap: '3rem', width: '100%', margin: 'auto', scale: '70%',
+                                        display: 'flex', overflowY: 'scroll', height: '40rem', flexFlow: 'column', gap: '3rem', width: '100%', margin: 'auto', scale: '70%',
                                     }}
                                 >
                                     {/* {codeInfo.name} */}
