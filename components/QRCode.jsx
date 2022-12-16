@@ -91,11 +91,11 @@ export default function QRCode({ qrCodes }) {
                             Confirm and Send For Printing
                         </Button>
                         <Content style={{ marginBottom: '2rem' }}>
-                            <Space style={{ justifyContent: 'space-between', marginBottom: '1rem', marginTop: '2rem' }} size="large">
+                            <Space style={{ justifyContent: 'space-between', marginBottom: '1rem' }} size="large">
                                 <div
                                     className="qr-code-container"
                                     style={{
-                                        display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gridGap: '3rem', width: '100%', margin: 'auto', scale: '70%',
+                                        display: 'flex', overflowY: 'scroll', height: '40rem', flexFlow: 'column', gap: '3rem', width: '100%', margin: 'auto', scale: '0.5',
                                     }}
                                 >
                                     {/* {codeInfo.name} */}

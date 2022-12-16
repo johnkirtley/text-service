@@ -53,7 +53,7 @@ canvas {
   }
 
   .qr-code-container {
-    display: block !important;
     margin-top: -13rem !important;
+    height: 90rem !important;
   }
 }
