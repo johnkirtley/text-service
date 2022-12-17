@@ -121,34 +121,69 @@ export default function Products() {
     return (
         <>
             <PageHeader title="Product and QR Code Page" />
-            <Content style={{ width: '100%' }}>
-                <Space direction="vertical" size="large">
-                    <Input placeholder="Enter Customer Name" name="customerName" onChange={(e) => handleTextChange(e, setClientInfo)} type="text" value={clientInfo} />
-                    <Space>
-                        <Input placeholder="Enter Product Name" name="newProduct" onChange={(e) => handleTextChange(e, setNewProduct)} type="text" value={newProduct} />
-                        <Button type="primary" onClick={addProduct}>Add</Button>
-                    </Space>
-                    <Space>
-                        <Input placeholder="Enter Rep Number" value={repInfo} name="repContact" onChange={(e) => handleTextChange(e, setRepInfo)} />
-                        <Button onClick={() => saveContact(repInfo)}>Save</Button>
+            <Content style={{ width: '100%', display: 'flex', justifyContent: 'space-evenly' }}>
+                <Space direction="vertical" size="large" style={{ minWidth: '18rem' }}>
+                    <div style={{
+                        marginBottom: '1rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', width: '16rem', gap: '0.5rem',
+                    }}
+                    >
+                        <p className="input-label">Who Are These For?</p>
+                        <Input placeholder="Enter Customer Name" name="customerName" onChange={(e) => handleTextChange(e, setClientInfo)} type="text" value={clientInfo} />
+                    </div>
+                    <Space style={{ minWidth: '18rem' }}>
+                        <div style={{
+                            marginBottom: '1rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', width: '16rem', gap: '0.5rem',
+                        }}
+                        >
+                            <p className="input-label">Who Should Receive Orders?</p>
+                            <Input placeholder="Enter Rep Number" value={repInfo} name="repContact" onChange={(e) => handleTextChange(e, setRepInfo)} />
+                            <Button onClick={() => saveContact(repInfo)}>Save</Button>
+                        </div>
                     </Space>
                 </Space>
+
+            </Content>
+            <Content style={{
+                display: 'flex', justifyContent: 'space-evenly', alignItems: 'flex-start', textAlign: 'center', marginBottom: '6rem', width: '100%', padding: '0 2rem', marginTop: '5rem',
+            }}
+            >
+                <div style={{ flexFlow: 'column', minWidth: '18rem' }}>
+                    <Space>
+                        <div style={{
+                            marginBottom: '4rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', width: '16rem', gap: '0.5rem',
+                        }}
+                        >
+                            <p className="input-label">Missing a Product?</p>
+                            <Input placeholder="Enter Product Name" name="newProduct" onChange={(e) => handleTextChange(e, setNewProduct)} type="text" value={newProduct} />
+                            <Button type="primary" onClick={addProduct}>Add</Button>
+                        </div>
+                    </Space>
+                    <div className="input-label" style={{ marginBottom: '2rem' }}>
+                Select Products Below:
+                    </div>
+
+                    <div style={{ overflowY: 'scroll', flexFlow: 'column', display: 'flex', height: '14rem' }}>
+                        {products.map((product, idx) => (
+                            <Space key={idx} style={{ justifyContent: 'space-between', marginBottom: '1rem' }} size="large">
+                                <Checkbox
+                                    value={product}
+                                    onChange={onCheckChange}
+                                >
+                                    {product}
+                                </Checkbox>
+                            </Space>
+                        ))}
+                    </div>
+                    <Button type="primary" onClick={generateCodes} style={{ marginTop: '2rem', maxWidth: '13rem' }}>Generate QR Codes</Button>
+                </div>
+                <div style={{ minWidth: '18rem' }}>
+                    <p className="input-label">
+                            Generated Codes
+                    </p>
+                    <QRCode qrCodes={qrCodes} />
+                </div>
             </Content>
 
-            <Button type="primary" onClick={generateCodes} style={{ marginBottom: '2rem' }}>Generate QR Codes</Button>
-            <Content style={{ display: 'flex', justifyContent: 'flex-start', flexFlow: 'column', marginBottom: '6rem' }}>
-                {products.map((product, idx) => (
-                    <Space key={idx} style={{ justifyContent: 'space-between', marginBottom: '1rem' }} size="large">
-                        <Checkbox
-                            value={product}
-                            onChange={onCheckChange}
-                        >
-                            {product}
-                        </Checkbox>
-                    </Space>
-                ))}
-            </Content>
-            <QRCode qrCodes={qrCodes} />
         </>
     );
 }
