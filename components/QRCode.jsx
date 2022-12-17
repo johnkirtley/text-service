@@ -10,7 +10,7 @@ import ClientContext from '../Context/ClientContext';
 
 const { Content } = Layout;
 
-export default function QRCode({ qrCodes }) {
+export default function QRCode({ qrCodes, loading }) {
     const { clientInfo } = useContext(ClientContext);
     const [showModal, setShowModal] = useState(false);
     const [sending, setSending] = useState(false);
@@ -67,13 +67,10 @@ export default function QRCode({ qrCodes }) {
     };
 
     return (
-        <div>
+        <div style={loading ? { visibility: 'hidden' } : { marginTop: '3rem' }}>
             {qrCodes.length > 0
                 ? (
                     <div style={{ textAlign: 'center' }}>
-                        <p>
-                            Generated Codes
-                        </p>
                         <Modal title="QR Code Confirmation" open={showModal} onOk={handleOk} onCancel={handleCancel}>
                             {sendingComplete ? <p>Sent Successfully</p> : ''}
                             {sending ? <p>Sending...</p>
@@ -87,15 +84,16 @@ export default function QRCode({ qrCodes }) {
                                     </>
                                 ) }
                         </Modal>
-                        <Button onClick={sendEmail} type="primary">
-                            Confirm and Send For Printing
-                        </Button>
-                        <Content style={{ marginBottom: '2rem' }}>
+
+                        <Content style={{
+                            marginTop: '-6rem', display: 'flex', flexFlow: 'column', alignItems: 'center', minWidth: '18rem',
+                        }}
+                        >
                             <Space style={{ justifyContent: 'space-between', marginBottom: '1rem' }} size="large">
                                 <div
                                     className="qr-code-container"
                                     style={{
-                                        display: 'flex', overflowY: 'scroll', height: '40rem', flexFlow: 'column', gap: '3rem', width: '100%', margin: 'auto', scale: '0.5',
+                                        display: 'flex', overflowY: 'scroll', height: '40rem', flexFlow: 'column', gap: '3rem', width: '100%', margin: 'auto', scale: '0.6',
                                     }}
                                 >
                                     {/* {codeInfo.name} */}
@@ -104,9 +102,13 @@ export default function QRCode({ qrCodes }) {
                                             </a> */}
                                 </div>
                             </Space>
+                            <Button onClick={sendEmail} type="primary" style={{ marginTop: '-6rem', maxWidth: '16rem' }}>
+                            Confirm and Send For Printing
+                            </Button>
                         </Content>
+
                     </div>
-                ) : <Empty description="No Generated Codes" />}
+                ) : <Empty description="No Generated Codes. Please Select Products." />}
         </div>
     );
 }
