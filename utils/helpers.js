@@ -43,14 +43,15 @@ const generateCanvasImg = (imgSrc, productText, customerName) => {
             ctx.textAlign = 'center';
             ctx.font = '25px arial';
 
-            if (ctx.measureText(productText).width * 2 > canvas.width) {
+            if (ctx.measureText(productText).width * 1.25 > canvas.width
+            || ctx.measureText(customerName).width * 1.25 > canvas.width) {
                 let fontSize = 25;
 
                 do {
                     fontSize -= 1;
                     ctx.font = `${fontSize}px arial`;
-                } while (ctx.measureText(productText).width > canvas.width);
-                // ctx.font = '25px arial';
+                } while (ctx.measureText(productText).width > canvas.width
+                || ctx.measureText(customerName).width > canvas.width);
             } else {
                 ctx.font = '25px arial';
                 ctx.fillText(productText, x, 300);
