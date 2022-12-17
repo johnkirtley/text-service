@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import {
-    Layout, Input, PageHeader, Space, Button, Checkbox,
+    Layout, Input, PageHeader, Space, Button, Checkbox, Spin,
 } from 'antd';
 import { RepContext, ClientContext, CustomerContext } from '../Context/Context';
 
@@ -18,6 +18,8 @@ export default function Products() {
     const [selectedProducts, setSelectedProducts] = useState([]);
     // const [customerName, setCustomerName] = useState('');
     const [qrCodes, setQRCodes] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [percentStatus, setPercentStatus] = useState(0);
 
     const { repInfo, setRepInfo } = useContext(RepContext);
     const { clientInfo, setClientInfo } = useContext(ClientContext);
@@ -68,6 +70,8 @@ export default function Products() {
             return;
         }
 
+        setLoading(true);
+
         const links = selectedProducts.map((product) => {
             const trimmedCustomerName = clientInfo.replace(' ', '%20');
             const message = `${product}%20to%20${trimmedCustomerName}`;
@@ -82,6 +86,10 @@ export default function Products() {
             generateCanvasImg(link.src, link.name, customerInfo);
             // add company name above QR code
         });
+
+        setTimeout(() => {
+            setLoading(false);
+        }, 4000);
     };
 
     const saveContact = (num) => {
@@ -122,7 +130,7 @@ export default function Products() {
         <>
             <PageHeader title="Product and QR Code Page" />
             <Content style={{ width: '100%', display: 'flex', justifyContent: 'space-evenly' }}>
-                <Space direction="vertical" size="large" style={{ minWidth: '18rem' }}>
+                <Space direction="horizontal" size="large" style={{ minWidth: '18rem', gap: '1rem' }}>
                     <div style={{
                         marginBottom: '1rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', width: '16rem', gap: '0.5rem',
                     }}
@@ -138,6 +146,7 @@ export default function Products() {
                             <p className="input-label">Who Should Receive Orders?</p>
                             <Input placeholder="Enter Rep Number" value={repInfo} name="repContact" onChange={(e) => handleTextChange(e, setRepInfo)} />
                             <Button onClick={() => saveContact(repInfo)}>Save</Button>
+                            {/* This will be replaced with dropdown of available rep numbers */}
                         </div>
                     </Space>
                 </Space>
@@ -148,16 +157,7 @@ export default function Products() {
             }}
             >
                 <div style={{ flexFlow: 'column', minWidth: '18rem' }}>
-                    <Space>
-                        <div style={{
-                            marginBottom: '4rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', width: '16rem', gap: '0.5rem',
-                        }}
-                        >
-                            <p className="input-label">Missing a Product?</p>
-                            <Input placeholder="Enter Product Name" name="newProduct" onChange={(e) => handleTextChange(e, setNewProduct)} type="text" value={newProduct} />
-                            <Button type="primary" onClick={addProduct}>Add</Button>
-                        </div>
-                    </Space>
+
                     <div className="input-label" style={{ marginBottom: '2rem' }}>
                 Select Products Below:
                     </div>
@@ -174,13 +174,25 @@ export default function Products() {
                             </Space>
                         ))}
                     </div>
-                    <Button type="primary" onClick={generateCodes} style={{ marginTop: '2rem', maxWidth: '13rem' }}>Generate QR Codes</Button>
+                    <Space>
+
+                        <div style={{
+                            marginBottom: '4rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', width: '16rem', gap: '0.5rem',
+                        }}
+                        >
+                            <Button type="primary" onClick={generateCodes} style={{ margin: '2rem 0', maxWidth: '13rem' }}>Generate QR Codes</Button>
+                            <p className="input-label">Missing a Product?</p>
+                            <Input placeholder="Enter Product Name" name="newProduct" onChange={(e) => handleTextChange(e, setNewProduct)} type="text" value={newProduct} />
+                            <Button type="primary" onClick={addProduct}>Add</Button>
+                        </div>
+                    </Space>
                 </div>
                 <div style={{ minWidth: '18rem' }}>
                     <p className="input-label">
                             Generated Codes
                     </p>
-                    <QRCode qrCodes={qrCodes} />
+                    {loading ? <Spin tip="Working Our Magic" style={{ marginTop: '4rem' }} /> : ''}
+                    <QRCode qrCodes={qrCodes} loading={loading} />
                 </div>
             </Content>
 

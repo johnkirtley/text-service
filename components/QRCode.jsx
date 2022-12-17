@@ -10,7 +10,7 @@ import ClientContext from '../Context/ClientContext';
 
 const { Content } = Layout;
 
-export default function QRCode({ qrCodes }) {
+export default function QRCode({ qrCodes, loading }) {
     const { clientInfo } = useContext(ClientContext);
     const [showModal, setShowModal] = useState(false);
     const [sending, setSending] = useState(false);
@@ -67,7 +67,7 @@ export default function QRCode({ qrCodes }) {
     };
 
     return (
-        <div style={{ marginTop: '3rem' }}>
+        <div style={loading ? { visibility: 'hidden' } : { marginTop: '3rem' }}>
             {qrCodes.length > 0
                 ? (
                     <div style={{ textAlign: 'center' }}>
@@ -108,7 +108,7 @@ export default function QRCode({ qrCodes }) {
                         </Content>
 
                     </div>
-                ) : <Empty description="No Generated Codes" />}
+                ) : <Empty description="No Generated Codes. Please Select Products." />}
         </div>
     );
 }
