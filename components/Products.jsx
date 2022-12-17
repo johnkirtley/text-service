@@ -19,7 +19,6 @@ export default function Products() {
     // const [customerName, setCustomerName] = useState('');
     const [qrCodes, setQRCodes] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [percentStatus, setPercentStatus] = useState(0);
 
     const { repInfo, setRepInfo } = useContext(RepContext);
     const { clientInfo, setClientInfo } = useContext(ClientContext);
