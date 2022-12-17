@@ -10,7 +10,11 @@ import QRCode from './QRCode';
 
 const { Content } = Layout;
 
-const sampleProducts = ['Windshield Fluid', 'Oil', 'Paper Towels', 'Gasoline', 'Wax', 'Water Bottles'];
+const sampleProducts = [];
+
+for (let i = 0; i < 50; i += 1) {
+    sampleProducts.push(`Product ${i + 1}`);
+}
 
 export default function Products() {
     const [products] = useState(sampleProducts);
