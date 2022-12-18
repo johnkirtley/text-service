@@ -15,7 +15,7 @@ export default function Auth() {
                 // eslint-disable-next-line object-shorthand
                 signInSuccessWithAuthResult: function (authResult, redirectUrl) {
                     console.log('results', authResult, redirectUrl);
-                    localStorage.setItem('result', authResult.email);
+                    localStorage.setItem('result', authResult.user);
                     return true;
                 },
 
