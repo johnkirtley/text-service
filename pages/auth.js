@@ -11,6 +11,14 @@ export default function Auth() {
             signInOptions: [
                 firebase.auth.GoogleAuthProvider.PROVIDER_ID,
             ],
+            callbacks: {
+                // eslint-disable-next-line object-shorthand
+                signInSuccessWithAuthResult: function (authResult, redirectUrl) {
+                    console.log('results', authResult, redirectUrl);
+                    return true;
+                },
+
+            },
         });
 
         const ui = firebaseui.auth.AuthUI.getInstance()
