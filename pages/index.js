@@ -25,28 +25,33 @@ export default function MainComponent() {
     }, [authContext]);
 
     return (
-        <>
-            <MainHeader companyName={customerInfo} />
-            <Layout>
-                <MetaHead />
-                <Sider
-                    collapsible
-                    collapsed={collapsed}
-                    onCollapse={(value) => setCollapsed(value)}
-                >
-                    <div className="logo" />
+        <div>
+            {authContext === null ? '' : (
+                <div>
+                    <MainHeader companyName={customerInfo} />
+                    <Layout>
+                        <MetaHead />
+                        <Sider
+                            collapsible
+                            collapsed={collapsed}
+                            onCollapse={(value) => setCollapsed(value)}
+                        >
+                            <div className="logo" />
 
-                    <Menu
-                        theme="dark"
-                        defaultSelectedKeys={['1']}
-                        mode="inline"
-                        items={items}
-                        onSelect={(key) => setView(key.key)}
-                    />
-                </Sider>
-                <MainView view={view} />
-            </Layout>
-            <MainFooter />
-        </>
+                            <Menu
+                                theme="dark"
+                                defaultSelectedKeys={['1']}
+                                mode="inline"
+                                items={items}
+                                onSelect={(key) => setView(key.key)}
+                            />
+                        </Sider>
+                        <MainView view={view} />
+                    </Layout>
+                    <MainFooter />
+                </div>
+            )}
+        </div>
+
     );
 }
