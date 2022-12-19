@@ -1,10 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
-    swcMinify: true,
-    images: {
-        domains: ['api.qrserver.com'],
-    },
+    swcMinify: false,
+    images: { domains: ['api.qrserver.com'] },
 };
 
 module.exports = nextConfig;

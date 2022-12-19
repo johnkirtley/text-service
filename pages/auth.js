@@ -23,6 +23,7 @@ export default function Auth() {
     });
 
     return (
+
         <div>
         Login Page
             <div id="firebaseui-auth-container" />
