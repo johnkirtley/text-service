@@ -17,7 +17,7 @@ export default function MainHeader({ companyName }) {
         .catch((error) => console.log(error));
     return (
         <Header className={`${styles.title} ${styles.header}`}>
-            Welcome {authContext?.displayName}
+            Welcome {authContext?.email}
             <button type="button" className="signOut-button" onClick={signOutButton}>
                 Sign Out
             </button>
