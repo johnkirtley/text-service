@@ -1,6 +1,7 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { Layout, Menu } from 'antd';
-import { CustomerContext } from '../Context/Context';
+import { AuthContext, CustomerContext } from '../Context/Context';
 import { MetaHead, MainHeader, MainFooter } from '../components';
 import MainView from '../components/MainView';
 
@@ -15,6 +16,13 @@ export default function MainComponent() {
     const [collapsed, setCollapsed] = useState(false);
     const [view, setView] = useState('1');
     const { customerInfo } = useContext(CustomerContext);
+    const { authContext } = useContext(AuthContext);
+    const router = useRouter();
+
+    useEffect(() => {
+        // eslint-disable-next-line no-unused-expressions
+        authContext !== null ? router.push('/') : router.push('/auth');
+    }, [authContext]);
 
     return (
         <>

@@ -1,45 +1,32 @@
-import { useEffect, useCallback } from 'react';
-import firebase from '../firebase/clientApp';
-import 'firebaseui/dist/firebaseui.css';
+/* eslint-disable no-unused-vars */
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { useRouter } from 'next/router';
+import { firebaseAuth } from '../firebase/clientApp';
 
 export default function Auth() {
-    const loadFirebaseUi = useCallback(async () => {
-        const firebaseui = await import('firebaseui');
+    const provider = new GoogleAuthProvider();
+    const router = useRouter();
 
-        const uiConfig = () => ({
-            signInSuccessUrl: '/',
-            signInOptions: [
-                firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-            ],
-            callbacks: {
-                // eslint-disable-next-line object-shorthand
-                signInSuccessWithAuthResult: function (authResult, redirectUrl) {
-                    console.log('results', authResult, redirectUrl);
-                    localStorage.setItem('result', authResult.user.email);
-                    return true;
-                },
+    const auth = firebaseAuth;
 
-            },
-        });
-
-        const ui = firebaseui.auth.AuthUI.getInstance()
-        || new firebaseui.auth.AuthUI(firebase.auth());
-
-        // if (ui.isPendingRedirect()) {
-        //     ui.start('#firebaseui-auth-container', uiConfig);
-        // }
-
-        ui.start('#firebaseui-auth-container', uiConfig());
-    }, []);
-
-    useEffect(() => {
-        loadFirebaseUi();
-    }, [loadFirebaseUi]);
+    const signIn = async () => signInWithPopup(auth, provider).then((result) => {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const { accessToken } = credential;
+        const { user } = result;
+        router.push('/');
+    }).catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        const { email } = error.customData;
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        console.log(errorCode, errorMessage, email, credential);
+    });
 
     return (
         <div>
         Login Page
             <div id="firebaseui-auth-container" />
+            <button type="button" onClick={() => signIn()}>Sign In With Google</button>
         </div>
     );
 }

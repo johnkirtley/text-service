@@ -1,6 +1,6 @@
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import 'firebase/firestore';
+import { initializeApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore/lite';
+import { getAuth } from 'firebase/auth';
 
 // const clientCredentials = {
 //     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -20,8 +20,8 @@ const firebaseConfig = {
     appId: '1:90069723064:web:417cf98f5513b532ead14d',
 };
 
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
+const firebaseApp = initializeApp(firebaseConfig);
+const firestore = getFirestore(firebaseApp);
+const firebaseAuth = getAuth(firebaseApp);
 
-export default firebase;
+export { firebaseApp, firestore, firebaseAuth };
