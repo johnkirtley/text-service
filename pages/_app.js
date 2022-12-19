@@ -18,7 +18,7 @@ export default function MyApp({ Component, pageProps }) {
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             setAuthContext(user);
-            console.log('app.js', user);
+            // console.log('app.js', user);
         });
     }, [auth]);
 

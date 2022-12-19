@@ -21,7 +21,7 @@ export default function MainComponent() {
 
     useEffect(() => {
         // eslint-disable-next-line no-unused-expressions
-        authContext !== null ? router.push('/') : router.push('/auth');
+        authContext !== null ? router.push('/') : router.push('/login');
     }, [authContext]);
 
     return (
