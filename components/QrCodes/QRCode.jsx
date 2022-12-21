@@ -6,7 +6,10 @@ import {
 } from 'antd';
 // import { saveAs } from 'file-saver';
 import axios from 'axios';
-import ClientContext from '../Context/ClientContext';
+import ClientContext from '../../Context/ClientContext';
+
+// styles
+import styles from './QrCode.module.css';
 
 const { Content } = Layout;
 
@@ -21,7 +24,7 @@ export default function QRCode({ qrCodes, loading }) {
         setSending(true);
         const zip = new JSZip();
         const codeFolder = zip.folder('QR-Codes');
-        const canvas = Array.from(document.querySelector('.qr-code-container').children);
+        const canvas = Array.from(document.querySelector('#qr-code-container').children);
 
         const fileGeneration = () => new Promise((resolve) => {
             qrCodes.forEach((code, idx) => {
@@ -68,10 +71,10 @@ export default function QRCode({ qrCodes, loading }) {
     };
 
     return (
-        <div style={loading ? { visibility: 'hidden' } : { marginTop: '3rem' }}>
+        <div className={loading ? styles.hideContainer : styles.showContainer}>
             {qrCodes.length > 0
                 ? (
-                    <div style={{ textAlign: 'center' }}>
+                    <div className={styles.codeContainer}>
                         <Modal title="QR Code Confirmation" open={showModal} onOk={handleOk} onCancel={handleCancel}>
                             {sendingComplete ? <p>Sent Successfully</p> : ''}
                             {sending ? <p>Sending...</p>
@@ -86,24 +89,14 @@ export default function QRCode({ qrCodes, loading }) {
                                 ) }
                         </Modal>
 
-                        <Content style={{
-                            marginTop: '-6rem', display: 'flex', flexFlow: 'column', alignItems: 'center', minWidth: '18rem',
-                        }}
-                        >
-                            <Space style={{ justifyContent: 'space-between', marginBottom: '1rem' }} size="large">
+                        <Content className={styles.codesGenerated}>
+                            <Space className={styles.codeSpacer} size="large">
                                 <div
-                                    className="qr-code-container"
-                                    style={{
-                                        display: 'flex', overflowY: 'scroll', height: '40rem', flexFlow: 'column', gap: '3rem', width: '100%', margin: 'auto', scale: '0.6',
-                                    }}
-                                >
-                                    {/* {codeInfo.name} */}
-                                    {/* <a href={codeInfo.src} target="_blank" download={`${codeInfo.name}.jpg`} rel="noreferrer">
-                                                <Image layout="intrinsic" width={150} height={150} src={codeInfo.src} alt={codeInfo.name} />
-                                            </a> */}
-                                </div>
+                                    id="qr-code-container"
+                                    className={styles.qrContainer}
+                                />
                             </Space>
-                            <Button onClick={sendEmail} type="primary" style={{ marginTop: '-6rem', maxWidth: '16rem' }}>
+                            <Button onClick={sendEmail} type="primary" className={styles.sendForPrintingButton}>
                             Confirm and Send For Printing
                             </Button>
                         </Content>

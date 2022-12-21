@@ -1,8 +1,8 @@
 import { Layout } from 'antd';
-import { Home, Products, SettingsPanel } from '.';
+import { Home, Products, SettingsPanel } from '..';
 
 // Styles
-import styles from '../styles/Home.module.css';
+import styles from '../../styles/Home.module.css';
 
 const { Content } = Layout;
 

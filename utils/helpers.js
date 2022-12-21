@@ -20,7 +20,7 @@ const handleTextChange = (e, cb) => {
 
 const generateCanvasImg = (imgSrc, productText, customerName) => {
     setTimeout(() => {
-        document.querySelector('.qr-code-container').innerHTML = '';
+        document.querySelector('#qr-code-container').innerHTML = '';
 
         const canvas = document.createElement('canvas');
         const image = new Image();
@@ -68,7 +68,7 @@ const generateCanvasImg = (imgSrc, productText, customerName) => {
             ctx.canvas.style.imageRendering = 'high';
             ctx.imageSmoothingEnabled = 'true';
             ctx.scale(1, 1);
-            document.querySelector('.qr-code-container').appendChild(canvas);
+            document.querySelector('#qr-code-container').appendChild(canvas);
         };
     }, 1000);
 };

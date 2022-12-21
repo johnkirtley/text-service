@@ -119,6 +119,41 @@
   margin-left: 0.5rem;
 }
 
+.loginContainer, .registerContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+    gap: 2rem;
+    width: 100%;
+    margin-top: 8rem;
+}
+
+.loginForm, .registerForm {
+    text-align: center;
+    width: 40%;
+}
+
+.loginDivider, .registerDivider {
+    margin: 0;
+}
+
+.signInWithGoogle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 23%;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    background: none;
+}
+
+.googleSignInText {
+    margin: 0;
+    font-weight: 600;
+
+}
+
 @media (max-width: 600px) {
   .grid {
     width: 100%;
@@ -137,4 +172,23 @@
   .logo img {
     filter: invert(1);
   }
+}
+
+@media (max-width: 500px) {
+    .title {
+        font-size: 1rem;
+        padding: 1rem;
+    }
+
+    .loginContainer, .registerContainer {
+        margin-top: 4rem;
+    }
+
+    .loginForm, .registerForm {
+        width: 75%;
+    }
+
+    .signInWithGoogle {
+        width: 80%;
+    }
 }

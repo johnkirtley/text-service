@@ -13,6 +13,9 @@ import Image from 'next/image';
 import { v4 as uuidv4 } from 'uuid';
 import { firebaseAuth, firestore } from '../firebase/clientApp';
 
+// styles
+import styles from '../styles/Home.module.css';
+
 const defaultCredentials = {
     username: '',
     password: '',
@@ -108,15 +111,12 @@ export default function SignIn() {
 
     return (
 
-        <div style={{
-            display: 'flex', justifyContent: 'center', alignItems: 'center', flexFlow: 'column', gap: '2rem', width: '100%', marginTop: '8rem',
-        }}
-        >
+        <div className={styles.registerContainer}>
             {showError ? <Alert message="Error: Passwords do not match" type="error" /> : ''}
             {emailExists ? <Alert message="Error: Email already exists" type="error" /> : ''}
             {invalidEmail ? <Alert message="Error: Invalid email" type="error" /> : ''}
             <h2>Register</h2>
-            <Form name="Register" onFinish={signUp} style={{ textAlign: 'center', width: '40%' }}>
+            <Form name="Register" onFinish={signUp} className={styles.registerForm}>
                 <Form.Item label="Username" name="username" rules={[{ required: true, message: 'Please input username' }]}>
                     <Input name="username" value={credentials.username} onChange={handleChange} />
                 </Form.Item>
@@ -132,16 +132,14 @@ export default function SignIn() {
                     </Button>
                 </Form.Item>
             </Form>
-            <Divider style={{ margin: '0' }} />
+            <Divider className={styles.registerDivider} />
             <button
                 type="button"
                 onClick={() => signInWithGoogle()}
-                style={{
-                    display: 'flex', justifyContent: 'center', alignItems: 'center', width: '23%', gap: '1rem', padding: '0.5rem 0', background: 'none',
-                }}
+                className={styles.signInWithGoogle}
             >
-                <Image src="/google.png" width={30} height={30} />
-                <p className="google-sign-in" style={{ margin: '0', fontWeight: '600' }}>Sign In With Google</p>
+                <Image src="/google.png" width={30} height={30} alt="Google Login Image" />
+                <p className={styles.googleSignInText}>Sign In With Google</p>
             </button>
             <div>
                 <Link href="/login">Have an account?</Link>

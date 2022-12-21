@@ -1,0 +1,63 @@
+.successAlert {
+    text-align: center;
+    border-radius: 10px;
+    top: -10%
+}
+
+.settingsContainer {
+    display: flex;
+    flex-flow: column;
+}
+
+.businessInput {
+    flex-flow: column;
+}
+
+.businessLabel {
+    font-weight: 600;
+    margin: 0;
+}
+
+.repListContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+    text-align: center;
+}
+
+.repInputBox {
+    border: 1px solid grey;
+    margin: 1rem auto;
+    padding: 2rem;
+}
+
+.addRepLabel {
+    font-weight: 600;
+}
+
+.repContainer {
+    display: flex;
+    gap: 2rem;
+    border: 1px solid grey;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    margin: 1rem auto;
+}
+
+.repInfo {
+    margin: 0;
+}
+
+.repBold {
+    font-weight: bold;
+}
+
+@media (max-width: 500px) {
+    .repContainer {
+        display: block;
+        width: 100%;
+        margin: 1rem 0;
+    }
+}

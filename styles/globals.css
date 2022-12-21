@@ -47,23 +47,14 @@ canvas {
   }
 }
 
-.qr-code-container {
-  margin-top: -3rem !important;
-}
-
 @media (max-width: 600px) {
 
   aside {
-    flex: 0 0 105px !important;
-    min-width: 150px !important
+    flex: 0 0 85px !important;
+    min-width: 85px !important
   }
 
   .ant-layout-sider-trigger {
-    width: 150px !important;
-  }
-
-  .qr-code-container {
-    margin-top: -13rem !important;
-    height: 90rem !important;
+    max-width: 80px !important;
   }
 }

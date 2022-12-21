@@ -4,7 +4,7 @@ import { Layout, Menu } from 'antd';
 import { getDocs, collection, query, where } from 'firebase/firestore';
 import { AuthContext, BusinessNameContext, CustomerContext, RepContext } from '../Context/Context';
 import { MetaHead, MainHeader, MainFooter } from '../components';
-import MainView from '../components/MainView';
+import MainView from '../components/Main/MainView';
 import { firestore } from '../firebase/clientApp';
 
 // Helper Functions
@@ -61,8 +61,6 @@ export default function MainComponent() {
                             collapsed={collapsed}
                             onCollapse={(value) => setCollapsed(value)}
                         >
-                            <div className="logo" />
-
                             <Menu
                                 theme="dark"
                                 defaultSelectedKeys={['1']}
