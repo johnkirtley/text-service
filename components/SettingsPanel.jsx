@@ -18,11 +18,38 @@ export default function SettingsPanel() {
     const { businessName, setBusinessName } = useContext(BusinessNameContext);
     const { authContext } = useContext(AuthContext);
     const [newRep, setNewRep] = useState(defaultRep);
+    const [loadings, setLoadings] = useState([]);
+    const [specLoadings, setSpecLoadings] = useState([]);
+
+    const enterLoading = (index) => {
+        setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            loadings[index] = true;
+            return newLoadings;
+        });
+    };
+
+    const enterSpecLoading = (id) => {
+        setSpecLoadings((prevLoadings) => {
+            const newSpecLoadings = [...prevLoadings];
+            specLoadings[id] = true;
+            return newSpecLoadings;
+        });
+    };
 
     const saveBusinessName = async (val) => {
+        enterSpecLoading(0);
         const nameUpdateRef = doc(firestore, 'users', authContext.email);
 
         await updateDoc(nameUpdateRef, { businessName: val });
+
+        setTimeout(() => {
+            setSpecLoadings((prevLoadings) => {
+                const newSpecLoadings = [...prevLoadings];
+                newSpecLoadings[0] = false;
+                return newSpecLoadings;
+            });
+        }, 1500);
     };
 
     const handleRepChange = (e) => {
@@ -55,7 +82,9 @@ export default function SettingsPanel() {
         }
     };
 
-    const removeRep = async (name, num) => {
+    const removeRep = async (name, num, id) => {
+        enterLoading(id);
+
         const repAddRef = doc(firestore, 'users', authContext.email);
         const dataToRemove = {
             name: `${name}`,
@@ -66,36 +95,59 @@ export default function SettingsPanel() {
 
         setNewRep(defaultRep);
 
-        const filtered = repInfo.filter((rep) => rep.number !== num);
+        setTimeout(() => {
+            setLoadings((prevLoadings) => {
+                const newLoadings = [...prevLoadings];
+                newLoadings[id] = false;
+                const filtered = repInfo.filter((rep) => rep.name !== name);
 
-        setRepInfo(filtered);
+                setTimeout(() => {
+                    setRepInfo(filtered);
+                }, 0);
+                return newLoadings;
+            });
+        }, 1500);
     };
 
     return (
         <div>
             <Layout>
                 <Space style={{ display: 'flex', flexFlow: 'column' }}>
-                    <Space>
+                    <Space style={{ flexFlow: 'column' }}>
+                        <p style={{ margin: '0' }} className="input-label">Business Name</p>
                         <Input placeholder="Company Name" value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
-                        <Button onClick={() => saveBusinessName(businessName)}>Save</Button>
+                        <Button type="primary" loading={specLoadings[0]} onClick={() => saveBusinessName(businessName)}>{specLoadings[0] ? 'Saving' : 'Save'}</Button>
                     </Space>
                     <Space style={{
                         display: 'flex', justifyContent: 'center', alignItems: 'center', flexFlow: 'column', textAlign: 'center',
                     }}
                     >
-                        <Input placeholder="Enter Rep Name" value={newRep.name} name="name" onChange={handleRepChange} />
-                        <Input placeholder="Enter Rep Number" value={newRep.number} name="number" onChange={handleRepChange} />
-                        <Button onClick={() => saveContact(newRep)}>Add</Button>
+                        <div style={{ border: '1px solid grey', margin: '1rem auto', padding: '2rem' }}>
+                            <p className="input-label">Add A New Rep</p>
+                            <p>Rep Name</p>
+                            <Input placeholder="Enter Rep Name" value={newRep.name} name="name" onChange={handleRepChange} />
+                            <p>Rep Number</p>
+                            <Input placeholder="Enter Rep Number" value={newRep.number} name="number" onChange={handleRepChange} />
+                            <Button onClick={() => saveContact(newRep)}>Add</Button>
+                        </div>
                         {/* input to add additional reps to contact list
                         iterate and show all added reps + numbers */}
-                        {repInfo && repInfo.length > 0
-                            ? repInfo.map((num, idx) => (
-                                <div key={idx}>
-                                    <p>{num?.name}</p>
-                                    <p>{num?.number}</p>
-                                    <Button type="primary" danger onClick={() => removeRep(num?.name, num?.number)}>Remove</Button>
-                                </div>
-                            )) : <div><p>No Reps Found. Please Add One.</p></div>}
+                        <div>
+                            <p className="input-label" style={{ margin: '0' }}>List of Current Reps</p>
+                            {repInfo && repInfo.length > 0
+                                ? repInfo.map((num, idx) => (
+                                    <div
+                                        key={idx}
+                                        style={{
+                                            display: 'flex', gap: '2rem', border: '1px solid grey', justifyContent: 'center', alignItems: 'center', padding: '1rem', margin: '1rem 0',
+                                        }}
+                                    >
+                                        <p style={{ margin: '0' }}><span style={{ fontWeight: 'bold' }}>Name:</span> {num?.name}</p>
+                                        <p style={{ margin: '0' }}><span style={{ fontWeight: 'bold' }}>Phone:</span> {num?.number}</p>
+                                        <Button loading={loadings[idx]} type="primary" danger onClick={() => removeRep(num?.name, num?.number, idx)}>Remove</Button>
+                                    </div>
+                                )) : <div><p>No Reps Found. Please Add One.</p></div>}
+                        </div>
                     </Space>
                 </Space>
             </Layout>

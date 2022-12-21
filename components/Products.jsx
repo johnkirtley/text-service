@@ -31,6 +31,7 @@ export default function Products() {
     const { clientInfo, setClientInfo } = useContext(ClientContext);
     const { customerInfo } = useContext(CustomerContext);
     const [curProducts, setCurProducts] = useState([]);
+    const [loadings, setLoadings] = useState([]);
 
     useEffect(() => {
         setCurProducts(customerInfo.products);
@@ -63,15 +64,33 @@ export default function Products() {
         }
     };
 
-    const removeProduct = async (val) => {
+    const enterLoading = (index) => {
+        setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            loadings[index] = true;
+            return newLoadings;
+        });
+    };
+
+    const removeProduct = async (val, id) => {
+        enterLoading(id);
         const prodRemoveRef = doc(firestore, 'users', authContext.email);
         const dataToRemove = val;
 
         await updateDoc(prodRemoveRef, { products: arrayRemove(dataToRemove) });
 
-        const filtered = curProducts.filter((prod) => prod !== val);
+        setTimeout(() => {
+            setLoadings((prevLoadings) => {
+                const newLoadings = [...prevLoadings];
+                newLoadings[id] = false;
+                const filtered = curProducts.filter((prod) => prod !== val);
 
-        setCurProducts(filtered);
+                setTimeout(() => {
+                    setCurProducts(filtered);
+                }, 0);
+                return newLoadings;
+            });
+        }, 1500);
     };
 
     const onCheckChange = (e) => {
@@ -182,9 +201,9 @@ export default function Products() {
 
     return (
         <>
-            <PageHeader title="Product and QR Code Page" />
+            <PageHeader title="" />
             <Content style={{ width: '100%', display: 'flex', justifyContent: 'space-evenly' }}>
-                <Space direction="horizontal" size="large" style={{ minWidth: '18rem', gap: '1rem' }}>
+                <Space direction="vertical" size="large" style={{ minWidth: '18rem', gap: '1rem' }}>
                     <div style={{
                         marginBottom: '1rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', width: '16rem', gap: '0.5rem',
                     }}
@@ -197,6 +216,8 @@ export default function Products() {
                             marginBottom: '1rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', width: '16rem', gap: '0.5rem',
                         }}
                         >
+                            <p className="input-label">Select a Rep</p>
+
                             <Select
                                 defaultValue="Select a Rep"
                                 style={{ width: 'inherit' }}
@@ -222,13 +243,19 @@ export default function Products() {
 
                                 <div style={{ overflowY: 'scroll', flexFlow: 'column', display: 'flex', height: '14rem' }}>
                                     {curProducts.map((product, idx) => (
-                                        <Space key={idx} style={{ justifyContent: 'space-between', marginBottom: '1rem' }} size="large">
+                                        <Space key={idx} style={{ justifyContent: 'space-between', marginBottom: '1rem', width: '100%', display: 'flex' }} size="large">
                                             <Checkbox
                                                 value={product}
                                                 onChange={onCheckChange}
+                                                style={{ width: '100%' }}
                                             >
-                                                {product}
-                                                <Button type="primary" danger onClick={() => removeProduct(product)}>Remove</Button>
+                                                <span style={{
+                                                    width: '100%', display: 'flex', justifyContent: 'flex-start', gap: '2rem', alignItems: 'center',
+                                                }}
+                                                >
+                                                    {product}
+                                                    <Button type="primary" loading={loadings[idx]} danger onClick={() => removeProduct(product, idx)}>Remove</Button>
+                                                </span>
                                             </Checkbox>
                                         </Space>
                                     ))}
@@ -247,13 +274,14 @@ export default function Products() {
                             </div>
                         )}
                     <div style={{
-                        marginBottom: '4rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', width: '16rem', gap: '0.5rem',
+                        marginBottom: '4rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', gap: '0.5rem',
                     }}
                     >
-                        <p className="input-label">Missing a Product?</p>
+                        <p className="input-label">Add a Product</p>
                         <Input placeholder="Enter Product Name" name="newProduct" onChange={(e) => handleTextChange(e, setNewProduct)} type="text" value={newProduct} />
                         <Button type="primary" onClick={() => addProduct(newProduct)}>Add</Button>
                     </div>
+
                 </div>
                 <div style={{ minWidth: '18rem' }}>
                     <p className="input-label">
