@@ -13,6 +13,9 @@ import Link from 'next/link';
 import { v4 as uuidv4 } from 'uuid';
 import { firebaseAuth, firestore } from '../firebase/clientApp';
 
+// styles
+import styles from '../styles/Home.module.css';
+
 const defaultCredentials = {
     username: '',
     password: '',
@@ -81,14 +84,11 @@ export default function Login() {
 
     return (
 
-        <div style={{
-            display: 'flex', justifyContent: 'center', alignItems: 'center', flexFlow: 'column', gap: '2rem', width: '100%', marginTop: '8rem',
-        }}
-        >
+        <div className={styles.loginContainer}>
             {showError ? <Alert message="Error: Please Check Email and Password" type="error" /> : ''}
             <h2>Login</h2>
 
-            <Form name="Login" onFinish={signIn} style={{ textAlign: 'center', width: '40%' }}>
+            <Form name="Login" onFinish={signIn} className={styles.loginForm}>
                 <Form.Item label="username" name="username" rules={[{ required: true, message: 'Please input username' }]}>
                     <Input name="username" value={credentials.username} onChange={handleChange} />
                 </Form.Item>
@@ -101,16 +101,14 @@ export default function Login() {
                     </Button>
                 </Form.Item>
             </Form>
-            <Divider style={{ margin: '0' }} />
+            <Divider className={styles.loginDivider} />
             <button
                 type="button"
                 onClick={() => signInWithGoogle()}
-                style={{
-                    display: 'flex', justifyContent: 'center', alignItems: 'center', width: '23%', gap: '1rem', padding: '0.5rem 0', background: 'none',
-                }}
+                className={styles.signInWithGoogle}
             >
                 <Image src="/google.png" width={30} height={30} />
-                <p className="google-sign-in" style={{ margin: '0', fontWeight: '600' }}>Sign In With Google</p>
+                <p className={styles.googleSignInText}>Sign In With Google</p>
             </button>
             <div>
                 <Link href="/register">Need To Register?</Link>

@@ -2,11 +2,11 @@
 import { useContext } from 'react';
 import { signOut } from 'firebase/auth';
 import { Layout } from 'antd';
-import { firebaseAuth } from '../firebase/clientApp';
-import { CustomerContext, BusinessNameContext } from '../Context/Context';
+import { firebaseAuth } from '../../firebase/clientApp';
+import { CustomerContext, BusinessNameContext } from '../../Context/Context';
 
 // Styles
-import styles from '../styles/Home.module.css';
+import styles from '../../styles/Home.module.css';
 
 const { Header } = Layout;
 

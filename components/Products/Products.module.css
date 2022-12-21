@@ -1,0 +1,121 @@
+.contentContainer {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.productInfoInputs {
+    min-width: 18rem;
+}
+
+.infoInput {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    width: 16rem;
+    margin-bottom: 1rem;
+}
+
+.inputLabel {
+    font-weight: 600;
+}
+
+.selectRep {
+    width: inherit;
+}
+
+.productContainer {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    text-align: center;
+    margin-bottom: 6rem;
+    width: 100%;
+    padding: 0 2rem;
+    margin-top: 5rem;
+}
+
+.productContainerDiv {
+    flex-flow: column;
+    min-width: 18rem;
+}
+
+.selectProductsLabel {
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+.productScroll {
+    overflow-y: scroll;
+    flex-flow: column;
+    display: flex;
+    height: 14rem;
+}
+
+.product {
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    width: 100%;
+    display: flex;
+    padding: 1rem;
+}
+
+.productRemove {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+}
+
+.generateCodesButton {
+    margin: 2rem 0;
+    max-width: 13rem;
+}
+
+.noProducts {
+    margin-bottom: 4rem;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    width: 16rem;
+}
+
+.addProductContainer {
+    margin-bottom: 4rem;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.codesLoading {
+    margin-top: 4rem;
+}
+
+@media (max-width: 500px) {
+    .productContainer {
+        display: block;
+        margin: auto;
+        padding: 0;
+    }
+
+    .productContainerDiv {
+        min-width: 0rem;
+        width: max-content;
+    }
+
+    .productInfoInputs {
+        min-width: 0rem;
+    }
+
+    .product {
+        padding: 1rem 0;
+    }
+
+    .infoInput {
+
+    }
+
+}

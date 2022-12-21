@@ -3,11 +3,14 @@ import {
     Layout, Input, Button, Space, Alert,
 } from 'antd';
 import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
-import { RepContext, BusinessNameContext, AuthContext } from '../Context/Context';
-import { firestore } from '../firebase/clientApp';
+import { RepContext, BusinessNameContext, AuthContext } from '../../Context/Context';
+import { firestore } from '../../firebase/clientApp';
 
 // Helper Functions
-import { handleTextChange } from '../utils/helpers';
+import { handleTextChange } from '../../utils/helpers';
+
+// styles
+import styles from './Settings.module.css';
 
 const defaultRep = {
     name: '',
@@ -81,21 +84,18 @@ export default function SettingsPanel() {
 
     return (
         <div>
-            {displayAlert ? <Alert message="Business name updated" type="success" style={{ textAlign: 'center', borderRadius: '10px', top: '-100px' }} /> : ''}
+            {displayAlert ? <Alert message="Business name updated" type="success" className={styles.successAlert} /> : ''}
 
             <Layout>
-                <Space style={{ display: 'flex', flexFlow: 'column' }}>
-                    <Space style={{ flexFlow: 'column' }}>
-                        <p style={{ margin: '0' }} className="input-label">Business Name</p>
+                <Space className={styles.settingsContainer}>
+                    <Space className={styles.businessInput}>
+                        <p className={styles.businessLabel}>Business Name</p>
                         <Input placeholder="Company Name" value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
                         <Button type="primary" onClick={() => saveBusinessName(businessName)}>Save</Button>
                     </Space>
-                    <Space style={{
-                        display: 'flex', justifyContent: 'center', alignItems: 'center', flexFlow: 'column', textAlign: 'center',
-                    }}
-                    >
-                        <div style={{ border: '1px solid grey', margin: '1rem auto', padding: '2rem' }}>
-                            <p className="input-label">Add A New Rep</p>
+                    <Space className={styles.repListContainer}>
+                        <div className={styles.repInputBox}>
+                            <p className={styles.addRepLabel}>Add A New Rep</p>
                             <p>Rep Name</p>
                             <Input placeholder="Enter Rep Name" value={newRep.name} name="name" onChange={handleRepChange} />
                             <p>Rep Number</p>
@@ -105,17 +105,21 @@ export default function SettingsPanel() {
                         {/* input to add additional reps to contact list
                         iterate and show all added reps + numbers */}
                         <div>
-                            <p className="input-label" style={{ margin: '0' }}>List of Current Reps</p>
+                            <p className={styles.businessLabel}>List of Current Reps</p>
                             {repInfo && repInfo.length > 0
                                 ? repInfo.map((num, idx) => (
                                     <div
                                         key={idx}
-                                        style={{
-                                            display: 'flex', gap: '2rem', border: '1px solid grey', justifyContent: 'center', alignItems: 'center', padding: '1rem', margin: '1rem 0',
-                                        }}
+                                        className={styles.repContainer}
                                     >
-                                        <p style={{ margin: '0' }}><span style={{ fontWeight: 'bold' }}>Name:</span> {num?.name}</p>
-                                        <p style={{ margin: '0' }}><span style={{ fontWeight: 'bold' }}>Phone:</span> {num?.number}</p>
+                                        <p className={styles.repInfo}>
+                                            <span className={styles.repBold}>Name:</span>
+                                            {num?.name}
+                                        </p>
+                                        <p className={styles.repInfo}>
+                                            <span className={styles.repBold}>Phone:</span>
+                                            {num?.number}
+                                        </p>
                                         <Button type="primary" danger onClick={() => removeRep(num?.name, num?.number)}>Remove</Button>
                                     </div>
                                 )) : <div><p>No Reps Found. Please Add One.</p></div>}

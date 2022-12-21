@@ -5,14 +5,17 @@ import {
 import {
     doc, updateDoc, arrayUnion, query, where, getDocs, collection, arrayRemove,
 } from 'firebase/firestore';
-import { firestore } from '../firebase/clientApp';
+import styles from './Products.module.css';
+import { firestore } from '../../firebase/clientApp';
 import {
     RepContext, ClientContext, CustomerContext, BusinessNameContext, AuthContext,
-} from '../Context/Context';
+} from '../../Context/Context';
 
 // Helper Functions
-import { handleTextChange, generateCanvasImg } from '../utils/helpers';
-import QRCode from './QRCode';
+import { handleTextChange, generateCanvasImg } from '../../utils/helpers';
+import QRCode from '../QrCodes/QRCode';
+
+// styles
 
 const { Content } = Layout;
 
@@ -182,25 +185,19 @@ export default function Products() {
     return (
         <>
             <PageHeader title="" />
-            <Content style={{ width: '100%', display: 'flex', justifyContent: 'space-evenly' }}>
-                <Space direction="vertical" size="large" style={{ minWidth: '18rem' }}>
-                    <div style={{
-                        marginBottom: '1rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', width: '16rem',
-                    }}
-                    >
-                        <p className="input-label">Who Are These For?</p>
+            <Content className={styles.contentContainer}>
+                <Space direction="vertical" size="large" className={styles.productInfoInputs}>
+                    <div className={styles.infoInput}>
+                        <p className={styles.inputLabel}>Who Are These For?</p>
                         <Input placeholder="Enter Customer Name" name="customerName" onChange={(e) => handleTextChange(e, setClientInfo)} type="text" value={clientInfo} />
                     </div>
-                    <Space style={{ minWidth: '18rem' }}>
-                        <div style={{
-                            marginBottom: '1rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', width: '16rem',
-                        }}
-                        >
+                    <Space className={styles.productInfoInputs}>
+                        <div className={styles.infoInput}>
                             <p className="input-label">Select a Rep</p>
 
                             <Select
                                 defaultValue="Select a Rep"
-                                style={{ width: 'inherit' }}
+                                className={styles.selectRep}
                                 onChange={handleRepChange}
                                 options={repOptions}
                             />
@@ -209,67 +206,55 @@ export default function Products() {
                 </Space>
 
             </Content>
-            <Content style={{
-                display: 'flex', justifyContent: 'space-evenly', alignItems: 'flex-start', textAlign: 'center', marginBottom: '6rem', width: '100%', padding: '0 2rem', marginTop: '5rem',
-            }}
-            >
-                <div style={{ flexFlow: 'column', minWidth: '18rem' }}>
+            <Content className={styles.productContainer}>
+                <div className={styles.productContainerDiv}>
                     {curProducts && curProducts.length > 0
                         ? (
                             <div>
-                                <div className="input-label" style={{ marginBottom: '2rem' }}>
+                                <div className={styles.selectProductsLabel}>
                 Select Products Below:
                                 </div>
 
-                                <div style={{ overflowY: 'scroll', flexFlow: 'column', display: 'flex', height: '14rem' }}>
+                                <div className={styles.productScroll}>
                                     {curProducts.map((product, idx) => (
                                         <Space
                                             key={idx}
-                                            style={{
-                                                justifyContent: 'space-between', marginBottom: '1rem', width: '100%', display: 'flex', padding: '1rem',
-                                            }}
+                                            className={styles.product}
                                             size="large"
                                         >
                                             <Checkbox
                                                 onChange={(e) => onCheckChange(e, product)}
-                                                style={{ width: '100%' }}
                                             >
                                                 {product}
                                             </Checkbox>
-                                            <span style={{ width: '100%', display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+                                            <span className={styles.productRemove}>
                                                 <Button type="primary" danger onClick={() => removeProduct(product)}>Remove</Button>
                                             </span>
                                         </Space>
                                     ))}
                                 </div>
                                 <Space />
-                                <Button type="primary" onClick={generateCodes} style={{ margin: '2rem 0', maxWidth: '13rem' }}>Generate QR Codes</Button>
+                                <Button type="primary" onClick={generateCodes} className={styles.generateCodesButton}>Generate QR Codes</Button>
 
                             </div>
                         )
                         : (
-                            <div style={{
-                                marginBottom: '4rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', width: '16rem',
-                            }}
-                            >
+                            <div className={styles.noProducts}>
                                 <p>No products found. Please Add Some below.</p>
                             </div>
                         )}
-                    <div style={{
-                        marginBottom: '4rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center',
-                    }}
-                    >
+                    <div className={styles.addProductContainer}>
                         <p className="input-label">Add a Product</p>
                         <Input placeholder="Enter Product Name" name="newProduct" onChange={(e) => handleTextChange(e, setNewProduct)} type="text" value={newProduct} />
                         <Button type="primary" onClick={() => addProduct(newProduct)}>Add</Button>
                     </div>
 
                 </div>
-                <div style={{ minWidth: '18rem' }}>
+                <div className={styles.productInfoInputs}>
                     <p className="input-label">
                             Generated Codes
                     </p>
-                    {loading ? <Spin tip="Working Our Magic" style={{ marginTop: '4rem' }} /> : ''}
+                    {loading ? <Spin tip="Working Our Magic" className={styles.codesLoading} /> : ''}
                     <QRCode qrCodes={qrCodes} loading={loading} />
                 </div>
             </Content>
