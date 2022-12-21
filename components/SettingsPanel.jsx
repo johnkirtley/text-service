@@ -1,5 +1,7 @@
 import { useContext, useState } from 'react';
-import { Layout, Input, Button, Space } from 'antd';
+import {
+    Layout, Input, Button, Space, Alert,
+} from 'antd';
 import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { RepContext, BusinessNameContext, AuthContext } from '../Context/Context';
 import { firestore } from '../firebase/clientApp';
@@ -18,11 +20,18 @@ export default function SettingsPanel() {
     const { businessName, setBusinessName } = useContext(BusinessNameContext);
     const { authContext } = useContext(AuthContext);
     const [newRep, setNewRep] = useState(defaultRep);
+    const [displayAlert, setDisplayAlert] = useState(false);
 
     const saveBusinessName = async (val) => {
         const nameUpdateRef = doc(firestore, 'users', authContext.email);
 
         await updateDoc(nameUpdateRef, { businessName: val });
+
+        setDisplayAlert(true);
+
+        setTimeout(() => {
+            setDisplayAlert(false);
+        }, 3000);
     };
 
     const handleRepChange = (e) => {
@@ -72,6 +81,8 @@ export default function SettingsPanel() {
 
     return (
         <div>
+            {displayAlert ? <Alert message="Business name updated" type="success" style={{ textAlign: 'center', borderRadius: '10px', top: '-100px' }} /> : ''}
+
             <Layout>
                 <Space style={{ display: 'flex', flexFlow: 'column' }}>
                     <Space style={{ flexFlow: 'column' }}>
