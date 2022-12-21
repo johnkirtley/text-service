@@ -18,38 +18,11 @@ export default function SettingsPanel() {
     const { businessName, setBusinessName } = useContext(BusinessNameContext);
     const { authContext } = useContext(AuthContext);
     const [newRep, setNewRep] = useState(defaultRep);
-    const [loadings, setLoadings] = useState([]);
-    const [specLoadings, setSpecLoadings] = useState([]);
-
-    const enterLoading = (index) => {
-        setLoadings((prevLoadings) => {
-            const newLoadings = [...prevLoadings];
-            loadings[index] = true;
-            return newLoadings;
-        });
-    };
-
-    const enterSpecLoading = (id) => {
-        setSpecLoadings((prevLoadings) => {
-            const newSpecLoadings = [...prevLoadings];
-            specLoadings[id] = true;
-            return newSpecLoadings;
-        });
-    };
 
     const saveBusinessName = async (val) => {
-        enterSpecLoading(0);
         const nameUpdateRef = doc(firestore, 'users', authContext.email);
 
         await updateDoc(nameUpdateRef, { businessName: val });
-
-        setTimeout(() => {
-            setSpecLoadings((prevLoadings) => {
-                const newSpecLoadings = [...prevLoadings];
-                newSpecLoadings[0] = false;
-                return newSpecLoadings;
-            });
-        }, 1500);
     };
 
     const handleRepChange = (e) => {
@@ -82,9 +55,7 @@ export default function SettingsPanel() {
         }
     };
 
-    const removeRep = async (name, num, id) => {
-        enterLoading(id);
-
+    const removeRep = async (name, num) => {
         const repAddRef = doc(firestore, 'users', authContext.email);
         const dataToRemove = {
             name: `${name}`,
@@ -93,20 +64,10 @@ export default function SettingsPanel() {
 
         await updateDoc(repAddRef, { repNumbers: arrayRemove(dataToRemove) });
 
+        const filtered = repInfo.filter((rep) => (rep.name !== name && rep.number !== num));
+
+        setRepInfo(filtered);
         setNewRep(defaultRep);
-
-        setTimeout(() => {
-            setLoadings((prevLoadings) => {
-                const newLoadings = [...prevLoadings];
-                newLoadings[id] = false;
-                const filtered = repInfo.filter((rep) => rep.name !== name);
-
-                setTimeout(() => {
-                    setRepInfo(filtered);
-                }, 0);
-                return newLoadings;
-            });
-        }, 1500);
     };
 
     return (
@@ -116,7 +77,7 @@ export default function SettingsPanel() {
                     <Space style={{ flexFlow: 'column' }}>
                         <p style={{ margin: '0' }} className="input-label">Business Name</p>
                         <Input placeholder="Company Name" value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
-                        <Button type="primary" loading={specLoadings[0]} onClick={() => saveBusinessName(businessName)}>{specLoadings[0] ? 'Saving' : 'Save'}</Button>
+                        <Button type="primary" onClick={() => saveBusinessName(businessName)}>Save</Button>
                     </Space>
                     <Space style={{
                         display: 'flex', justifyContent: 'center', alignItems: 'center', flexFlow: 'column', textAlign: 'center',
@@ -144,7 +105,7 @@ export default function SettingsPanel() {
                                     >
                                         <p style={{ margin: '0' }}><span style={{ fontWeight: 'bold' }}>Name:</span> {num?.name}</p>
                                         <p style={{ margin: '0' }}><span style={{ fontWeight: 'bold' }}>Phone:</span> {num?.number}</p>
-                                        <Button loading={loadings[idx]} type="primary" danger onClick={() => removeRep(num?.name, num?.number, idx)}>Remove</Button>
+                                        <Button type="primary" danger onClick={() => removeRep(num?.name, num?.number)}>Remove</Button>
                                     </div>
                                 )) : <div><p>No Reps Found. Please Add One.</p></div>}
                         </div>

@@ -10,7 +10,7 @@ import '../styles/globals.css';
 import 'antd/dist/antd.css';
 
 export default function MyApp({ Component, pageProps }) {
-    const [repInfo, setRepInfo] = useState('');
+    const [repInfo, setRepInfo] = useState([]);
     const [customerInfo, setCustomerInfo] = useState('');
     const [clientInfo, setClientInfo] = useState('');
     const [authContext, setAuthContext] = useState(null);
@@ -21,7 +21,6 @@ export default function MyApp({ Component, pageProps }) {
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             setAuthContext(user);
-            // console.log('app.js', user);
         });
     }, [auth]);
 

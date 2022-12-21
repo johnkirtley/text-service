@@ -31,7 +31,6 @@ export default function Products() {
     const { clientInfo, setClientInfo } = useContext(ClientContext);
     const { customerInfo } = useContext(CustomerContext);
     const [curProducts, setCurProducts] = useState([]);
-    const [loadings, setLoadings] = useState([]);
 
     useEffect(() => {
         setCurProducts(customerInfo.products);
@@ -64,42 +63,23 @@ export default function Products() {
         }
     };
 
-    const enterLoading = (index) => {
-        setLoadings((prevLoadings) => {
-            const newLoadings = [...prevLoadings];
-            loadings[index] = true;
-            return newLoadings;
-        });
-    };
-
-    const removeProduct = async (val, id) => {
-        enterLoading(id);
+    const removeProduct = async (val) => {
         const prodRemoveRef = doc(firestore, 'users', authContext.email);
         const dataToRemove = val;
 
         await updateDoc(prodRemoveRef, { products: arrayRemove(dataToRemove) });
 
-        setTimeout(() => {
-            setLoadings((prevLoadings) => {
-                const newLoadings = [...prevLoadings];
-                newLoadings[id] = false;
-                const filtered = curProducts.filter((prod) => prod !== val);
-
-                setTimeout(() => {
-                    setCurProducts(filtered);
-                }, 0);
-                return newLoadings;
-            });
-        }, 1500);
+        const filtered = curProducts.filter((prod) => prod !== val);
+        setCurProducts(filtered);
     };
 
-    const onCheckChange = (e) => {
+    const onCheckChange = (e, product) => {
         if (e.target.checked) {
-            selectedProducts.push(e.target.value);
+            selectedProducts.push(product);
         }
 
         if (!e.target.checked) {
-            setSelectedProducts(selectedProducts.filter((p) => p !== e.target.value));
+            setSelectedProducts(selectedProducts.filter((p) => p !== product));
         }
         // setCheckedList(list);
         // setIndeterminate(!!list.length && list.length < products.length);
@@ -203,9 +183,9 @@ export default function Products() {
         <>
             <PageHeader title="" />
             <Content style={{ width: '100%', display: 'flex', justifyContent: 'space-evenly' }}>
-                <Space direction="vertical" size="large" style={{ minWidth: '18rem', gap: '1rem' }}>
+                <Space direction="vertical" size="large" style={{ minWidth: '18rem' }}>
                     <div style={{
-                        marginBottom: '1rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', width: '16rem', gap: '0.5rem',
+                        marginBottom: '1rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', width: '16rem',
                     }}
                     >
                         <p className="input-label">Who Are These For?</p>
@@ -213,7 +193,7 @@ export default function Products() {
                     </div>
                     <Space style={{ minWidth: '18rem' }}>
                         <div style={{
-                            marginBottom: '1rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', width: '16rem', gap: '0.5rem',
+                            marginBottom: '1rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', width: '16rem',
                         }}
                         >
                             <p className="input-label">Select a Rep</p>
@@ -243,20 +223,22 @@ export default function Products() {
 
                                 <div style={{ overflowY: 'scroll', flexFlow: 'column', display: 'flex', height: '14rem' }}>
                                     {curProducts.map((product, idx) => (
-                                        <Space key={idx} style={{ justifyContent: 'space-between', marginBottom: '1rem', width: '100%', display: 'flex' }} size="large">
+                                        <Space
+                                            key={idx}
+                                            style={{
+                                                justifyContent: 'space-between', marginBottom: '1rem', width: '100%', display: 'flex', padding: '1rem',
+                                            }}
+                                            size="large"
+                                        >
                                             <Checkbox
-                                                value={product}
-                                                onChange={onCheckChange}
+                                                onChange={(e) => onCheckChange(e, product)}
                                                 style={{ width: '100%' }}
                                             >
-                                                <span style={{
-                                                    width: '100%', display: 'flex', justifyContent: 'flex-start', gap: '2rem', alignItems: 'center',
-                                                }}
-                                                >
-                                                    {product}
-                                                    <Button type="primary" loading={loadings[idx]} danger onClick={() => removeProduct(product, idx)}>Remove</Button>
-                                                </span>
+                                                {product}
                                             </Checkbox>
+                                            <span style={{ width: '100%', display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+                                                <Button type="primary" danger onClick={() => removeProduct(product)}>Remove</Button>
+                                            </span>
                                         </Space>
                                     ))}
                                 </div>
@@ -267,14 +249,14 @@ export default function Products() {
                         )
                         : (
                             <div style={{
-                                marginBottom: '4rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', width: '16rem', gap: '0.5rem',
+                                marginBottom: '4rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', width: '16rem',
                             }}
                             >
                                 <p>No products found. Please Add Some below.</p>
                             </div>
                         )}
                     <div style={{
-                        marginBottom: '4rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', gap: '0.5rem',
+                        marginBottom: '4rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center',
                     }}
                     >
                         <p className="input-label">Add a Product</p>
