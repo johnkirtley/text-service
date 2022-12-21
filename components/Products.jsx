@@ -87,22 +87,22 @@ export default function Products() {
         // setCheckAll(list.length === products.length);
     };
     const generateCodes = () => {
-        if (clientInfo && clientInfo.length < 1) {
+        if (clientInfo.length < 1) {
             alert('Please Add Customer Name');
             return;
         }
 
-        if (selectedProducts && selectedProducts.length < 1) {
+        if (selectedProducts.length < 1) {
             alert('Please Select Products');
             return;
         }
 
-        if (selectedRep && selectedRep.length < 1) {
+        if (selectedRep.length < 1) {
             alert('Please Select a Rep');
             return;
         }
 
-        if (businessName && businessName.length < 1) {
+        if (businessName.length < 1) {
             alert('Please Add Your Business Name Under Settings');
             return;
         }
