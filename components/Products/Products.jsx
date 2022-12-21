@@ -71,7 +71,7 @@ export default function Products() {
     const removeProduct = async (val) => {
         const prodRemoveRef = doc(firestore, 'users', authContext.email);
         const dataToRemove = val;
-
+        console.log('test');
         await updateDoc(prodRemoveRef, { products: arrayRemove(dataToRemove) });
 
         const filtered = curProducts.filter((prod) => prod !== val);
