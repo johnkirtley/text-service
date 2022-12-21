@@ -36,7 +36,9 @@ export default function Products() {
     const [curProducts, setCurProducts] = useState([]);
 
     useEffect(() => {
-        setCurProducts(customerInfo.products);
+        if (customerInfo.products) {
+            setCurProducts(customerInfo.products);
+        }
     }, [customerInfo.products]);
 
     const getQuery = useCallback(async (ref) => {
@@ -45,7 +47,11 @@ export default function Products() {
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((document) => {
             if (document.data().email === authContext.email) {
-                setCurProducts(document.data().products);
+                if (document.data().products.length < 1) {
+                    setCurProducts([]);
+                } else {
+                    setCurProducts(document.data().products);
+                }
             }
         });
     }, [authContext?.email]);
