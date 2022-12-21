@@ -77,10 +77,10 @@ export default function SignIn() {
                 setEmailExists(false);
                 setInvalidEmail(false);
 
-                const usersRef = doc(collection(firestore, 'users'), user.email);
+                const usersRef = doc(collection(firestore, 'users'), user.email.toLowerCase());
 
                 setDoc(usersRef, {
-                    email: `${username}`, repNumbers: [], products: [], businessName: '', accountCreatedTimestamp: serverTimestamp(), uid: uuidv4(),
+                    email: `${username.toLowerCase()}`, repNumbers: [], products: [], businessName: '', accountCreatedTimestamp: serverTimestamp(), uid: uuidv4(),
                 });
 
                 router.push('/');
