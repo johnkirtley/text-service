@@ -6,8 +6,12 @@ import { useRouter } from 'next/router';
 import {
     Form, Input, Button, Alert, Divider,
 } from 'antd';
+import {
+    getDocs, query, where, doc, collection, setDoc, serverTimestamp, getDoc,
+} from 'firebase/firestore';
 import Link from 'next/link';
-import { firebaseAuth } from '../firebase/clientApp';
+import { v4 as uuidv4 } from 'uuid';
+import { firebaseAuth, firestore } from '../firebase/clientApp';
 
 const defaultCredentials = {
     username: '',
@@ -22,11 +26,23 @@ export default function Login() {
 
     const auth = firebaseAuth;
 
-    const signInWithGoogle = async () => signInWithPopup(auth, provider).then((result) => {
+    const signInWithGoogle = async () => signInWithPopup(auth, provider).then(async (result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const { accessToken } = credential;
         const { user } = result;
-        router.push('/');
+
+        const usersRef = doc(firestore, 'users', user.email);
+        const userSnap = await getDoc(usersRef);
+
+        if (!userSnap.exists()) {
+            setDoc(usersRef, {
+                email: `${user.email}`, repNumbers: [], products: [], businessName: '', accountCreatedTimestamp: serverTimestamp(), uid: uuidv4(),
+            }).then(() => {
+                router.push('/');
+            });
+        } else {
+            router.push('/');
+        }
     }).catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;

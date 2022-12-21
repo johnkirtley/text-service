@@ -26,6 +26,7 @@ export default function QRCode({ qrCodes, loading }) {
         const fileGeneration = () => new Promise((resolve) => {
             qrCodes.forEach((code, idx) => {
                 canvas[idx].toBlob((data) => {
+                    console.log(data);
                     codeFolder.file(`Code-${idx}.png`, data);
                 });
             });
