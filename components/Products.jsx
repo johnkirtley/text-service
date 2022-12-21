@@ -126,7 +126,6 @@ export default function Products() {
 
         setTimeout(() => {
             setLoading(false);
-            setClientInfo('');
         }, 4000);
     };
 
