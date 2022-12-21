@@ -1,9 +1,11 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { Layout, Menu } from 'antd';
-import { AuthContext, CustomerContext } from '../Context/Context';
+import { getDocs, collection, query, where } from 'firebase/firestore';
+import { AuthContext, BusinessNameContext, CustomerContext, RepContext } from '../Context/Context';
 import { MetaHead, MainHeader, MainFooter } from '../components';
 import MainView from '../components/MainView';
+import { firestore } from '../firebase/clientApp';
 
 // Helper Functions
 import { items } from '../utils/helpers';
@@ -15,20 +17,43 @@ const { Sider } = Layout;
 export default function MainComponent() {
     const [collapsed, setCollapsed] = useState(false);
     const [view, setView] = useState('1');
-    const { customerInfo } = useContext(CustomerContext);
+    const { setCustomerInfo } = useContext(CustomerContext);
+    const { businessName, setBusinessName } = useContext(BusinessNameContext);
     const { authContext } = useContext(AuthContext);
+    const { setRepInfo } = useContext(RepContext);
     const router = useRouter();
+
+    const getQuery = useCallback(async (ref) => {
+        const q = query(ref, where('email', '==', authContext.email));
+
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((document) => {
+            if (document.data().email === authContext.email) {
+                console.log('firebase query', document.data());
+                setCustomerInfo(document.data());
+                setBusinessName(document.data().businessName);
+                setRepInfo(document.data().repNumbers);
+            }
+        });
+    }, [authContext?.email, setCustomerInfo, setBusinessName]);
 
     useEffect(() => {
         // eslint-disable-next-line no-unused-expressions
         authContext !== null ? router.push('/') : router.push('/login');
-    }, [authContext]);
+    }, [authContext, router]);
+
+    useEffect(() => {
+        if (authContext) {
+            const colRef = collection(firestore, 'users');
+            getQuery(colRef);
+        }
+    }, [authContext, getQuery]);
 
     return (
         <div>
             {authContext === null ? '' : (
                 <div>
-                    <MainHeader companyName={customerInfo} />
+                    <MainHeader companyName={businessName} />
                     <Layout>
                         <MetaHead />
                         <Sider

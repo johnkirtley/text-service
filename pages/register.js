@@ -1,13 +1,17 @@
 /* eslint-disable no-unused-vars */
 import { useCallback, useEffect, useState } from 'react';
 import { GoogleAuthProvider, createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import {
+    collection, doc, setDoc, serverTimestamp, query, where, getDoc,
+} from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import {
     Form, Input, Button, Alert, Divider,
 } from 'antd';
 import Link from 'next/link';
 import Image from 'next/image';
-import { firebaseAuth } from '../firebase/clientApp';
+import { v4 as uuidv4 } from 'uuid';
+import { firebaseAuth, firestore } from '../firebase/clientApp';
 
 const defaultCredentials = {
     username: '',
@@ -26,11 +30,23 @@ export default function SignIn() {
 
     const auth = firebaseAuth;
 
-    const signInWithGoogle = async () => signInWithPopup(auth, provider).then((result) => {
+    const signInWithGoogle = async () => signInWithPopup(auth, provider).then(async (result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const { accessToken } = credential;
         const { user } = result;
-        router.push('/');
+
+        const usersRef = doc(firestore, 'users', user.email);
+        const userSnap = await getDoc(usersRef);
+
+        if (!userSnap.exists()) {
+            setDoc(usersRef, {
+                email: `${user.email}`, repNumbers: [], products: [], businessName: '', accountCreatedTimestamp: serverTimestamp(), uid: uuidv4(),
+            }).then(() => {
+                router.push('/');
+            });
+        } else {
+            router.push('/');
+        }
     }).catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -57,6 +73,12 @@ export default function SignIn() {
                 setShowError(false);
                 setEmailExists(false);
                 setInvalidEmail(false);
+
+                const usersRef = doc(collection(firestore, 'users'), user.email);
+
+                setDoc(usersRef, {
+                    email: `${username}`, repNumbers: [], products: [], businessName: '', accountCreatedTimestamp: serverTimestamp(), uid: uuidv4(),
+                });
 
                 router.push('/');
             }).catch((error) => {

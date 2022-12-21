@@ -1,8 +1,14 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect, useCallback } from 'react';
 import {
-    Layout, Input, PageHeader, Space, Button, Checkbox, Spin,
+    Layout, Input, PageHeader, Space, Button, Checkbox, Spin, Select,
 } from 'antd';
-import { RepContext, ClientContext, CustomerContext } from '../Context/Context';
+import {
+    doc, updateDoc, arrayUnion, query, where, getDocs, collection, arrayRemove,
+} from 'firebase/firestore';
+import { firestore } from '../firebase/clientApp';
+import {
+    RepContext, ClientContext, CustomerContext, BusinessNameContext, AuthContext,
+} from '../Context/Context';
 
 // Helper Functions
 import { handleTextChange, generateCanvasImg } from '../utils/helpers';
@@ -10,34 +16,62 @@ import QRCode from './QRCode';
 
 const { Content } = Layout;
 
-const sampleProducts = [];
-
-for (let i = 0; i < 50; i += 1) {
-    sampleProducts.push(`Product ${i + 1}`);
-}
-
 export default function Products() {
-    const [products] = useState(sampleProducts);
     const [newProduct, setNewProduct] = useState('');
     const [selectedProducts, setSelectedProducts] = useState([]);
+    const [selectedRep, setSelectedRep] = useState('');
+    const [repOptions, setRepOptions] = useState([]);
     // const [customerName, setCustomerName] = useState('');
     const [qrCodes, setQRCodes] = useState([]);
     const [loading, setLoading] = useState(false);
+    const { businessName } = useContext(BusinessNameContext);
+    const { authContext } = useContext(AuthContext);
 
-    const { repInfo, setRepInfo } = useContext(RepContext);
+    const { repInfo } = useContext(RepContext);
     const { clientInfo, setClientInfo } = useContext(ClientContext);
     const { customerInfo } = useContext(CustomerContext);
+    const [curProducts, setCurProducts] = useState([]);
 
-    const addProduct = () => {
-        if (newProduct.length > 0) {
-            if (!products.includes(newProduct)) {
-                products.push(newProduct);
+    useEffect(() => {
+        setCurProducts(customerInfo.products);
+    }, [customerInfo.products]);
+
+    const getQuery = useCallback(async (ref) => {
+        const q = query(ref, where('email', '==', authContext.email));
+
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((document) => {
+            if (document.data().email === authContext.email) {
+                setCurProducts(document.data().products);
+            }
+        });
+    }, [authContext?.email]);
+
+    const addProduct = async (val) => {
+        if (val && val.length > 0) {
+            if (curProducts && !curProducts.includes(val)) {
+                const productRef = doc(firestore, 'users', authContext.email);
+
+                await updateDoc(productRef, { products: arrayUnion(val) });
+
+                setCurProducts((oldProducts) => [...oldProducts, val]);
                 setNewProduct('');
             } else {
                 setNewProduct('');
                 alert('Product Already Added');
             }
         }
+    };
+
+    const removeProduct = async (val) => {
+        const prodRemoveRef = doc(firestore, 'users', authContext.email);
+        const dataToRemove = val;
+
+        await updateDoc(prodRemoveRef, { products: arrayRemove(dataToRemove) });
+
+        const filtered = curProducts.filter((prod) => prod !== val);
+
+        setCurProducts(filtered);
     };
 
     const onCheckChange = (e) => {
@@ -53,22 +87,22 @@ export default function Products() {
         // setCheckAll(list.length === products.length);
     };
     const generateCodes = () => {
-        if (clientInfo.length < 1) {
+        if (clientInfo && clientInfo.length < 1) {
             alert('Please Add Customer Name');
             return;
         }
 
-        if (selectedProducts.length < 1) {
+        if (selectedProducts && selectedProducts.length < 1) {
             alert('Please Select Products');
             return;
         }
 
-        if (repInfo.length < 1) {
-            alert('Please Add Rep Contact Number');
+        if (selectedRep && selectedRep.length < 1) {
+            alert('Please Select a Rep');
             return;
         }
 
-        if (customerInfo.length < 1) {
+        if (businessName && businessName.length < 1) {
             alert('Please Add Your Business Name Under Settings');
             return;
         }
@@ -79,14 +113,14 @@ export default function Products() {
             const trimmedCustomerName = clientInfo.replace(' ', '%20');
             const message = `${product}%20to%20${trimmedCustomerName}`;
             const trimmed = message.replace(' ', '%20');
-            const codeString = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=SMSTO:${repInfo}:${trimmed}`;
+            const codeString = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=SMSTO:${selectedRep}:${trimmed}`;
             return { name: product, src: codeString };
         });
 
         setQRCodes(links);
 
         links.forEach((link) => {
-            generateCanvasImg(link.src, link.name, customerInfo);
+            generateCanvasImg(link.src, link.name, businessName);
             // add company name above QR code
         });
 
@@ -95,12 +129,12 @@ export default function Products() {
         }, 4000);
     };
 
-    const saveContact = (num) => {
-        // backend api call to store phone number in DB
-        const sanitizedNum = num.replace(/^(\+)|\D/g, '$1');
+    // const saveContact = (num) => {
+    //     // backend api call to store phone number in DB
+    //     const sanitizedNum = num.replace(/^(\+)|\D/g, '$1');
 
-        setRepInfo(sanitizedNum);
-    };
+    //     setRepInfo(sanitizedNum);
+    // };
 
     // const onChange = (value) => {
     //     console.log(`selected ${value}`);
@@ -129,6 +163,23 @@ export default function Products() {
     // api call for QR Code
     // https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=SMSTO:7024437014:${message}
 
+    const handleRepChange = (val) => {
+        setSelectedRep(val);
+    };
+
+    useEffect(() => {
+        const newArr = repInfo.map((rep) => ({ value: rep.number, label: `${rep.name} - ${rep.number}` }));
+
+        setRepOptions(newArr);
+    }, [repInfo]);
+
+    useEffect(() => {
+        if (authContext) {
+            const colRef = collection(firestore, 'users');
+            getQuery(colRef);
+        }
+    }, [authContext, getQuery]);
+
     return (
         <>
             <PageHeader title="Product and QR Code Page" />
@@ -146,10 +197,12 @@ export default function Products() {
                             marginBottom: '1rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', width: '16rem', gap: '0.5rem',
                         }}
                         >
-                            <p className="input-label">Who Should Receive Orders?</p>
-                            <Input placeholder="Enter Rep Number" value={repInfo} name="repContact" onChange={(e) => handleTextChange(e, setRepInfo)} />
-                            <Button onClick={() => saveContact(repInfo)}>Save</Button>
-                            {/* This will be replaced with dropdown of available rep numbers */}
+                            <Select
+                                defaultValue="Select a Rep"
+                                style={{ width: 'inherit' }}
+                                onChange={handleRepChange}
+                                options={repOptions}
+                            />
                         </div>
                     </Space>
                 </Space>
@@ -160,35 +213,47 @@ export default function Products() {
             }}
             >
                 <div style={{ flexFlow: 'column', minWidth: '18rem' }}>
-
-                    <div className="input-label" style={{ marginBottom: '2rem' }}>
+                    {curProducts && curProducts.length > 0
+                        ? (
+                            <div>
+                                <div className="input-label" style={{ marginBottom: '2rem' }}>
                 Select Products Below:
-                    </div>
+                                </div>
 
-                    <div style={{ overflowY: 'scroll', flexFlow: 'column', display: 'flex', height: '14rem' }}>
-                        {products.map((product, idx) => (
-                            <Space key={idx} style={{ justifyContent: 'space-between', marginBottom: '1rem' }} size="large">
-                                <Checkbox
-                                    value={product}
-                                    onChange={onCheckChange}
-                                >
-                                    {product}
-                                </Checkbox>
-                            </Space>
-                        ))}
-                    </div>
-                    <Space>
+                                <div style={{ overflowY: 'scroll', flexFlow: 'column', display: 'flex', height: '14rem' }}>
+                                    {curProducts.map((product, idx) => (
+                                        <Space key={idx} style={{ justifyContent: 'space-between', marginBottom: '1rem' }} size="large">
+                                            <Checkbox
+                                                value={product}
+                                                onChange={onCheckChange}
+                                            >
+                                                {product}
+                                                <Button type="primary" danger onClick={() => removeProduct(product)}>Remove</Button>
+                                            </Checkbox>
+                                        </Space>
+                                    ))}
+                                </div>
+                                <Space />
+                                <Button type="primary" onClick={generateCodes} style={{ margin: '2rem 0', maxWidth: '13rem' }}>Generate QR Codes</Button>
 
-                        <div style={{
-                            marginBottom: '4rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', width: '16rem', gap: '0.5rem',
-                        }}
-                        >
-                            <Button type="primary" onClick={generateCodes} style={{ margin: '2rem 0', maxWidth: '13rem' }}>Generate QR Codes</Button>
-                            <p className="input-label">Missing a Product?</p>
-                            <Input placeholder="Enter Product Name" name="newProduct" onChange={(e) => handleTextChange(e, setNewProduct)} type="text" value={newProduct} />
-                            <Button type="primary" onClick={addProduct}>Add</Button>
-                        </div>
-                    </Space>
+                            </div>
+                        )
+                        : (
+                            <div style={{
+                                marginBottom: '4rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', width: '16rem', gap: '0.5rem',
+                            }}
+                            >
+                                <p>No products found. Please Add Some below.</p>
+                            </div>
+                        )}
+                    <div style={{
+                        marginBottom: '4rem', display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', width: '16rem', gap: '0.5rem',
+                    }}
+                    >
+                        <p className="input-label">Missing a Product?</p>
+                        <Input placeholder="Enter Product Name" name="newProduct" onChange={(e) => handleTextChange(e, setNewProduct)} type="text" value={newProduct} />
+                        <Button type="primary" onClick={() => addProduct(newProduct)}>Add</Button>
+                    </div>
                 </div>
                 <div style={{ minWidth: '18rem' }}>
                     <p className="input-label">
