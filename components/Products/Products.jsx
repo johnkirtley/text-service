@@ -47,11 +47,7 @@ export default function Products() {
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((document) => {
             if (document.data().email === authContext.email) {
-                if (document.data().products.length < 1) {
-                    setCurProducts([]);
-                } else {
-                    setCurProducts(document.data().products);
-                }
+                setCurProducts(document.data().products);
             }
         });
     }, [authContext?.email]);

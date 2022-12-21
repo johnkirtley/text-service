@@ -24,9 +24,9 @@ export default function MainComponent() {
     const router = useRouter();
 
     const getQuery = useCallback(async (ref) => {
-        const q = query(ref, where('email', '==', authContext.email));
-
+        const q = query(ref, where('email', '==', authContext.email.toLowerCase()));
         const querySnapshot = await getDocs(q);
+
         querySnapshot.forEach((document) => {
             if (document.data().email === authContext.email) {
                 console.log('firebase query', document.data());
@@ -35,7 +35,7 @@ export default function MainComponent() {
                 setRepInfo(document.data().repNumbers);
             }
         });
-    }, [authContext?.email, setCustomerInfo, setBusinessName]);
+    }, [authContext, setCustomerInfo, setBusinessName, setRepInfo]);
 
     useEffect(() => {
         // eslint-disable-next-line no-unused-expressions

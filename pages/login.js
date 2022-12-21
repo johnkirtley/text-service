@@ -64,6 +64,7 @@ export default function Login() {
         signInWithEmailAndPassword(auth, username, password)
             .then((userCredential) => {
                 const { user } = userCredential;
+
                 router.push('/');
             }).catch((error) => {
                 const errorCode = error.code;
