@@ -64,38 +64,51 @@ export default function SettingsPanel() {
 
         await updateDoc(repAddRef, { repNumbers: arrayRemove(dataToRemove) });
 
-        setNewRep(defaultRep);
-
-        const filtered = repInfo.filter((rep) => rep.number !== num);
+        const filtered = repInfo.filter((rep) => (rep.name !== name && rep.number !== num));
 
         setRepInfo(filtered);
+        setNewRep(defaultRep);
     };
 
     return (
         <div>
             <Layout>
                 <Space style={{ display: 'flex', flexFlow: 'column' }}>
-                    <Space>
+                    <Space style={{ flexFlow: 'column' }}>
+                        <p style={{ margin: '0' }} className="input-label">Business Name</p>
                         <Input placeholder="Company Name" value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
-                        <Button onClick={() => saveBusinessName(businessName)}>Save</Button>
+                        <Button type="primary" onClick={() => saveBusinessName(businessName)}>Save</Button>
                     </Space>
                     <Space style={{
                         display: 'flex', justifyContent: 'center', alignItems: 'center', flexFlow: 'column', textAlign: 'center',
                     }}
                     >
-                        <Input placeholder="Enter Rep Name" value={newRep.name} name="name" onChange={handleRepChange} />
-                        <Input placeholder="Enter Rep Number" value={newRep.number} name="number" onChange={handleRepChange} />
-                        <Button onClick={() => saveContact(newRep)}>Add</Button>
+                        <div style={{ border: '1px solid grey', margin: '1rem auto', padding: '2rem' }}>
+                            <p className="input-label">Add A New Rep</p>
+                            <p>Rep Name</p>
+                            <Input placeholder="Enter Rep Name" value={newRep.name} name="name" onChange={handleRepChange} />
+                            <p>Rep Number</p>
+                            <Input placeholder="Enter Rep Number" value={newRep.number} name="number" onChange={handleRepChange} />
+                            <Button onClick={() => saveContact(newRep)}>Add</Button>
+                        </div>
                         {/* input to add additional reps to contact list
                         iterate and show all added reps + numbers */}
-                        {repInfo && repInfo.length > 0
-                            ? repInfo.map((num, idx) => (
-                                <div key={idx}>
-                                    <p>{num?.name}</p>
-                                    <p>{num?.number}</p>
-                                    <Button type="primary" danger onClick={() => removeRep(num?.name, num?.number)}>Remove</Button>
-                                </div>
-                            )) : <div><p>No Reps Found. Please Add One.</p></div>}
+                        <div>
+                            <p className="input-label" style={{ margin: '0' }}>List of Current Reps</p>
+                            {repInfo && repInfo.length > 0
+                                ? repInfo.map((num, idx) => (
+                                    <div
+                                        key={idx}
+                                        style={{
+                                            display: 'flex', gap: '2rem', border: '1px solid grey', justifyContent: 'center', alignItems: 'center', padding: '1rem', margin: '1rem 0',
+                                        }}
+                                    >
+                                        <p style={{ margin: '0' }}><span style={{ fontWeight: 'bold' }}>Name:</span> {num?.name}</p>
+                                        <p style={{ margin: '0' }}><span style={{ fontWeight: 'bold' }}>Phone:</span> {num?.number}</p>
+                                        <Button type="primary" danger onClick={() => removeRep(num?.name, num?.number)}>Remove</Button>
+                                    </div>
+                                )) : <div><p>No Reps Found. Please Add One.</p></div>}
+                        </div>
                     </Space>
                 </Space>
             </Layout>
