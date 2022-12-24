@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import JSZip from 'jszip';
 import {
     Layout, Space, Empty, Button, Modal,
@@ -13,11 +13,21 @@ import styles from './QrCode.module.css';
 
 const { Content } = Layout;
 
-export default function QRCode({ qrCodes, loading }) {
+export default function QRCode({ qrCodes, loading, selectedRep, repOptions }) {
     const { clientInfo } = useContext(ClientContext);
     const [showModal, setShowModal] = useState(false);
     const [sending, setSending] = useState(false);
     const [sendingComplete, setSendingComplete] = useState(false);
+    const [repName, setRepName] = useState('');
+
+    useEffect(() => {
+        const selectedName = repOptions.filter((rep) => rep.value === selectedRep);
+
+        if (selectedName.length > 0) {
+            const sanitizedName = selectedName[0]?.label.split('-');
+            setRepName(sanitizedName[0]);
+        }
+    }, [selectedRep]);
 
     const sanitizedFileName = clientInfo.replace(' ', '-');
     const zipImages = () => {
@@ -53,7 +63,7 @@ export default function QRCode({ qrCodes, loading }) {
                 setTimeout(() => {
                     setShowModal(false);
                     setSendingComplete(false);
-                }, 2000);
+                }, 1000);
             }, 2000);
         });
     };
@@ -75,18 +85,31 @@ export default function QRCode({ qrCodes, loading }) {
             {qrCodes.length > 0
                 ? (
                     <div className={styles.codeContainer}>
-                        <Modal title="QR Code Confirmation" open={showModal} onOk={handleOk} onCancel={handleCancel}>
+                        <Modal
+                            className={styles.modal}
+                            title="QR Code Confirmation"
+                            open={showModal}
+                            onOk={handleOk}
+                            onCancel={handleCancel}
+                            okButtonProps={sending || sendingComplete ? { disabled: true } : { disabled: false }}
+                            cancelButtonProps={sending || sendingComplete ? { disabled: true } : { disabled: false }}
+                        >
+                            <p className={styles.disclaimer}>*You will not be billed until clicking OK</p>
                             {sendingComplete ? <p>Sent Successfully</p> : ''}
                             {sending ? <p>Sending...</p>
                                 : (
                                     <>
-                                        <p>Total Codes: {qrCodes.length}</p>
-                                        <p>Selected Products:</p>
-                                        {qrCodes.map((code, idx) => (
-                                            <p key={idx}>{code.name}</p>
-                                        ))}
+                                        <p><span className={styles.highlight}>Client:</span> {clientInfo}</p>
+                                        <p><span className={styles.highlight}>Selected Rep:</span> {repName}</p>
+                                        <p><span className={styles.highlight}>Total Codes:</span> {qrCodes.length}</p>
+                                        <p><span className={styles.highlight}>Selected Products:</span></p>
+                                        <div className={qrCodes.length > 10 ? styles.codeConfirmScroll : ''}>
+                                            {qrCodes.map((code, idx) => (
+                                                <p key={idx}>- {code.name}</p>
+                                            ))}
+                                        </div>
                                     </>
-                                ) }
+                                )}
                         </Modal>
 
                         <Content className={styles.codesGenerated}>
