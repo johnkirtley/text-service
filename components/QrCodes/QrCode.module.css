@@ -41,6 +41,26 @@
     max-width: 16rem;
   }
 
+  .modal > div{
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .highlight {
+    font-weight: bold;
+  }
+
+  .codeConfirmScroll {
+    overflow-y: scroll;
+    height: 4rem;
+  }
+
+  .disclaimer {
+    font-style: italic;
+  }
+
   @media (max-width: 500px) {
     .codesGenerated {
         min-width: 0;

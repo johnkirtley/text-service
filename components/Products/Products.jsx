@@ -257,7 +257,12 @@ export default function Products() {
                             Generated Codes
                     </p>
                     {loading ? <Spin tip="Working Our Magic" className={styles.codesLoading} /> : ''}
-                    <QRCode qrCodes={qrCodes} loading={loading} />
+                    <QRCode
+                        qrCodes={qrCodes}
+                        loading={loading}
+                        selectedRep={selectedRep}
+                        repOptions={repOptions}
+                    />
                 </div>
             </Content>
 
