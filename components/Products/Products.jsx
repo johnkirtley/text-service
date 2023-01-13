@@ -74,9 +74,10 @@ export default function Products() {
 
         await updateDoc(prodRemoveRef, { products: arrayRemove(dataToRemove) });
 
-        const filtered = curProducts.filter((prod) => prod !== val);
-        setSelectedProducts(filtered);
-        setCurProducts(filtered);
+        const filteredCur = curProducts.filter((prod) => prod !== val);
+        const filteredSelect = selectedProducts.filter((prod) => prod !== val);
+        setSelectedProducts(filteredSelect);
+        setCurProducts(filteredCur);
     };
 
     const onCheckChange = (e, product) => {
