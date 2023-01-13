@@ -76,7 +76,7 @@ export default function SettingsPanel() {
 
         await updateDoc(repAddRef, { repNumbers: arrayRemove(dataToRemove) });
 
-        const filtered = repInfo.filter((rep) => (rep.name !== name && rep.number !== num));
+        const filtered = repInfo.filter((rep) => rep.number !== num);
 
         setRepInfo(filtered);
         setNewRep(defaultRep);
