@@ -75,6 +75,7 @@ export default function Products() {
         await updateDoc(prodRemoveRef, { products: arrayRemove(dataToRemove) });
 
         const filtered = curProducts.filter((prod) => prod !== val);
+        setSelectedProducts(filtered);
         setCurProducts(filtered);
     };
 
@@ -132,40 +133,6 @@ export default function Products() {
             setLoading(false);
         }, 4000);
     };
-
-    // const saveContact = (num) => {
-    //     // backend api call to store phone number in DB
-    //     const sanitizedNum = num.replace(/^(\+)|\D/g, '$1');
-
-    //     setRepInfo(sanitizedNum);
-    // };
-
-    // const onChange = (value) => {
-    //     console.log(`selected ${value}`);
-    //     setRepInfo(value);
-    // };
-
-    // const onSearch = (value) => {
-    //     console.log('search:', value);
-    // };
-
-    // const repNumbers = [
-    //     {
-    //         value: '702-281-5940',
-    //         label: 'Jack',
-    //     },
-    //     {
-    //         value: '702-616-2339',
-    //         label: 'Lucy',
-    //     },
-    //     {
-    //         value: '702-443-7014',
-    //         label: 'Tom',
-    //     },
-    // ];
-
-    // api call for QR Code
-    // https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=SMSTO:7024437014:${message}
 
     const handleRepChange = (val) => {
         setSelectedRep(val);
