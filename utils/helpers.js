@@ -5,7 +5,8 @@ function getItem(label, key, icon, children) {
 const items = [
     getItem('Home', '1'),
     getItem('Products and QR Codes', '2'),
-    getItem('Settings', '3'),
+    getItem('Pending Restocks', '3'),
+    getItem('Settings', '4'),
 ];
 
 const handleTextChange = (e, cb) => {

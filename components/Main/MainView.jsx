@@ -1,5 +1,5 @@
 import { Layout } from 'antd';
-import { Home, Products, SettingsPanel } from '..';
+import { Home, Products, PendingRestocks, SettingsPanel } from '..';
 
 // Styles
 import styles from '../../styles/Home.module.css';
@@ -14,7 +14,8 @@ function MainView({ view }) {
 
                 {view === '1' ? <Home /> : ''}
                 {view === '2' ? <Products /> : ''}
-                {view === '3' ? <SettingsPanel /> : ''}
+                {view === '3' ? <PendingRestocks /> : ''}
+                {view === '4' ? <SettingsPanel /> : ''}
 
             </Content>
 
