@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { Layout, Menu } from 'antd';
 import { getDocs, collection, query, where } from 'firebase/firestore';
 import {
-    AuthContext, BusinessNameContext, CustomerContext, RepContext, ProductContext,
+    AuthContext, BusinessNameContext, CustomerContext, RepContext, ProductContext, OwnerIdContext,
 } from '../Context/Context';
 import { MetaHead, MainHeader, MainFooter } from '../components';
 import MainView from '../components/Main/MainView';
@@ -24,6 +24,7 @@ export default function MainComponent() {
     const { authContext } = useContext(AuthContext);
     const { setRepInfo } = useContext(RepContext);
     const { setCurProducts } = useContext(ProductContext);
+    const { setOwnerId } = useContext(OwnerIdContext);
     const router = useRouter();
 
     const getQuery = useCallback(async (ref) => {
@@ -39,9 +40,10 @@ export default function MainComponent() {
                 setBusinessName(document.data().businessName);
                 setRepInfo(document.data().repNumbers);
                 setCurProducts(document.data().products);
+                setOwnerId(document.data().uid);
             }
         });
-    }, [authContext, setCustomerInfo, setBusinessName, setRepInfo, setCurProducts]);
+    }, [authContext, setCustomerInfo, setBusinessName, setRepInfo, setCurProducts, setOwnerId]);
 
     useEffect(() => {
         // eslint-disable-next-line no-unused-expressions

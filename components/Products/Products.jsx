@@ -6,7 +6,7 @@ import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import styles from './Products.module.css';
 import { firestore } from '../../firebase/clientApp';
 import {
-    RepContext, ClientContext, BusinessNameContext, AuthContext, ProductContext,
+    RepContext, ClientContext, BusinessNameContext, AuthContext, ProductContext, OwnerIdContext,
 } from '../../Context/Context';
 
 // Helper Functions
@@ -31,6 +31,7 @@ export default function Products() {
 
     const { repInfo } = useContext(RepContext);
     const { clientInfo, setClientInfo } = useContext(ClientContext);
+    const { ownerId } = useContext(OwnerIdContext);
     // const { customerInfo } = useContext(CustomerContext);
 
     // useEffect(() => {
@@ -128,7 +129,7 @@ export default function Products() {
             const trimmedCustomerName = clientInfo.replace(' ', '%20');
             // const message = `${product}%20to%20${trimmedCustomerName}`;
             // const trimmed = message.replace(' ', '%20');
-            const url = encodeURIComponent(`https://app.physicalmint.com/submit?product=${product}&rep=${selectedRep}&clientName=${trimmedCustomerName}&ownerName=${businessName}`);
+            const url = encodeURIComponent(`https://app.physicalmint.com/submit?product=${product}&rep=${selectedRep}&clientName=${trimmedCustomerName}&ownerName=${businessName}&id=${ownerId}`);
             const codeString = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${url}`;
             return { name: product, src: codeString };
         });
