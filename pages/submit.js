@@ -15,6 +15,8 @@ export default function Submit() {
     const [ownerId, setOwnerId] = useState('');
     const [plan, setPlan] = useState('');
     const [email, setEmail] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(false);
 
     const { Content } = Layout;
 
@@ -35,11 +37,8 @@ export default function Submit() {
         const q = query(ref, where('uid', '==', ownerId));
         const querySnapshot = await getDocs(q);
 
-        // add product context, set info here like rep info
-        // this could eliminate re render on product
         querySnapshot.forEach((document) => {
             if (document.data().uid === ownerId) {
-                console.log('firebase owner', document.data());
                 setPlan(document.data().plan);
                 setEmail(document.data().email);
             }
@@ -59,18 +58,24 @@ export default function Submit() {
     };
 
     const addPendingRestock = async (reqRestockProduct) => {
+        setLoading(true);
         const restockRef = doc(firestore, 'users', email);
 
         await updateDoc(restockRef, { pendingOrders: arrayUnion(reqRestockProduct) });
+
+        setTimeout(() => {
+            setLoading(false);
+            setSuccess(true);
+        }, 1000);
     };
 
     return (
-        <Content className={styles.loginContainer}>
+        <Content className={styles.requestContainer}>
             <div>You Are About To Request A Restock For The Following Product:</div>
-            <div>{product}</div>
+            <div className={styles.requestProduct}>{product}</div>
             {/* on click, trigger email and send order to order status screen */}
-            <Button type="primary" onClick={() => addPendingRestock({ client: clientName, requestedProduct: product })}>Request Restock</Button>
-            <Button type="default" disabled={plan !== 'premium' ? true : ''} onClick={sendText}>Text Rep Directly</Button>
+            <Button type="primary" loading={loading} disabled={success ? 'true' : ''} onClick={() => addPendingRestock({ client: clientName, requestedProduct: product })}>{success ? 'Request Sent Successfully. You May Close This Page' : 'Request Restock'}</Button>
+            {plan !== 'premium' ? '' : <Button type="default" onClick={sendText}>Text Rep Directly</Button> }
         </Content>
     );
 }
