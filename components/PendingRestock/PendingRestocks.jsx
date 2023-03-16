@@ -20,12 +20,10 @@ export default function PendingRestocks() {
         const q = query(ref, where('uid', '==', ownerId));
         const querySnapshot = await getDocs(q);
 
-        // add product context, set info here like rep info
-        // this could eliminate re render on product
         querySnapshot.forEach((document) => {
             if (document.data().uid === ownerId) {
-                console.log('firebase pending orders', document.data().pendingOrders);
                 setPendingRestocks(document.data().pendingOrders);
+                console.log(pendingRestocks);
                 setEmail(document.data().email);
             }
         });
@@ -38,7 +36,7 @@ export default function PendingRestocks() {
         }
     }, [ownerId, getQuery]);
 
-    const fulfillRestock = async (client, item) => {
+    const fulfillRestock = async (client, item, id) => {
         const restockRef = doc(firestore, 'users', email);
         const dataToRemove = {
             client: `${client}`,
@@ -47,14 +45,15 @@ export default function PendingRestocks() {
 
         await updateDoc(restockRef, { pendingOrders: arrayRemove(dataToRemove) });
 
-        const filtered = pendingRestocks.filter((order) => order.requestedProduct !== item);
+        const filtered = pendingRestocks.filter((order, idx) => idx !== id);
+
+        console.log('filter', filtered);
 
         setPendingRestocks(filtered);
     };
 
     return (
         <Content>
-            <p>Restock Status</p>
             <Space direction="vertical" size="large" />
             <div>
                 {pendingRestocks && pendingRestocks.length > 0
@@ -62,7 +61,7 @@ export default function PendingRestocks() {
                         <div key={idx} className={styles.restockItemContainer}>
                             <div>Client: {item.client}</div>
                             <div>Product: {item.requestedProduct}</div>
-                            <Button type="primary" onClick={() => fulfillRestock(item.client, item.requestedProduct)}>Completed</Button>
+                            <Button type="primary" onClick={() => fulfillRestock(item.client, item.requestedProduct, idx)}>Completed</Button>
                         </div>
                     )) : 'No Pending Restock Requests'}
             </div>

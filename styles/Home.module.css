@@ -154,6 +154,21 @@
 
 }
 
+.requestContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+    text-align: center;
+    gap: 2rem;
+    width: 75%;
+    margin: 3rem auto;
+}
+
+.requestProduct {
+    font-weight: bold;
+}
+
 @media (max-width: 600px) {
   .grid {
     width: 100%;
