@@ -6,6 +6,7 @@ export default function Submit() {
     const [repNumber, setRepNumber] = useState('');
     const [clientName, setClientName] = useState('');
     const [ownerName, setOwnerName] = useState('');
+    const [ownerId, setOwnerId] = useState('');
 
     if (typeof window !== 'undefined') {
         const queryString = window.location.search;
@@ -16,6 +17,7 @@ export default function Submit() {
             setRepNumber(urlParams.get('rep'));
             setClientName(urlParams.get('clientName'));
             setOwnerName(urlParams.get('ownerName'));
+            setOwnerId(urlParams.get('id'));
         }, [urlParams]);
     }
 
@@ -26,6 +28,7 @@ export default function Submit() {
             <p>number: {repNumber}</p>
             <p>clientName: {clientName}</p>
             <p>ownerName: {ownerName}</p>
+            <p>id: {ownerId}</p>
         </div>
     );
 }
