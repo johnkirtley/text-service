@@ -3,6 +3,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { firebaseAuth } from '../firebase/clientApp';
 import {
     RepContext, CustomerContext, ClientContext, AuthContext, BusinessNameContext, ProductContext,
+    OwnerIdContext,
 } from '../Context/Context';
 
 // Global Styles
@@ -16,6 +17,7 @@ export default function MyApp({ Component, pageProps }) {
     const [authContext, setAuthContext] = useState(null);
     const [businessName, setBusinessName] = useState('');
     const [curProducts, setCurProducts] = useState([]);
+    const [ownerId, setOwnerId] = useState(null);
 
     const auth = firebaseAuth;
 
@@ -30,11 +32,13 @@ export default function MyApp({ Component, pageProps }) {
             <ProductContext.Provider value={{ curProducts, setCurProducts }}>
                 <CustomerContext.Provider value={{ customerInfo, setCustomerInfo }}>
                     <BusinessNameContext.Provider value={{ businessName, setBusinessName }}>
-                        <RepContext.Provider value={{ repInfo, setRepInfo }}>
-                            <ClientContext.Provider value={{ clientInfo, setClientInfo }}>
-                                <Component {...pageProps} />
-                            </ClientContext.Provider>
-                        </RepContext.Provider>
+                        <OwnerIdContext.Provider value={{ ownerId, setOwnerId }}>
+                            <RepContext.Provider value={{ repInfo, setRepInfo }}>
+                                <ClientContext.Provider value={{ clientInfo, setClientInfo }}>
+                                    <Component {...pageProps} />
+                                </ClientContext.Provider>
+                            </RepContext.Provider>
+                        </OwnerIdContext.Provider>
                     </BusinessNameContext.Provider>
                 </CustomerContext.Provider>
             </ProductContext.Provider>
