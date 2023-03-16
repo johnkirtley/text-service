@@ -1,14 +1,12 @@
-import { useState, useContext, useEffect, useCallback } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import {
     Layout, Input, PageHeader, Space, Button, Checkbox, Spin, Select,
 } from 'antd';
-import {
-    doc, updateDoc, arrayUnion, query, where, getDocs, collection, arrayRemove,
-} from 'firebase/firestore';
+import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import styles from './Products.module.css';
 import { firestore } from '../../firebase/clientApp';
 import {
-    RepContext, ClientContext, CustomerContext, BusinessNameContext, AuthContext,
+    RepContext, ClientContext, BusinessNameContext, AuthContext, ProductContext,
 } from '../../Context/Context';
 
 // Helper Functions
@@ -29,28 +27,28 @@ export default function Products() {
     const [loading, setLoading] = useState(false);
     const { businessName } = useContext(BusinessNameContext);
     const { authContext } = useContext(AuthContext);
+    const { curProducts, setCurProducts } = useContext(ProductContext);
 
     const { repInfo } = useContext(RepContext);
     const { clientInfo, setClientInfo } = useContext(ClientContext);
-    const { customerInfo } = useContext(CustomerContext);
-    const [curProducts, setCurProducts] = useState([]);
+    // const { customerInfo } = useContext(CustomerContext);
 
-    useEffect(() => {
-        if (customerInfo.products) {
-            setCurProducts(customerInfo.products);
-        }
-    }, [customerInfo.products]);
+    // useEffect(() => {
+    //     if (customerInfo.products) {
+    //         setCurProducts(customerInfo.products);
+    //     }
+    // }, [customerInfo.products]);
 
-    const getQuery = useCallback(async (ref) => {
-        const q = query(ref, where('email', '==', authContext.email));
+    // const getQuery = useCallback(async (ref) => {
+    //     const q = query(ref, where('email', '==', authContext.email));
 
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((document) => {
-            if (document.data().email === authContext.email) {
-                setCurProducts(document.data().products);
-            }
-        });
-    }, [authContext?.email]);
+    //     const querySnapshot = await getDocs(q);
+    //     querySnapshot.forEach((document) => {
+    //         if (document.data().email === authContext.email) {
+    //             setCurProducts(document.data().products);
+    //         }
+    //     });
+    // }, [authContext.email]);
 
     const addProduct = async (val) => {
         if (val && val.length > 0) {
@@ -74,10 +72,21 @@ export default function Products() {
 
         await updateDoc(prodRemoveRef, { products: arrayRemove(dataToRemove) });
 
-        const filteredCur = curProducts.filter((prod) => prod !== val);
+        // const filteredCur = curProducts.filter((prod) => prod !== val);
         const filteredSelect = selectedProducts.filter((prod) => prod !== val);
+
+        const copyArr = [...curProducts];
+        const index = copyArr.indexOf(val);
+
+        if (index !== -1) {
+            copyArr.splice(index, 1);
+
+            console.log(copyArr);
+
+            setCurProducts(copyArr);
+        }
         setSelectedProducts(filteredSelect);
-        setCurProducts(filteredCur);
+        // setCurProducts(filteredCur);
     };
 
     const onCheckChange = (e, product) => {
@@ -145,12 +154,14 @@ export default function Products() {
         setRepOptions(newArr);
     }, [repInfo]);
 
-    useEffect(() => {
-        if (authContext) {
-            const colRef = collection(firestore, 'users');
-            getQuery(colRef);
-        }
-    }, [authContext, getQuery]);
+    // this is firing twice causing 2 network calls ?????
+    // Firebase subscription listeners??
+    // useEffect(() => {
+    //     if (authContext) {
+    //         const colRef = collection(firestore, 'users');
+    //         getQuery(colRef);
+    //     }
+    // }, [authContext, getQuery]);
 
     return (
         <>
@@ -193,6 +204,7 @@ export default function Products() {
                                             size="large"
                                         >
                                             <Checkbox
+                                            // if box is checked, disable remove button
                                                 onChange={(e) => onCheckChange(e, product)}
                                             >
                                                 {product}

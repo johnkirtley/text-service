@@ -2,7 +2,9 @@ import { useState, useContext, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { Layout, Menu } from 'antd';
 import { getDocs, collection, query, where } from 'firebase/firestore';
-import { AuthContext, BusinessNameContext, CustomerContext, RepContext } from '../Context/Context';
+import {
+    AuthContext, BusinessNameContext, CustomerContext, RepContext, ProductContext,
+} from '../Context/Context';
 import { MetaHead, MainHeader, MainFooter } from '../components';
 import MainView from '../components/Main/MainView';
 import { firestore } from '../firebase/clientApp';
@@ -21,21 +23,25 @@ export default function MainComponent() {
     const { businessName, setBusinessName } = useContext(BusinessNameContext);
     const { authContext } = useContext(AuthContext);
     const { setRepInfo } = useContext(RepContext);
+    const { setCurProducts } = useContext(ProductContext);
     const router = useRouter();
 
     const getQuery = useCallback(async (ref) => {
         const q = query(ref, where('email', '==', authContext.email.toLowerCase()));
         const querySnapshot = await getDocs(q);
 
+        // add product context, set info here like rep info
+        // this could eliminate re render on product
         querySnapshot.forEach((document) => {
             if (document.data().email === authContext.email) {
                 console.log('firebase query', document.data());
                 setCustomerInfo(document.data());
                 setBusinessName(document.data().businessName);
                 setRepInfo(document.data().repNumbers);
+                setCurProducts(document.data().products);
             }
         });
-    }, [authContext, setCustomerInfo, setBusinessName, setRepInfo]);
+    }, [authContext, setCustomerInfo, setBusinessName, setRepInfo, setCurProducts]);
 
     useEffect(() => {
         // eslint-disable-next-line no-unused-expressions

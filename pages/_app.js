@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { firebaseAuth } from '../firebase/clientApp';
 import {
-    RepContext, CustomerContext, ClientContext, AuthContext, BusinessNameContext,
+    RepContext, CustomerContext, ClientContext, AuthContext, BusinessNameContext, ProductContext,
 } from '../Context/Context';
 
 // Global Styles
@@ -15,6 +15,7 @@ export default function MyApp({ Component, pageProps }) {
     const [clientInfo, setClientInfo] = useState('');
     const [authContext, setAuthContext] = useState(null);
     const [businessName, setBusinessName] = useState('');
+    const [curProducts, setCurProducts] = useState([]);
 
     const auth = firebaseAuth;
 
@@ -26,15 +27,17 @@ export default function MyApp({ Component, pageProps }) {
 
     return (
         <AuthContext.Provider value={{ authContext }}>
-            <CustomerContext.Provider value={{ customerInfo, setCustomerInfo }}>
-                <BusinessNameContext.Provider value={{ businessName, setBusinessName }}>
-                    <RepContext.Provider value={{ repInfo, setRepInfo }}>
-                        <ClientContext.Provider value={{ clientInfo, setClientInfo }}>
-                            <Component {...pageProps} />
-                        </ClientContext.Provider>
-                    </RepContext.Provider>
-                </BusinessNameContext.Provider>
-            </CustomerContext.Provider>
+            <ProductContext.Provider value={{ curProducts, setCurProducts }}>
+                <CustomerContext.Provider value={{ customerInfo, setCustomerInfo }}>
+                    <BusinessNameContext.Provider value={{ businessName, setBusinessName }}>
+                        <RepContext.Provider value={{ repInfo, setRepInfo }}>
+                            <ClientContext.Provider value={{ clientInfo, setClientInfo }}>
+                                <Component {...pageProps} />
+                            </ClientContext.Provider>
+                        </RepContext.Provider>
+                    </BusinessNameContext.Provider>
+                </CustomerContext.Provider>
+            </ProductContext.Provider>
         </AuthContext.Provider>
     );
 }
