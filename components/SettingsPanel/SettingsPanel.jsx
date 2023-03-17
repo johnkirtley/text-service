@@ -5,6 +5,8 @@ import {
 import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { RepContext, BusinessNameContext, AuthContext } from '../../Context/Context';
 import { firestore } from '../../firebase/clientApp';
+import createCheckoutSession from '../../stripe/createCheckoutSession';
+import usePremiumStatus from '../../stripe/usePremiumStatus';
 
 // Helper Functions
 import { handleTextChange } from '../../utils/helpers';
@@ -24,6 +26,10 @@ export default function SettingsPanel() {
     const { authContext } = useContext(AuthContext);
     const [newRep, setNewRep] = useState(defaultRep);
     const [displayAlert, setDisplayAlert] = useState(false);
+    const [planClicked, setPlanClicked] = useState(false);
+    const isUserPremium = usePremiumStatus(authContext);
+
+    const plans = ['silver', 'bronze', 'gold'];
 
     const saveBusinessName = async (val) => {
         const nameUpdateRef = doc(firestore, 'users', authContext.email);
@@ -82,12 +88,34 @@ export default function SettingsPanel() {
         setNewRep(defaultRep);
     };
 
+    const handleBilling = (planType) => {
+        setPlanClicked(true);
+        createCheckoutSession(authContext.uid, planType);
+    };
+
     return (
         <div>
             {displayAlert ? <Alert message="Business name updated" type="success" className={styles.successAlert} /> : ''}
 
             <Layout>
                 <Space className={styles.settingsContainer}>
+                    <Space className={styles.billingContainer}>
+                        <p>Billing</p>
+                        <div>
+                            Current Plan: {isUserPremium.planName}
+                        </div>
+                        {planClicked ? <Button type="primary" loading>Redirecting To Stripe...</Button>
+                            : (
+                                <>
+                                    {plans.map((plan, idx) => (
+                                        isUserPremium.planName === plan ? <Button type="primary" key={idx} className={styles.planButton} disabled>Current Plan</Button>
+                                            : <Button type="primary" key={idx} className={styles.planButton} onClick={() => handleBilling(plan)}>Select {plan} Plan</Button>
+                                    ))}
+
+                                </>
+                            )}
+
+                    </Space>
                     <Space className={styles.businessInput}>
                         <p className={styles.businessLabel}>Business Name</p>
                         <Input placeholder="Company Name" value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />

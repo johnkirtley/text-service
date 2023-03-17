@@ -9,6 +9,20 @@
     flex-flow: column;
 }
 
+.billingContainer {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+    margin: 2rem;
+    padding: 2rem;
+}
+
+.planButton {
+    text-transform: capitalize;
+}
+
 .businessInput {
     flex-flow: column;
 }
