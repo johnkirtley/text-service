@@ -5,6 +5,7 @@ import {
     RepContext, CustomerContext, ClientContext, AuthContext, BusinessNameContext, ProductContext,
     OwnerIdContext,
 } from '../Context/Context';
+import usePremiumStatus from '../stripe/usePremiumStatus';
 
 // Global Styles
 import '../styles/globals.css';
@@ -18,6 +19,10 @@ export default function MyApp({ Component, pageProps }) {
     const [businessName, setBusinessName] = useState('');
     const [curProducts, setCurProducts] = useState([]);
     const [ownerId, setOwnerId] = useState(null);
+
+    const isUserPremium = usePremiumStatus(authContext);
+
+    console.log('planStatus', isUserPremium);
 
     const auth = firebaseAuth;
 

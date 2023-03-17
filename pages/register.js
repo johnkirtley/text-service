@@ -49,7 +49,6 @@ export default function SignIn() {
                 businessName: '',
                 accountCreatedTimestamp: serverTimestamp(),
                 uid: uuidv4(),
-                plan: 'basic',
                 pendingOrders: [],
             }).then(() => {
                 router.push('/');
@@ -87,7 +86,13 @@ export default function SignIn() {
                 const usersRef = doc(collection(firestore, 'users'), user.email.toLowerCase());
 
                 setDoc(usersRef, {
-                    email: `${username.toLowerCase()}`, repNumbers: [], products: [], businessName: '', accountCreatedTimestamp: serverTimestamp(), uid: uuidv4(),
+                    email: `${user.email}`,
+                    repNumbers: [],
+                    products: [],
+                    businessName: '',
+                    accountCreatedTimestamp: serverTimestamp(),
+                    uid: uuidv4(),
+                    pendingOrders: [],
                 });
 
                 router.push('/');
