@@ -4,10 +4,11 @@ import {
     Layout, Input, Button, Space, Alert, Card, Collapse,
 } from 'antd';
 import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
-import { RepContext, BusinessNameContext, AuthContext } from '../../Context/Context';
+import { RepContext, BusinessNameContext } from '../../Context/Context';
 import { firestore } from '../../firebase/clientApp';
 import createCheckoutSession from '../../stripe/createCheckoutSession';
 import usePremiumStatus from '../../stripe/usePremiumStatus';
+import { useAuth } from '../../Context/AuthContext';
 
 // Helper Functions
 import { handleTextChange } from '../../utils/helpers';
@@ -24,18 +25,18 @@ export default function SettingsPanel() {
     const { repInfo, setRepInfo } = useContext(RepContext);
     // const { customerInfo } = useContext(CustomerContext);
     const { businessName, setBusinessName } = useContext(BusinessNameContext);
-    const { authContext } = useContext(AuthContext);
     const [newRep, setNewRep] = useState(defaultRep);
     const [displayAlert, setDisplayAlert] = useState(false);
     const [planClicked, setPlanClicked] = useState(false);
-    const isUserPremium = usePremiumStatus(authContext);
+    const { user } = useAuth();
+    const isUserPremium = usePremiumStatus(user);
 
     const plans = ['silver', 'bronze', 'gold'];
 
     const { Panel } = Collapse;
 
     const saveBusinessName = async (val) => {
-        const nameUpdateRef = doc(firestore, 'users', authContext.email);
+        const nameUpdateRef = doc(firestore, 'users', user.email);
 
         await updateDoc(nameUpdateRef, { businessName: val });
 
@@ -66,7 +67,7 @@ export default function SettingsPanel() {
         if (rep.length < 1) {
             alert('Enter Valid Phone Number');
         } else {
-            const repAddRef = doc(firestore, 'users', authContext.email);
+            const repAddRef = doc(firestore, 'users', user.email);
 
             await updateDoc(repAddRef, { repNumbers: arrayUnion(newRep) });
 
@@ -77,7 +78,7 @@ export default function SettingsPanel() {
     };
 
     const removeRep = async (name, num) => {
-        const repAddRef = doc(firestore, 'users', authContext.email);
+        const repAddRef = doc(firestore, 'users', user.email);
         const dataToRemove = {
             name: `${name}`,
             number: `${num}`,
@@ -93,7 +94,7 @@ export default function SettingsPanel() {
 
     const handleBilling = (planType) => {
         setPlanClicked(true);
-        createCheckoutSession(authContext.uid, planType);
+        createCheckoutSession(user.uid, planType);
     };
 
     return (
@@ -135,12 +136,12 @@ export default function SettingsPanel() {
                                             >
                                                 <p className={styles.repName}>{num?.name}</p>
 
-                                                <p className={styles.repInfo}>
-                                                    <div className={styles.repBold}>
+                                                <div className={styles.repInfo}>
+                                                    <p className={styles.repBold}>
                                                     Phone Number:
-                                                    </div>
-                                                    <span>{num?.number}</span>
-                                                </p>
+                                                    </p>
+                                                    <p>{num?.number}</p>
+                                                </div>
                                                 <Button type="primary" danger onClick={() => removeRep(num?.name, num?.number)}>Remove</Button>
                                             </div>
                                         )) : <div><p>No Reps Found. Please Add One.</p></div>}

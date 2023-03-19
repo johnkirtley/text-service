@@ -1,11 +1,9 @@
-import { useState, useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { firebaseAuth } from '../firebase/clientApp';
+import { useState } from 'react';
 import {
-    RepContext, CustomerContext, ClientContext, AuthContext, BusinessNameContext, ProductContext,
+    RepContext, CustomerContext, ClientContext, BusinessNameContext, ProductContext,
     OwnerIdContext,
 } from '../Context/Context';
-import usePremiumStatus from '../stripe/usePremiumStatus';
+import { AuthProvider } from '../Context/AuthContext';
 
 // Global Styles
 import '../styles/globals.css';
@@ -15,38 +13,38 @@ export default function MyApp({ Component, pageProps }) {
     const [repInfo, setRepInfo] = useState([]);
     const [customerInfo, setCustomerInfo] = useState('');
     const [clientInfo, setClientInfo] = useState('');
-    const [authContext, setAuthContext] = useState(null);
+    // const [authContext, setAuthContext] = useState(null);
     const [businessName, setBusinessName] = useState('');
     const [curProducts, setCurProducts] = useState([]);
     const [ownerId, setOwnerId] = useState(null);
 
-    const isUserPremium = usePremiumStatus(authContext);
+    // const isUserPremium = usePremiumStatus(user);
 
-    console.log('planStatus', isUserPremium);
+    // console.log('planStatus', isUserPremium);
 
-    const auth = firebaseAuth;
+    // const auth = firebaseAuth;
 
-    useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
-            setAuthContext(user);
-        });
-    }, [auth]);
+    // useEffect(() => {
+    //     onAuthStateChanged(auth, (user) => {
+    //         setAuthContext(user);
+    //     });
+    // }, [auth]);
 
     return (
-        <AuthContext.Provider value={{ authContext }}>
-            <ProductContext.Provider value={{ curProducts, setCurProducts }}>
-                <CustomerContext.Provider value={{ customerInfo, setCustomerInfo }}>
-                    <BusinessNameContext.Provider value={{ businessName, setBusinessName }}>
-                        <OwnerIdContext.Provider value={{ ownerId, setOwnerId }}>
-                            <RepContext.Provider value={{ repInfo, setRepInfo }}>
-                                <ClientContext.Provider value={{ clientInfo, setClientInfo }}>
+        <ProductContext.Provider value={{ curProducts, setCurProducts }}>
+            <CustomerContext.Provider value={{ customerInfo, setCustomerInfo }}>
+                <BusinessNameContext.Provider value={{ businessName, setBusinessName }}>
+                    <OwnerIdContext.Provider value={{ ownerId, setOwnerId }}>
+                        <RepContext.Provider value={{ repInfo, setRepInfo }}>
+                            <ClientContext.Provider value={{ clientInfo, setClientInfo }}>
+                                <AuthProvider>
                                     <Component {...pageProps} />
-                                </ClientContext.Provider>
-                            </RepContext.Provider>
-                        </OwnerIdContext.Provider>
-                    </BusinessNameContext.Provider>
-                </CustomerContext.Provider>
-            </ProductContext.Provider>
-        </AuthContext.Provider>
+                                </AuthProvider>
+                            </ClientContext.Provider>
+                        </RepContext.Provider>
+                    </OwnerIdContext.Provider>
+                </BusinessNameContext.Provider>
+            </CustomerContext.Provider>
+        </ProductContext.Provider>
     );
 }
