@@ -6,9 +6,9 @@ import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import styles from './Products.module.css';
 import { firestore } from '../../firebase/clientApp';
 import {
-    RepContext, ClientContext, BusinessNameContext, AuthContext, ProductContext, OwnerIdContext,
+    RepContext, ClientContext, BusinessNameContext, ProductContext, OwnerIdContext,
 } from '../../Context/Context';
-
+import { useAuth } from '../../Context/AuthContext';
 // Helper Functions
 import { handleTextChange, generateCanvasImg } from '../../utils/helpers';
 import QRCode from '../QrCodes/QRCode';
@@ -27,8 +27,8 @@ export default function Products() {
     const [qrCodes, setQRCodes] = useState([]);
     const [loading, setLoading] = useState(false);
     const { businessName } = useContext(BusinessNameContext);
-    const { authContext } = useContext(AuthContext);
     const { curProducts, setCurProducts } = useContext(ProductContext);
+    const { user } = useAuth();
 
     const { repInfo } = useContext(RepContext);
     const { clientInfo, setClientInfo } = useContext(ClientContext);
@@ -55,7 +55,7 @@ export default function Products() {
     const addProduct = async (val) => {
         if (val && val.length > 0) {
             if (curProducts && !curProducts.includes(val)) {
-                const productRef = doc(firestore, 'users', authContext.email);
+                const productRef = doc(firestore, 'users', user.email);
 
                 await updateDoc(productRef, { products: arrayUnion(val) });
 
@@ -69,7 +69,7 @@ export default function Products() {
     };
 
     const removeProduct = async (val) => {
-        const prodRemoveRef = doc(firestore, 'users', authContext.email);
+        const prodRemoveRef = doc(firestore, 'users', user.email);
         const dataToRemove = val;
 
         await updateDoc(prodRemoveRef, { products: arrayRemove(dataToRemove) });

@@ -1,12 +1,12 @@
 import RepContext from './RepContext';
 import CustomerContext from './CustomerContext';
 import ClientContext from './ClientContext';
-import AuthContext from './AuthContext';
 import BusinessNameContext from './BusinessContext';
 import ProductContext from './ProductContext';
 import OwnerIdContext from './OwnerIdContext';
+import { AuthProvider } from './AuthContext';
 
 export {
-    RepContext, CustomerContext, ClientContext, AuthContext, BusinessNameContext, ProductContext,
+    RepContext, CustomerContext, ClientContext, AuthProvider, BusinessNameContext, ProductContext,
     OwnerIdContext,
 };

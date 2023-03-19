@@ -5,11 +5,12 @@ import { Layout, Menu } from 'antd';
 import { HomeOutlined, BarcodeOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import { getDocs, collection, query, where } from 'firebase/firestore';
 import {
-    AuthContext, BusinessNameContext, CustomerContext, RepContext, ProductContext, OwnerIdContext,
+    BusinessNameContext, CustomerContext, RepContext, ProductContext, OwnerIdContext,
 } from '../Context/Context';
 import { MetaHead, MainHeader, MainFooter } from '../components';
 import MainView from '../components/Main/MainView';
 import { firestore } from '../firebase/clientApp';
+import { useAuth } from '../Context/AuthContext';
 
 // Styles
 import styles from '../styles/Home.module.css';
@@ -18,11 +19,51 @@ export default function MainComponent() {
     const [view, setView] = useState('1');
     const { setCustomerInfo } = useContext(CustomerContext);
     const { businessName, setBusinessName } = useContext(BusinessNameContext);
-    const { authContext } = useContext(AuthContext);
+    // const { authContext } = useContext(AuthContext);
     const { setRepInfo } = useContext(RepContext);
     const { setCurProducts } = useContext(ProductContext);
     const { setOwnerId } = useContext(OwnerIdContext);
+    const { user, loading } = useAuth();
     const router = useRouter();
+
+    console.log('user', user);
+
+    const getQuery = useCallback(async (ref) => {
+        const q = query(ref, where('email', '==', user.email.toLowerCase()));
+        const querySnapshot = await getDocs(q);
+
+        // add product context, set info here like rep info
+        // this could eliminate re render on product
+        querySnapshot.forEach((document) => {
+            if (document.data().email === user.email) {
+                console.log('firebase query', document.data());
+                setCustomerInfo(document.data());
+                setBusinessName(document.data().businessName);
+                setRepInfo(document.data().repNumbers);
+                setCurProducts(document.data().products);
+                setOwnerId(document.data().uid);
+            }
+        });
+    }, [user, setCustomerInfo, setBusinessName, setRepInfo, setCurProducts, setOwnerId]);
+
+    useEffect(() => {
+        if (user) {
+            const colRef = collection(firestore, 'users');
+            getQuery(colRef);
+        }
+    }, [user, getQuery]);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (!user) {
+        router.push('/login');
+    }
+
+    // if (user) {
+    //     router.push('/');
+    // }
 
     function getItem(label, key, icon, children) {
         return { key, icon, children, label };
@@ -35,39 +76,14 @@ export default function MainComponent() {
         getItem('Settings', '4', <SettingOutlined />),
     ];
 
-    const getQuery = useCallback(async (ref) => {
-        const q = query(ref, where('email', '==', authContext.email.toLowerCase()));
-        const querySnapshot = await getDocs(q);
-
-        // add product context, set info here like rep info
-        // this could eliminate re render on product
-        querySnapshot.forEach((document) => {
-            if (document.data().email === authContext.email) {
-                console.log('firebase query', document.data());
-                setCustomerInfo(document.data());
-                setBusinessName(document.data().businessName);
-                setRepInfo(document.data().repNumbers);
-                setCurProducts(document.data().products);
-                setOwnerId(document.data().uid);
-            }
-        });
-    }, [authContext, setCustomerInfo, setBusinessName, setRepInfo, setCurProducts, setOwnerId]);
-
-    useEffect(() => {
-        // eslint-disable-next-line no-unused-expressions
-        authContext !== null ? router.push('/') : router.push('/login');
-    }, [authContext]);
-
-    useEffect(() => {
-        if (authContext) {
-            const colRef = collection(firestore, 'users');
-            getQuery(colRef);
-        }
-    }, [authContext, getQuery]);
+    // useEffect(() => {
+    //     // eslint-disable-next-line no-unused-expressions
+    //     authContext !== null ? router.push('/') : router.push('/login');
+    // }, [authContext]);
 
     return (
         <div>
-            {authContext === null ? '' : (
+            {user === null ? '' : (
                 <div>
                     <MainHeader companyName={businessName} />
                     <Layout style={{ minHeight: '100vh' }}>
