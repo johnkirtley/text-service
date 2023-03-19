@@ -6,7 +6,7 @@ import {
 } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import {
-    Form, Input, Button, Alert, Divider,
+    Form, Input, Button, Alert, Divider, Card, Layout,
 } from 'antd';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -21,6 +21,8 @@ const defaultCredentials = {
     password: '',
     confirmPass: '',
 };
+
+const { Header } = Layout;
 
 export default function SignIn() {
     const [credentials, setCredentials] = useState(defaultCredentials);
@@ -122,40 +124,45 @@ export default function SignIn() {
     }, [credentials]);
 
     return (
-
-        <div className={styles.registerContainer}>
-            {showError ? <Alert message="Error: Passwords do not match" type="error" /> : ''}
-            {emailExists ? <Alert message="Error: Email already exists" type="error" /> : ''}
-            {invalidEmail ? <Alert message="Error: Invalid email" type="error" /> : ''}
-            <h2>Register</h2>
-            <Form name="Register" onFinish={signUp} className={styles.registerForm}>
-                <Form.Item label="Username" name="username" rules={[{ required: true, message: 'Please input username' }]}>
-                    <Input name="username" value={credentials.username} onChange={handleChange} />
-                </Form.Item>
-                <Form.Item label="Password" name="password" rules={[{ required: true, message: 'Please input password' }]}>
-                    <Input.Password name="password" value={credentials.password} onChange={handleChange} />
-                </Form.Item>
-                <Form.Item label="Confirm Password" name="confirmPass" rules={[{ required: true, message: 'Please input password' }]}>
-                    <Input.Password name="confirmPass" value={credentials.confirmPass} onChange={handleChange} />
-                </Form.Item>
-                <Form.Item>
-                    <Button type="primary" htmlType="submit">
+        <>
+            <Header className={`${styles.title} ${styles.header}`}>
+            LOGO HERE
+            </Header>
+            <div className={styles.registerContainer}>
+                {showError ? <Alert message="Error: Passwords do not match" type="error" /> : ''}
+                {emailExists ? <Alert message="Error: Email already exists" type="error" /> : ''}
+                {invalidEmail ? <Alert message="Error: Invalid email" type="error" /> : ''}
+                <Card title="Register">
+                    <Form name="Register" onFinish={signUp} className={styles.registerForm}>
+                        <Form.Item label="Username" name="username" rules={[{ required: true, message: 'Please input username' }]}>
+                            <Input name="username" value={credentials.username} onChange={handleChange} />
+                        </Form.Item>
+                        <Form.Item label="Password" name="password" rules={[{ required: true, message: 'Please input password' }]}>
+                            <Input.Password name="password" value={credentials.password} onChange={handleChange} />
+                        </Form.Item>
+                        <Form.Item label="Confirm Password" name="confirmPass" rules={[{ required: true, message: 'Please input password' }]}>
+                            <Input.Password name="confirmPass" value={credentials.confirmPass} onChange={handleChange} />
+                        </Form.Item>
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit" className={styles.registerButton}>
                         Register
-                    </Button>
-                </Form.Item>
-            </Form>
-            <Divider className={styles.registerDivider} />
-            <button
-                type="button"
-                onClick={() => signInWithGoogle()}
-                className={styles.signInWithGoogle}
-            >
-                <Image src="/google.png" width={30} height={30} alt="Google Login Image" />
-                <p className={styles.googleSignInText}>Sign In With Google</p>
-            </button>
-            <div>
-                <Link href="/login">Have an account?</Link>
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </Card>
+                <Divider className={styles.registerDivider} />
+                <button
+                    type="button"
+                    onClick={() => signInWithGoogle()}
+                    className={styles.signInWithGoogle}
+                >
+                    <Image src="/google.png" width={30} height={30} alt="Google Login Image" />
+                    <p className={styles.googleSignInText}>Sign In With Google</p>
+                </button>
+                <div>
+                    <Link href="/login">Have an account?</Link>
+                </div>
             </div>
-        </div>
+        </>
     );
 }

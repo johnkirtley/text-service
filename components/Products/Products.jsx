@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from 'react';
 import {
-    Layout, Input, PageHeader, Space, Button, Checkbox, Spin, Select,
+    Layout, Input, PageHeader, Space, Button, Checkbox, Spin, Select, Collapse,
 } from 'antd';
 import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import styles from './Products.module.css';
@@ -16,6 +16,7 @@ import QRCode from '../QrCodes/QRCode';
 // styles
 
 const { Content } = Layout;
+const { Panel } = Collapse;
 
 export default function Products() {
     const [newProduct, setNewProduct] = useState('');
@@ -191,6 +192,7 @@ export default function Products() {
             </Content>
             <Content className={styles.productContainer}>
                 <div className={styles.productContainerDiv}>
+
                     {curProducts && curProducts.length > 0
                         ? (
                             <div>
@@ -228,9 +230,14 @@ export default function Products() {
                             </div>
                         )}
                     <div className={styles.addProductContainer}>
-                        <p className="input-label">Add a Product</p>
-                        <Input placeholder="Enter Product Name" name="newProduct" onChange={(e) => handleTextChange(e, setNewProduct)} type="text" value={newProduct} />
-                        <Button type="primary" onClick={() => addProduct(newProduct)}>Add</Button>
+                        <Collapse>
+                            <Panel header="Add New Product">
+                                <div className={styles.addProductPanel}>
+                                    <Input placeholder="Enter Product Name" name="newProduct" onChange={(e) => handleTextChange(e, setNewProduct)} type="text" value={newProduct} />
+                                    <Button type="primary" onClick={() => addProduct(newProduct)}>Add</Button>
+                                </div>
+                            </Panel>
+                        </Collapse>
                     </div>
 
                 </div>
@@ -246,6 +253,7 @@ export default function Products() {
                         repOptions={repOptions}
                     />
                 </div>
+
             </Content>
 
         </>

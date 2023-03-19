@@ -7,6 +7,8 @@
 .settingsContainer {
     display: flex;
     flex-flow: column;
+    background-color: var(--primary-white);
+    width: 100%;
 }
 
 .billingContainer {
@@ -14,9 +16,17 @@
     flex-flow: column;
     justify-content: center;
     align-items: center;
-    border: 1px solid black;
-    margin: 2rem;
-    padding: 2rem;
+    padding: 0.5rem 2rem 2rem 2rem;
+}
+
+.plans {
+    display: flex;
+    gap: 1rem;
+}
+
+.currentPlan {
+    text-transform: capitalize;
+    font-weight: var(--primary-label-weight);
 }
 
 .planButton {
@@ -41,9 +51,11 @@
 }
 
 .repInputBox {
-    border: 1px solid grey;
-    margin: 1rem auto;
-    padding: 2rem;
+    padding: 0 2rem;
+    display: flex;
+    flex-flow: column;
+    gap: 2rem;
+    width: 25rem;
 }
 
 .addRepLabel {
@@ -51,16 +63,21 @@
 }
 
 .repContainer {
-    display: flex;
-    gap: 2rem;
-    border: 1px solid grey;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4rem;
+    justify-content: space-between;
     align-items: center;
-    padding: 1rem;
-    margin: 1rem auto;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--primary-black);
 }
 
 .repInfo {
+    margin: 0;
+    display: block;
+}
+
+.repName {
     margin: 0;
 }
 
@@ -68,10 +85,26 @@
     font-weight: bold;
 }
 
+.viewPlansLink {
+    margin-top: 2rem;
+}
+
 @media (max-width: 500px) {
     .repContainer {
-        display: block;
+        display: flex;
+        flex-flow: column;
+        gap: 1rem;
         width: 100%;
-        margin: 1rem 0;
     }
+
+    .repInputBox {
+        width: 15rem;
+    }
+
+    .plans {
+        display: flex;
+        flex-flow: column;
+        gap: 1rem;
+    }
+
 }

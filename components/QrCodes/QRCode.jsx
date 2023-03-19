@@ -94,7 +94,6 @@ export default function QRCode({ qrCodes, loading, selectedRep, repOptions }) {
                             okButtonProps={sending || sendingComplete ? { disabled: true } : { disabled: false }}
                             cancelButtonProps={sending || sendingComplete ? { disabled: true } : { disabled: false }}
                         >
-                            <p className={styles.disclaimer}>*You will not be billed until clicking OK</p>
                             {sendingComplete ? <p>Sent Successfully</p> : ''}
                             {sending ? <p>Sending...</p>
                                 : (

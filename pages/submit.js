@@ -18,7 +18,7 @@ export default function Submit() {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
 
-    const { Content } = Layout;
+    const { Content, Header } = Layout;
 
     if (typeof window !== 'undefined') {
         const queryString = window.location.search;
@@ -70,12 +70,24 @@ export default function Submit() {
     };
 
     return (
-        <Content className={styles.requestContainer}>
-            <div>You Are About To Request A Restock For The Following Product:</div>
-            <div className={styles.requestProduct}>{product}</div>
-            {/* on click, trigger email and send order to order status screen */}
-            <Button type="primary" loading={loading} disabled={success ? 'true' : ''} onClick={() => addPendingRestock({ client: clientName, requestedProduct: product })}>{success ? 'Request Sent Successfully. You May Close This Page' : 'Request Restock'}</Button>
-            {plan !== 'premium' ? '' : <Button type="default" onClick={sendText}>Text Rep Directly</Button> }
-        </Content>
+        <>
+            <Header className={`${styles.title} ${styles.header}`}>
+        LOGO HERE
+            </Header>
+            <Layout style={{ minHeight: '100vh' }}>
+
+                <Content className={styles.requestContainer}>
+                    <div>You Are About To Request A Restock For The Following Product:</div>
+                    <div className={styles.requestProduct}>{product}</div>
+                    {/* on click, trigger email and send order to order status screen */}
+                    <Button type="primary" loading={loading} disabled={success ? 'true' : ''} onClick={() => addPendingRestock({ client: clientName, requestedProduct: product })}>{success ? 'Request Sent Successfully. You May Close This Page' : 'Request Restock'}</Button>
+                    {plan !== 'premium' ? '' : <Button type="default" onClick={sendText}>Text Rep Directly</Button> }
+                    <div className={styles.poweredBy}>
+                        Powered By Supply Mate
+                    </div>
+                </Content>
+
+            </Layout>
+        </>
     );
 }
