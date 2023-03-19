@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import {
-    Form, Input, Button, Alert, Divider,
+    Form, Input, Button, Alert, Divider, Card, Layout,
 } from 'antd';
 import {
     getDocs, query, where, doc, collection, setDoc, serverTimestamp, getDoc,
@@ -20,6 +20,8 @@ const defaultCredentials = {
     username: '',
     password: '',
 };
+
+const { Header } = Layout;
 
 export default function Login() {
     const [credentials, setCredentials] = useState(defaultCredentials);
@@ -84,36 +86,41 @@ export default function Login() {
     };
 
     return (
-
-        <div className={styles.loginContainer}>
-            {showError ? <Alert message="Error: Please Check Email and Password" type="error" /> : ''}
-            <h2>Login</h2>
-
-            <Form name="Login" onFinish={signIn} className={styles.loginForm}>
-                <Form.Item label="username" name="username" rules={[{ required: true, message: 'Please input username' }]}>
-                    <Input name="username" value={credentials.username} onChange={handleChange} />
-                </Form.Item>
-                <Form.Item label="password" name="password" rules={[{ required: true, message: 'Please input password' }]}>
-                    <Input.Password name="password" value={credentials.password} onChange={handleChange} />
-                </Form.Item>
-                <Form.Item>
-                    <Button type="primary" htmlType="submit">
+        <>
+            <Header className={`${styles.title} ${styles.header}`}>
+            LOGO HERE
+            </Header>
+            <div className={styles.loginContainer}>
+                {showError ? <Alert message="Error: Please Check Email and Password" type="error" /> : ''}
+                <Card title="Login">
+                    <Form name="Login" onFinish={signIn} className={styles.loginForm}>
+                        <Form.Item label="username" name="username" rules={[{ required: true, message: 'Please input username' }]}>
+                            <Input name="username" value={credentials.username} onChange={handleChange} />
+                        </Form.Item>
+                        <Form.Item label="password" name="password" rules={[{ required: true, message: 'Please input password' }]}>
+                            <Input.Password name="password" value={credentials.password} onChange={handleChange} />
+                        </Form.Item>
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit" className={styles.loginButton}>
                         Login
-                    </Button>
-                </Form.Item>
-            </Form>
-            <Divider className={styles.loginDivider} />
-            <button
-                type="button"
-                onClick={() => signInWithGoogle()}
-                className={styles.signInWithGoogle}
-            >
-                <Image src="/google.png" width={30} height={30} />
-                <p className={styles.googleSignInText}>Sign In With Google</p>
-            </button>
-            <div>
-                <Link href="/register">Need To Register?</Link>
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </Card>
+                <Divider className={styles.loginDivider} />
+                <button
+                    type="button"
+                    onClick={() => signInWithGoogle()}
+                    className={styles.signInWithGoogle}
+                >
+                    <Image src="/google.png" width={30} height={30} />
+                    <p className={styles.googleSignInText}>Sign In With Google</p>
+                </button>
+                <div>
+                    <Link href="/register">Need To Register?</Link>
+                </div>
             </div>
-        </div>
+        </>
+
     );
 }

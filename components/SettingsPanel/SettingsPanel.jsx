@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
+import Link from 'next/link';
 import {
-    Layout, Input, Button, Space, Alert,
+    Layout, Input, Button, Space, Alert, Card, Collapse,
 } from 'antd';
 import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { RepContext, BusinessNameContext, AuthContext } from '../../Context/Context';
@@ -30,6 +31,8 @@ export default function SettingsPanel() {
     const isUserPremium = usePremiumStatus(authContext);
 
     const plans = ['silver', 'bronze', 'gold'];
+
+    const { Panel } = Collapse;
 
     const saveBusinessName = async (val) => {
         const nameUpdateRef = doc(firestore, 'users', authContext.email);
@@ -99,61 +102,79 @@ export default function SettingsPanel() {
 
             <Layout>
                 <Space className={styles.settingsContainer}>
-                    <Space className={styles.billingContainer}>
-                        <p>Billing</p>
-                        <div>
-                            Current Plan: {isUserPremium.planName}
-                        </div>
-                        {planClicked ? <Button type="primary" loading>Redirecting To Stripe...</Button>
-                            : (
-                                <>
-                                    {plans.map((plan, idx) => (
-                                        isUserPremium.planName === plan ? <Button type="primary" key={idx} className={styles.planButton} disabled>Current Plan</Button>
-                                            : <Button type="primary" key={idx} className={styles.planButton} onClick={() => handleBilling(plan)}>Select {plan} Plan</Button>
-                                    ))}
-
-                                </>
-                            )}
-
-                    </Space>
                     <Space className={styles.businessInput}>
-                        <p className={styles.businessLabel}>Business Name</p>
-                        <Input placeholder="Company Name" value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
-                        <Button type="primary" onClick={() => saveBusinessName(businessName)}>Save</Button>
+                        <Card title="Business Name">
+                            <Input placeholder="Company Name" value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
+                            <Button type="primary" onClick={() => saveBusinessName(businessName)}>Save</Button>
+                        </Card>
                     </Space>
                     <Space className={styles.repListContainer}>
-                        <div className={styles.repInputBox}>
-                            <p className={styles.addRepLabel}>Add A New Rep</p>
-                            <p>Rep Name</p>
-                            <Input placeholder="Enter Rep Name" value={newRep.name} name="name" onChange={handleRepChange} />
-                            <p>Rep Number</p>
-                            <Input placeholder="Enter Rep Number" value={newRep.number} name="number" onChange={handleRepChange} />
-                            <Button onClick={() => saveContact(newRep)}>Add</Button>
-                        </div>
+                        <Card title="Add Reps">
+                            <div className={styles.repInputBox}>
+                                <div>
+                                    <p>Name</p>
+                                    <Input placeholder="Enter Rep Name" value={newRep.name} name="name" onChange={handleRepChange} />
+                                </div>
+                                <div>
+                                    <p>Phone Number</p>
+                                    <Input placeholder="Enter Rep Number" value={newRep.number} name="number" onChange={handleRepChange} />
+                                </div>
+                                <Button type="primary" onClick={() => saveContact(newRep)}>Add</Button>
+                            </div>
+                        </Card>
                         {/* input to add additional reps to contact list
                         iterate and show all added reps + numbers */}
                         <div>
-                            <p className={styles.businessLabel}>List of Current Reps</p>
-                            {repInfo && repInfo.length > 0
-                                ? repInfo.map((num, idx) => (
-                                    <div
-                                        key={idx}
-                                        className={styles.repContainer}
-                                    >
-                                        <p className={styles.repInfo}>
-                                            <span className={styles.repBold}>Name:</span>
-                                            {num?.name}
-                                        </p>
-                                        <p className={styles.repInfo}>
-                                            <span className={styles.repBold}>Phone:</span>
-                                            {num?.number}
-                                        </p>
-                                        <Button type="primary" danger onClick={() => removeRep(num?.name, num?.number)}>Remove</Button>
-                                    </div>
-                                )) : <div><p>No Reps Found. Please Add One.</p></div>}
+                            <Collapse>
+                                <Panel header="List of Current Reps">
+                                    {repInfo && repInfo.length > 0
+                                        ? repInfo.map((num, idx) => (
+                                            <div
+                                                className={styles.repContainer}
+                                                key={idx}
+                                            >
+                                                <p className={styles.repName}>{num?.name}</p>
+
+                                                <p className={styles.repInfo}>
+                                                    <div className={styles.repBold}>
+                                                    Phone Number:
+                                                    </div>
+                                                    <span>{num?.number}</span>
+                                                </p>
+                                                <Button type="primary" danger onClick={() => removeRep(num?.name, num?.number)}>Remove</Button>
+                                            </div>
+                                        )) : <div><p>No Reps Found. Please Add One.</p></div>}
+                                </Panel>
+                            </Collapse>
                         </div>
                     </Space>
+                    <Collapse>
+                        <Panel header="Manage Billing">
+                            <Space className={styles.billingContainer}>
+
+                                <div className={styles.currentPlan}>
+                            Current Plan: {isUserPremium.planName}
+                                </div>
+                                {planClicked ? <Button type="primary" loading>Redirecting To Stripe...</Button>
+                                    : (
+                                        <div className={styles.plans}>
+                                            {plans.map((plan, idx) => (
+                                                isUserPremium.planName === plan ? <Button type="primary" key={idx} className={styles.planButton} disabled>Current Plan</Button>
+                                                    : <Button type="primary" key={idx} className={styles.planButton} onClick={() => handleBilling(plan)}>Select {plan} Plan</Button>
+                                            ))}
+
+                                        </div>
+                                    )}
+                                <Space>
+                                    <div className={styles.viewPlansLink}>
+                                        <Link href="/plans">View Plans Page</Link>
+                                    </div>
+                                </Space>
+                            </Space>
+                        </Panel>
+                    </Collapse>
                 </Space>
+
             </Layout>
         </div>
     );

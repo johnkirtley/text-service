@@ -1,3 +1,14 @@
+html {
+    --primary-blue: #3f4bbd;
+    --secondary-blue: #646ecb;
+    --highlight-blue: #8a92d8;
+    --primary-black: #111111;
+    --secondary-black: #2a2a2a;
+    --primary-white: #ffffff;
+    --primary-font-size: 14px;
+    --primary-label-weight: 500;
+}
+
 html, body {
   padding: 0;
   margin: 0;
@@ -37,6 +48,56 @@ canvas {
   height: fit-content !important;
 }
 
+.ant-btn-primary {
+    background-color: var(--highlight-blue) !important;
+    border-color: var(--highlight-blue) !important;
+    color: var(--primary-white) !important;
+}
+
+.ant-btn-dangerous {
+    background-color: var(--primary-black) !important;
+    border-color: var(--primary-black) !important;
+    color: var(--primary-white) !important;
+}
+
+.ant-btn-primary[disabled] {
+    background-color: grey !important;
+    border-color: grey !important;
+}
+
+.ant-menu-item-selected, .ant-menu-item:hover {
+    color: var(--highlight-blue) !important;
+}
+
+.ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item:hover::after, .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item-selected::after {
+    border-color: var(--highlight-blue) !important;
+}
+
+.ant-card-body {
+    justify-content: center;
+    align-items: center;
+    display: flex !important;
+    gap: 1rem;
+    width: 30rem;
+}
+
+.ant-card-head-title {
+    text-align: center;
+}
+
+.ant-card-head {
+    background-color: #fafafa !important;
+}
+
+.ant-collapse {
+    width: 30rem;
+    font-weight: 500;
+}
+
+.ant-collapse-header {
+    text-align: center;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
@@ -57,4 +118,12 @@ canvas {
   .ant-layout-sider-trigger {
     max-width: 80px !important;
   }
+
+  .ant-menu-title-content {
+    display: none !important;
+}
+
+.ant-collapse, .ant-card-body {
+    width: 20rem;
+}
 }

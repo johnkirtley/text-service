@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useContext } from 'react';
 import {
     getDocs, collection, query, where, updateDoc, arrayRemove, doc,
 } from 'firebase/firestore';
-import { Layout, Space, Button } from 'antd';
+import { Layout, Space, Button, Card } from 'antd';
 import { firestore } from '../../firebase/clientApp';
 
 import styles from './PendingRestock.module.css';
@@ -59,9 +59,12 @@ export default function PendingRestocks() {
                 {pendingRestocks && pendingRestocks.length > 0
                     ? pendingRestocks.map((item, idx) => (
                         <div key={idx} className={styles.restockItemContainer}>
-                            <div>Client: {item.client}</div>
-                            <div>Product: {item.requestedProduct}</div>
-                            <Button type="primary" onClick={() => fulfillRestock(item.client, item.requestedProduct, idx)}>Completed</Button>
+                            <Card title={item.client}>
+                                <div className={styles.restockCardInfo}>
+                                    <div>{item.requestedProduct}</div>
+                                    <Button type="primary" onClick={() => fulfillRestock(item.client, item.requestedProduct, idx)}>Completed</Button>
+                                </div>
+                            </Card>
                         </div>
                     )) : 'No Pending Restock Requests'}
             </div>

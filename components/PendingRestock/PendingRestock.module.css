@@ -1,6 +1,12 @@
 .restockItemContainer {
-    border: 1px solid black;
     display: flex;
-    gap: 60px;
-    padding: 20px;
+    gap: 40px;
+    padding: 7px;
+}
+
+.restockCardInfo {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
 }

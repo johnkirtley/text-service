@@ -6,6 +6,19 @@
 
 .productInfoInputs {
     min-width: 18rem;
+    margin-bottom: 2rem;
+
+}
+
+.addProductPanel {
+    display: flex;
+    gap: 1rem;
+    flex-flow: column;
+}
+
+.addProductPanel button {
+    width: 50%;
+    margin: auto;
 }
 
 .infoInput {
@@ -34,6 +47,7 @@
     width: 100%;
     padding: 0 2rem;
     margin-top: 5rem;
+
 }
 
 .productContainerDiv {
@@ -43,7 +57,8 @@
 
 .selectProductsLabel {
     font-weight: 600;
-    margin-bottom: 2rem;
+    margin-bottom: 0rem;
+    text-decoration: underline;
 }
 
 .productScroll {
@@ -103,7 +118,6 @@
 
     .productContainerDiv {
         min-width: 0rem;
-        width: max-content;
     }
 
     .productInfoInputs {
@@ -114,8 +128,9 @@
         padding: 1rem 0;
     }
 
-    .infoInput {
-
+    .addProductPanel button {
+        width: 100%;
+        margin: auto;
     }
 
 }
