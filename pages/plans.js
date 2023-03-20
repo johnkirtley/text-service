@@ -11,7 +11,9 @@ export default function Plans() {
             <Header className={`${styles.title} ${styles.header}`}>
             LOGO HERE
             </Header>
-            <PlansPage />
+            <Layout style={{ minHeight: '100vh' }}>
+                <PlansPage />
+            </Layout>
             <MainFooter />
         </div>
     );
