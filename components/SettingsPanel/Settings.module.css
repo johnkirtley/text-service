@@ -108,6 +108,18 @@
     margin-top: 2rem;
 }
 
+.deleteButton {
+    border-color: red !important;
+    color: red !important;
+    margin-top: 1rem;
+}
+
+.deleteButton:hover {
+    background-color: red !important;
+    border-color: red !important;
+    color: var(--primary-white) !important
+}
+
 @media (max-width: 500px) {
     .repContainer {
         display: flex;
