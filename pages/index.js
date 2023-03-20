@@ -26,8 +26,6 @@ export default function MainComponent() {
     const { user, loading } = useAuth();
     const router = useRouter();
 
-    console.log('user', user);
-
     const getQuery = useCallback(async (ref) => {
         const q = query(ref, where('email', '==', user.email.toLowerCase()));
         const querySnapshot = await getDocs(q);
