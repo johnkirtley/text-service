@@ -54,6 +54,7 @@ export default function QRCode({ qrCodes, loading, selectedRep, repOptions }) {
                         base64Codes: content,
                         clientName: `${sanitizedFileName}`,
                     };
+                    window.location = `data:application/zip;base64,${content}`;
                     axios.post('https://text-service-mailer.herokuapp.com/api/code_submission/send', data)
                         .then((res) => console.log(res))
                         .catch((err) => console.log(err));
@@ -119,7 +120,7 @@ export default function QRCode({ qrCodes, loading, selectedRep, repOptions }) {
                                 />
                             </Space>
                             <Button onClick={sendEmail} type="primary" className={styles.sendForPrintingButton}>
-                            Confirm and Send For Printing
+                            Confirm and Download
                             </Button>
                         </Content>
 

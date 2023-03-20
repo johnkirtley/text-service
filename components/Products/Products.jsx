@@ -242,7 +242,7 @@ export default function Products() {
 
                 </div>
                 <div className={styles.productInfoInputs}>
-                    <p className="input-label">
+                    <p className={styles.generatedCodes}>
                             Generated Codes
                     </p>
                     {loading ? <Spin tip="Working Our Magic" className={styles.codesLoading} /> : ''}

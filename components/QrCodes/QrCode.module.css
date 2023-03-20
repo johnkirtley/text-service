@@ -11,7 +11,7 @@
 }
 
 .codesGenerated {
-    margin-top: -6rem;
+    margin-top: -7rem;
     display: flex;
     flex-flow: column;
     align-items: center;
@@ -24,8 +24,7 @@
 }
 
 .qrContainer {
-    margin-top: -4rem !important;
-    height: 40rem !important;
+    height: 30rem !important;
     display: flex;
     overflow-y: scroll;
     height: 20rem;
