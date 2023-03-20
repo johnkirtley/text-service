@@ -23,6 +23,8 @@ export default function Submit() {
     const { user } = useAuth();
     const { planName } = usePremiumStatus(user);
 
+    console.log('plan', planName);
+
     const { Content, Header } = Layout;
 
     if (typeof window !== 'undefined') {
@@ -80,7 +82,7 @@ export default function Submit() {
             </Header>
             <Layout style={{ minHeight: '100vh' }}>
                 {!planName ? (
-                    <Modal title="Basic Modal" open centered="true" footer={null}>
+                    <Modal title="Plan Status" open centered="true" footer={null}>
                         <p>Plan Not Active. Please Contact Account Owner</p>
                     </Modal>
                 ) : ''}
