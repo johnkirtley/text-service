@@ -21,9 +21,10 @@ export default function Submit() {
     const [success, setSuccess] = useState(false);
 
     const { user } = useAuth();
-    const { planName } = usePremiumStatus(user);
+    const planNameCheck = usePremiumStatus(user);
 
-    console.log('plan', planName);
+    console.log('user', user);
+    console.log('plan', planNameCheck);
 
     const { Content, Header } = Layout;
 
@@ -90,8 +91,8 @@ export default function Submit() {
                     <div>You Are About To Request A Restock For The Following Product:</div>
                     <div className={styles.requestProduct}>{product}</div>
                     {/* on click, trigger email and send order to order status screen */}
-                    <Button type="primary" loading={loading} disabled={success || !planName ? 'true' : ''} onClick={planName ? () => addPendingRestock({ client: clientName, requestedProduct: product }) : ''}>{success ? 'Request Sent Successfully. You May Close This Page' : 'Request Restock'}</Button>
-                    {planName === 'silver' || !planName ? '' : <Button type="default" href={`sms:${repNumber}&body=${trimmedMessage}`}>Text Rep Directly</Button> }
+                    <Button type="primary" loading={loading} disabled={success ? 'true' : ''} onClick={() => addPendingRestock({ client: clientName, requestedProduct: product })}>{success ? 'Request Sent Successfully. You May Close This Page' : 'Request Restock'}</Button>
+                    {planName === 'silver' ? '' : <Button type="default" href={`sms:${repNumber}&body=${trimmedMessage}`}>Text Rep Directly</Button> }
                     <div className={styles.poweredBy}>
                         Powered By Supply Mate
                     </div>
