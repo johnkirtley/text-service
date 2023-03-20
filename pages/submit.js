@@ -4,8 +4,6 @@ import {
     getDocs, collection, query, where, doc, updateDoc, arrayUnion,
 } from 'firebase/firestore';
 import { Layout, Button } from 'antd';
-import { useAuth } from '../Context/AuthContext';
-import usePremiumStatus from '../stripe/usePremiumStatus';
 import { firestore } from '../firebase/clientApp';
 import styles from '../styles/Home.module.css';
 
@@ -20,13 +18,9 @@ export default function Submit() {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
 
-    const { user } = useAuth();
-    const planNameCheck = usePremiumStatus(user);
+    const planName = 'silver';
 
-    console.log('user', user);
-    console.log('plan', planNameCheck);
-
-    const planName = 'bronze';
+    // make firebase call based on uid in url to get updated plan status
 
     const { Content, Header } = Layout;
 
