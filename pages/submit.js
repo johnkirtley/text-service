@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import {
     getDocs, collection, query, where, doc, updateDoc, arrayUnion,
 } from 'firebase/firestore';
-import { Layout, Button, Modal } from 'antd';
+import { Layout, Button } from 'antd';
 import { useAuth } from '../Context/AuthContext';
 import usePremiumStatus from '../stripe/usePremiumStatus';
 import { firestore } from '../firebase/clientApp';
