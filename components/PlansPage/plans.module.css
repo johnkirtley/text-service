@@ -1,0 +1,53 @@
+.planGrid {
+    display: flex;
+    flex-flow: column;
+    gap: 2rem;
+    width: 60%;
+    margin: auto;
+    justify-content: center;
+    align-items: center;
+    text-transform: capitalize;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.cardBody {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.planPrice {
+    font-weight: var(--primary-label-weight);
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+}
+
+.currentPlan {
+    text-transform: capitalize;
+    font-weight: var(--primary-label-weight);
+}
+
+.planButton {
+    text-transform: capitalize;
+}
+
+.feature {
+    padding: 0.6rem 0;
+}
+
+.goHome {
+    display: flex;
+    justify-content: flex-start;
+    align-items: baseline;
+    gap: 0.6rem;
+    font-size: 1.25rem;
+    margin: 1.25rem 0 0 1rem;
+}
+
+.goHome:hover {
+    color: var(--primary-blue);
+    cursor: pointer;
+    
+}
