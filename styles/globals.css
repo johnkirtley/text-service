@@ -54,6 +54,12 @@ canvas {
     color: var(--primary-white) !important;
 }
 
+.ant-btn-primary:hover {
+    background-color: var(--primary-white) !important;
+    border-color: var(--highlight-blue) !important;
+    color: var(--highlight-blue) !important;
+}
+
 .ant-btn-dangerous {
     background-color: var(--primary-black) !important;
     border-color: var(--primary-black) !important;
@@ -63,6 +69,17 @@ canvas {
 .ant-btn-primary[disabled] {
     background-color: grey !important;
     border-color: grey !important;
+}
+
+.ant-btn-default {
+    border-color: var(--highlight-blue) !important;
+    color: var(--highlight-blue) !important;
+}
+
+.ant-btn-default:hover {
+    border-color: var(--highlight-blue) !important;
+    background-color: var(--highlight-blue) !important;
+    color: var(--primary-white) !important;
 }
 
 .ant-menu-item-selected, .ant-menu-item:hover {

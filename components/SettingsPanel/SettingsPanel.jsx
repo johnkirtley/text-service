@@ -2,7 +2,7 @@
 import { useContext, useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
-    Layout, Input, Button, Space, Alert, Card, Collapse,
+    Layout, Input, Button, Space, Alert, Card, Collapse, Modal,
 } from 'antd';
 import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { RepContext, BusinessNameContext } from '../../Context/Context';
@@ -31,6 +31,7 @@ export default function SettingsPanel() {
     const [planClicked, setPlanClicked] = useState(false);
     const [searchRep, setSearchRep] = useState('');
     const [filteredSearch, setFilteredSearch] = useState(repInfo);
+    const [accountDeleteModal, setAccountDeleteModal] = useState(false);
     const { user } = useAuth();
     const isUserPremium = usePremiumStatus(user);
 
@@ -116,11 +117,22 @@ export default function SettingsPanel() {
         createCheckoutSession(user.uid, planType);
     };
 
+    const deleteUser = async () => {
+        setAccountDeleteModal(true);
+    };
+
+    const handleDelete = async () => {
+        await user?.delete();
+    };
+
     return (
         <div>
             {displayAlert ? <Alert message="Business name updated" type="success" className={styles.successAlert} /> : ''}
 
             <Layout>
+                <Modal centered title="Account Delete Confirmation" open={accountDeleteModal} onOk={handleDelete} onCancel={() => setAccountDeleteModal(false)}>
+                Are You Sure You Want To Delete Your Account?
+                </Modal>
                 <Space className={styles.settingsContainer}>
                     <Space className={styles.businessInput}>
                         <Collapse defaultActiveKey={1}>
@@ -194,13 +206,19 @@ export default function SettingsPanel() {
                                         </div>
                                     )}
                                 <Space>
-                                    <div className={styles.viewPlansLink}>
+                                    <Button className={styles.viewPlansLink}>
                                         <Link href="/plans">View Plans Page</Link>
-                                    </div>
+                                    </Button>
                                 </Space>
+                                <Button>
+                                    Cancel Subscription
+                                </Button>
                             </Space>
                         </Panel>
                     </Collapse>
+                    <Button onClick={deleteUser} className={styles.deleteButton}>
+                                                    Delete Account
+                    </Button>
                 </Space>
 
             </Layout>
