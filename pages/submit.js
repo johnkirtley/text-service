@@ -26,6 +26,8 @@ export default function Submit() {
     console.log('user', user);
     console.log('plan', planNameCheck);
 
+    const planName = 'bronze';
+
     const { Content, Header } = Layout;
 
     if (typeof window !== 'undefined') {
