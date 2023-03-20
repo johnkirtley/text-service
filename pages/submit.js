@@ -81,11 +81,11 @@ export default function Submit() {
         LOGO HERE
             </Header>
             <Layout style={{ minHeight: '100vh' }}>
-                {!planName ? (
+                {/* {!planName ? (
                     <Modal title="Plan Status" open centered="true" footer={null}>
                         <p>Plan Not Active. Please Contact Account Owner</p>
                     </Modal>
-                ) : ''}
+                ) : ''} */}
                 <Content className={styles.requestContainer}>
                     <div>You Are About To Request A Restock For The Following Product:</div>
                     <div className={styles.requestProduct}>{product}</div>
