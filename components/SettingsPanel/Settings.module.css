@@ -37,6 +37,15 @@
     flex-flow: column;
 }
 
+.businessNameContainer {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem 2rem 2rem 2rem;
+    gap: 1rem;
+}
+
 .businessLabel {
     font-weight: 600;
     margin: 0;
@@ -56,6 +65,16 @@
     flex-flow: column;
     gap: 2rem;
     width: 25rem;
+}
+
+.repScroll {
+    overflow-y: scroll;
+    height: 20rem;
+}
+
+.searchRepsInput {
+    width: 85%;
+    margin: auto;
 }
 
 .addRepLabel {

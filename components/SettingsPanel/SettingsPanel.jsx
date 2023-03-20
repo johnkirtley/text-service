@@ -1,4 +1,5 @@
-import { useContext, useState } from 'react';
+/* eslint-disable max-len */
+import { useContext, useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
     Layout, Input, Button, Space, Alert, Card, Collapse,
@@ -28,6 +29,8 @@ export default function SettingsPanel() {
     const [newRep, setNewRep] = useState(defaultRep);
     const [displayAlert, setDisplayAlert] = useState(false);
     const [planClicked, setPlanClicked] = useState(false);
+    const [searchRep, setSearchRep] = useState('');
+    const [filteredSearch, setFilteredSearch] = useState(repInfo);
     const { user } = useAuth();
     const isUserPremium = usePremiumStatus(user);
 
@@ -53,6 +56,22 @@ export default function SettingsPanel() {
             [e.target.name]: e.target.value,
         });
     };
+
+    const handleRepSearch = (e) => {
+        const searchValue = e.target.value;
+        setSearchRep(searchValue);
+    };
+
+    useEffect(() => {
+        const filtered = repInfo.filter((rep) => rep.name.toLowerCase().includes(searchRep.toLowerCase())
+        || rep.number.includes(searchRep));
+
+        if (searchRep.trim() === '') {
+            setFilteredSearch(repInfo);
+        } else {
+            setFilteredSearch(filtered);
+        }
+    }, [repInfo, searchRep]);
 
     const saveContact = async (rep) => {
         // backend api call to store phone number in DB
@@ -104,10 +123,14 @@ export default function SettingsPanel() {
             <Layout>
                 <Space className={styles.settingsContainer}>
                     <Space className={styles.businessInput}>
-                        <Card title="Business Name">
-                            <Input placeholder="Company Name" value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
-                            <Button type="primary" onClick={() => saveBusinessName(businessName)}>Save</Button>
-                        </Card>
+                        <Collapse defaultActiveKey={1}>
+                            <Panel header="Business Name" key={1}>
+                                <div className={styles.businessNameContainer}>
+                                    <Input placeholder="Company Name" value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
+                                    <Button type="primary" onClick={() => saveBusinessName(businessName)}>Update</Button>
+                                </div>
+                            </Panel>
+                        </Collapse>
                     </Space>
                     <Space className={styles.repListContainer}>
                         <Card title="Add Reps">
@@ -128,23 +151,27 @@ export default function SettingsPanel() {
                         <div>
                             <Collapse>
                                 <Panel header="List of Current Reps">
-                                    {repInfo && repInfo.length > 0
-                                        ? repInfo.map((num, idx) => (
-                                            <div
-                                                className={styles.repContainer}
-                                                key={idx}
-                                            >
-                                                <p className={styles.repName}>{num?.name}</p>
+                                    <div className={styles.repScroll}>
+                                        <Input placeholder="Search Reps..." value={searchRep} name="repSearch" onChange={handleRepSearch} className={styles.searchRepsInput} />
+                                        {filteredSearch && filteredSearch.length > 0
+                                            ? filteredSearch.map((num, idx) => (
+                                                <div
+                                                    className={styles.repContainer}
+                                                    key={idx}
+                                                >
+                                                    <p className={styles.repName}>{num?.name}</p>
 
-                                                <div className={styles.repInfo}>
-                                                    <p className={styles.repBold}>
+                                                    <div className={styles.repInfo}>
+                                                        <p className={styles.repBold}>
                                                     Phone Number:
-                                                    </p>
-                                                    <p>{num?.number}</p>
+                                                        </p>
+                                                        <p>{num?.number}</p>
+                                                    </div>
+                                                    <Button type="primary" danger onClick={() => removeRep(num?.name, num?.number)}>Remove</Button>
                                                 </div>
-                                                <Button type="primary" danger onClick={() => removeRep(num?.name, num?.number)}>Remove</Button>
-                                            </div>
-                                        )) : <div><p>No Reps Found. Please Add One.</p></div>}
+                                            )) : <div><p>No Reps Found. Please Add One.</p></div>}
+                                    </div>
+
                                 </Panel>
                             </Collapse>
                         </div>
