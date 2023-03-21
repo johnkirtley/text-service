@@ -192,7 +192,7 @@
 
 .signUpAlert {
     width: 40%;
-    margin-top: 1rem;
+    margin: 1rem auto auto auto;
     text-align: center;
 }
 
@@ -239,6 +239,6 @@
     }
 
     .signUpAlert {
-        width: 90%;
+        width: 80%;
     }
 }
