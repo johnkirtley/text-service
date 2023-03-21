@@ -211,7 +211,7 @@ export default function SettingsPanel() {
                                     </Button>
                                 </Space>
                                 <Button>
-                                    Cancel Subscription
+                                    Manage Subscription
                                 </Button>
                             </Space>
                         </Panel>

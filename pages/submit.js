@@ -49,13 +49,17 @@ export default function Submit() {
                 querySubCollection('customers', 'email', '==', email, 'subscriptions').then((subCollection) => {
                     if (subCollection.length > 0) {
                         subCollection.forEach((sub) => {
-                            if (sub.mostRecentSubDoc?.status === 'active') {
+                            if (sub.mostRecentSubDoc?.status === 'active' || sub.mostRecentSubDoc?.status === 'trialing') {
                                 setPlan(sub.mostRecentSubDoc?.role);
                             }
-                            setGettingData(false);
+                            setTimeout(() => {
+                                setGettingData(false);
+                            }, 2000);
                         });
                     } else {
-                        setGettingData(false);
+                        setTimeout(() => {
+                            setGettingData(false);
+                        }, 2000);
                     }
                 });
             }
@@ -93,14 +97,14 @@ export default function Submit() {
             <Layout style={{ minHeight: '100vh' }}>
                 {gettingData ? (
                     <Modal title="Plan Status" open centered="true" footer={null}>
-                        <p>{plan === '' ? 'Plan Not Active. Please Contact Account Owner' : 'Loading...'}</p>
+                        <p>Loading...</p>
                     </Modal>
                 ) : ''}
                 <Content className={styles.requestContainer}>
                     <div>You Are About To Request A Restock For The Following Product:</div>
                     <div className={styles.requestProduct}>{product}</div>
                     {/* on click, trigger email and send order to order status screen */}
-                    <Button type="primary" loading={loading} disabled={success ? true : ''} onClick={() => addPendingRestock({ client: clientName, requestedProduct: product })}>{success ? 'Request Sent Successfully. You May Close This Page' : 'Request Restock'}</Button>
+                    {!gettingData && plan === '' ? <Button disabled>Plan Not Active. Please Contact Account Owner.</Button> : <Button type="primary" loading={loading} disabled={success ? true : ''} onClick={() => addPendingRestock({ client: clientName, requestedProduct: product })}>{success ? 'Request Sent Successfully. You May Close This Page' : 'Request Restock'}</Button>}
                     {plan === 'silver' || plan === '' ? '' : <Button type="default" href={`sms:${repNumber}&body=${trimmedMessage}`}>Text Rep Directly</Button> }
                     <div className={styles.poweredBy}>
                         Powered By Supply Mate
