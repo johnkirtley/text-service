@@ -35,6 +35,8 @@ export default function SettingsPanel() {
     const { user } = useAuth();
     const isUserPremium = usePremiumStatus(user);
 
+    console.log(isUserPremium);
+
     const plans = ['silver', 'bronze', 'gold'];
 
     const { Panel } = Collapse;
