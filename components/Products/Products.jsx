@@ -119,7 +119,7 @@ export default function Products() {
             const trimmedCustomerName = clientInfo.replace(' ', '%20');
             // const message = `${product}%20to%20${trimmedCustomerName}`;
             // const trimmed = message.replace(' ', '%20');
-            const url = encodeURIComponent(`https://app.physicalmint.com/submit?product=${product}&rep=${selectedRep}&clientName=${trimmedCustomerName}&ownerName=${businessName}&id=${ownerId}`);
+            const url = encodeURIComponent(`https://app.supplymate.io/submit?product=${product}&rep=${selectedRep}&clientName=${trimmedCustomerName}&ownerName=${businessName}&id=${ownerId}`);
             const codeString = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${url}`;
             return { name: product, src: codeString };
         });
