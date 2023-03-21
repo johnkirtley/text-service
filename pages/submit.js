@@ -47,12 +47,16 @@ export default function Submit() {
                 setEmail(document.data().email);
 
                 querySubCollection('customers', 'email', '==', email, 'subscriptions').then((subCollection) => {
-                    subCollection.forEach((sub) => {
-                        if (sub.mostRecentSubDoc?.status === 'active') {
-                            setPlan(sub.mostRecentSubDoc?.role);
-                        }
+                    if (subCollection.length > 0) {
+                        subCollection.forEach((sub) => {
+                            if (sub.mostRecentSubDoc?.status === 'active') {
+                                setPlan(sub.mostRecentSubDoc?.role);
+                            }
+                            setGettingData(false);
+                        });
+                    } else {
                         setGettingData(false);
-                    });
+                    }
                 });
             }
         });
