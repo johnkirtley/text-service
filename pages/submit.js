@@ -91,9 +91,9 @@ export default function Submit() {
         LOGO HERE
             </Header>
             <Layout style={{ minHeight: '100vh' }}>
-                {!gettingData === '' ? (
+                {gettingData ? (
                     <Modal title="Plan Status" open centered="true" footer={null}>
-                        <p>{plan ? 'Plan Not Active. Please Contact Account Owner' : 'Loading...'}</p>
+                        <p>{plan === '' ? 'Plan Not Active. Please Contact Account Owner' : 'Loading...'}</p>
                     </Modal>
                 ) : ''}
                 <Content className={styles.requestContainer}>
