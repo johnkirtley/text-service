@@ -190,6 +190,12 @@
     font-weight: bold;
 }
 
+.signUpAlert {
+    width: 40%;
+    margin: 1rem auto auto auto;
+    text-align: center;
+}
+
 @media (max-width: 600px) {
   .grid {
     width: 100%;
@@ -230,5 +236,9 @@
 
     .ant-menu-title-content {
         display: none !important;
+    }
+
+    .signUpAlert {
+        width: 90%;
     }
 }

@@ -39,6 +39,10 @@ canvas {
   font-weight: 500;
 }
 
+.ant-layout {
+    background-color: white !important;
+}
+
 .ant-page-header-heading-title {
   white-space: normal !important;
 }
@@ -69,6 +73,12 @@ canvas {
 .ant-btn-primary[disabled] {
     background-color: grey !important;
     border-color: grey !important;
+}
+
+.ant-btn[disabled] {
+    background-color: var(--primary-white) !important;
+    border-color: var(--highlight-blue) !important;
+    color: var(--highlight-blue) !important; 
 }
 
 .ant-btn-default {

@@ -18,18 +18,6 @@ export default function MyApp({ Component, pageProps }) {
     const [curProducts, setCurProducts] = useState([]);
     const [ownerId, setOwnerId] = useState(null);
 
-    // const isUserPremium = usePremiumStatus(user);
-
-    // console.log('planStatus', isUserPremium);
-
-    // const auth = firebaseAuth;
-
-    // useEffect(() => {
-    //     onAuthStateChanged(auth, (user) => {
-    //         setAuthContext(user);
-    //     });
-    // }, [auth]);
-
     return (
         <ProductContext.Provider value={{ curProducts, setCurProducts }}>
             <CustomerContext.Provider value={{ customerInfo, setCustomerInfo }}>

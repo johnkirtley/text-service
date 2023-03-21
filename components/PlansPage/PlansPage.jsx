@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { Card, Button } from 'antd';
+import { useState } from 'react';
+import { Card, Button, Modal } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import createCheckoutSession from '../../stripe/createCheckoutSession';
@@ -10,13 +11,13 @@ import planInfo from './planInfo';
 import styles from './plans.module.css';
 
 export default function PlansPage() {
-    // const [planClicked, setPlanClicked] = useState(false);
+    const [planClicked, setPlanClicked] = useState(false);
     const { user } = useAuth();
 
     const isUserPremium = usePremiumStatus(user);
 
     const handleBilling = (planType) => {
-        // setPlanClicked(true);
+        setPlanClicked(true);
         createCheckoutSession(user.uid, planType);
     };
     return (
@@ -29,6 +30,7 @@ export default function PlansPage() {
                     <p>Go Home</p>
                 </div>
             </Link>
+            {planClicked ? <Modal open={planClicked} title="Redirecting To Stripe" footer={null} centered closable={false}>Loading...</Modal> : ''}
             <div className={styles.planGrid}>
                 {planInfo.map((plan, id) => (
                     <Card title={plan.name} key={id}>

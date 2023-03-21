@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { useState, useContext, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Alert } from 'antd';
 import { HomeOutlined, BarcodeOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import { getDocs, collection, query, where } from 'firebase/firestore';
 import {
@@ -11,6 +11,7 @@ import { MetaHead, MainHeader, MainFooter } from '../components';
 import MainView from '../components/Main/MainView';
 import { firestore } from '../firebase/clientApp';
 import { useAuth } from '../Context/AuthContext';
+import usePremiumStatus from '../stripe/usePremiumStatus';
 
 // Styles
 import styles from '../styles/Home.module.css';
@@ -24,7 +25,16 @@ export default function MainComponent() {
     const { setCurProducts } = useContext(ProductContext);
     const { setOwnerId } = useContext(OwnerIdContext);
     const { user, loading } = useAuth();
+    const [newUserAlert, setNewUserAlert] = useState(false);
     const router = useRouter();
+
+    const { planName } = usePremiumStatus(user);
+
+    useEffect(() => {
+        if (planName === '') {
+            setNewUserAlert(true);
+        }
+    }, [planName]);
 
     const getQuery = useCallback(async (ref) => {
         const q = query(ref, where('email', '==', user.email.toLowerCase()));
@@ -95,7 +105,11 @@ export default function MainComponent() {
                             onSelect={(key) => setView(key.key)}
                             className={styles.navMenu}
                         />
-
+                        {newUserAlert ? (
+                            <div className={styles.signUpAlert}>
+                                <Alert message="Head To Settings To Choose Your Plan Before Generating Codes &#128522;" type="info" showIcon />
+                            </div>
+                        ) : ''}
                         <MainView view={view} />
                     </Layout>
                     <MainFooter />
