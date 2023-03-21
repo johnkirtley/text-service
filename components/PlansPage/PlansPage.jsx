@@ -6,6 +6,7 @@ import Link from 'next/link';
 import createCheckoutSession from '../../stripe/createCheckoutSession';
 import usePremiumStatus from '../../stripe/usePremiumStatus';
 import { useAuth } from '../../Context/AuthContext';
+import generatePortal from '../../stripe/createPortal';
 
 import planInfo from './planInfo';
 import styles from './plans.module.css';
@@ -18,7 +19,12 @@ export default function PlansPage() {
 
     const handleBilling = (planType) => {
         setPlanClicked(true);
-        createCheckoutSession(user.uid, planType);
+
+        if (isUserPremium.planName === '') {
+            createCheckoutSession(user.uid, planType);
+        } else {
+            generatePortal();
+        }
     };
     return (
         <div>
