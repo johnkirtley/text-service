@@ -12,6 +12,7 @@ import { useAuth } from '../../Context/AuthContext';
 // Helper Functions
 import { handleTextChange, generateCanvasImg } from '../../utils/helpers';
 import QRCode from '../QrCodes/QRCode';
+import usePremiumStatus from '../../stripe/usePremiumStatus';
 
 // styles
 
@@ -33,24 +34,8 @@ export default function Products() {
     const { repInfo } = useContext(RepContext);
     const { clientInfo, setClientInfo } = useContext(ClientContext);
     const { ownerId } = useContext(OwnerIdContext);
-    // const { customerInfo } = useContext(CustomerContext);
 
-    // useEffect(() => {
-    //     if (customerInfo.products) {
-    //         setCurProducts(customerInfo.products);
-    //     }
-    // }, [customerInfo.products]);
-
-    // const getQuery = useCallback(async (ref) => {
-    //     const q = query(ref, where('email', '==', authContext.email));
-
-    //     const querySnapshot = await getDocs(q);
-    //     querySnapshot.forEach((document) => {
-    //         if (document.data().email === authContext.email) {
-    //             setCurProducts(document.data().products);
-    //         }
-    //     });
-    // }, [authContext.email]);
+    const { planName } = usePremiumStatus(user);
 
     const addProduct = async (val) => {
         if (val && val.length > 0) {
@@ -121,6 +106,10 @@ export default function Products() {
 
         if (businessName.length < 1) {
             alert('Please Add Your Business Name Under Settings');
+            return;
+        }
+
+        if (planName === '') {
             return;
         }
 
@@ -220,7 +209,7 @@ export default function Products() {
                                     ))}
                                 </div>
                                 <Space />
-                                <Button type="primary" onClick={generateCodes} className={styles.generateCodesButton}>Generate QR Codes</Button>
+                                <Button type="primary" onClick={generateCodes} disabled={planName === '' ? true : ''} className={styles.generateCodesButton}>Generate QR Codes</Button>
 
                             </div>
                         )

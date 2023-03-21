@@ -4,12 +4,16 @@ import Link from 'next/link';
 import {
     Layout, Input, Button, Space, Alert, Card, Collapse, Modal,
 } from 'antd';
-import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
+import {
+    doc, updateDoc, arrayUnion, arrayRemove, deleteDoc,
+} from 'firebase/firestore';
+import { deleteUser } from 'firebase/auth';
 import { RepContext, BusinessNameContext } from '../../Context/Context';
 import { firestore } from '../../firebase/clientApp';
-import createCheckoutSession from '../../stripe/createCheckoutSession';
+// import createCheckoutSession from '../../stripe/createCheckoutSession';
 import usePremiumStatus from '../../stripe/usePremiumStatus';
 import { useAuth } from '../../Context/AuthContext';
+import generatePortal from '../../stripe/createPortal';
 
 // Helper Functions
 import { handleTextChange } from '../../utils/helpers';
@@ -28,14 +32,15 @@ export default function SettingsPanel() {
     const { businessName, setBusinessName } = useContext(BusinessNameContext);
     const [newRep, setNewRep] = useState(defaultRep);
     const [displayAlert, setDisplayAlert] = useState(false);
-    const [planClicked, setPlanClicked] = useState(false);
+    // const [planClicked, setPlanClicked] = useState(false);
     const [searchRep, setSearchRep] = useState('');
     const [filteredSearch, setFilteredSearch] = useState(repInfo);
     const [accountDeleteModal, setAccountDeleteModal] = useState(false);
+    const [customerPortal, setCustomerPortal] = useState(false);
     const { user } = useAuth();
     const isUserPremium = usePremiumStatus(user);
 
-    const plans = ['silver', 'bronze', 'gold'];
+    // const plans = ['silver', 'bronze', 'gold'];
 
     const { Panel } = Collapse;
 
@@ -112,17 +117,25 @@ export default function SettingsPanel() {
         setNewRep(defaultRep);
     };
 
-    const handleBilling = (planType) => {
-        setPlanClicked(true);
-        createCheckoutSession(user.uid, planType);
-    };
+    // const handleBilling = (planType) => {
+    //     setPlanClicked(true);
+    //     createCheckoutSession(user.uid, planType);
+    // };
 
-    const deleteUser = async () => {
+    const confirmAccountDelete = async () => {
         setAccountDeleteModal(true);
     };
 
-    const handleDelete = async () => {
-        await user?.delete();
+    const handleDelete = () => {
+        if (user) {
+            const userRef = doc(firestore, 'users', user.email);
+            deleteDoc(userRef).then(() => deleteUser(user));
+        }
+    };
+
+    const handleManageBilling = () => {
+        setCustomerPortal(true);
+        generatePortal();
     };
 
     return (
@@ -189,13 +202,13 @@ export default function SettingsPanel() {
                         </div>
                     </Space>
                     <Collapse>
-                        <Panel header="Manage Billing">
+                        <Panel header="Manage Plan">
                             <Space className={styles.billingContainer}>
 
                                 <div className={styles.currentPlan}>
-                            Current Plan: {isUserPremium.planName}
+                            Current Plan: {isUserPremium.planName || 'No Active Plan'}
                                 </div>
-                                {planClicked ? <Button type="primary" loading>Redirecting To Stripe...</Button>
+                                {/* {planClicked ? <Button type="primary" loading>Redirecting To Stripe...</Button>
                                     : (
                                         <div className={styles.plans}>
                                             {plans.map((plan, idx) => (
@@ -204,21 +217,23 @@ export default function SettingsPanel() {
                                             ))}
 
                                         </div>
-                                    )}
+                                    )} */}
                                 <Space>
                                     <Button className={styles.viewPlansLink}>
-                                        <Link href="/plans">View Plans Page</Link>
+                                        <Link href="/plans">Upgrade Plan</Link>
                                     </Button>
                                 </Space>
-                                <Button>
-                                    Manage Subscription
+                                {isUserPremium.planName === '' ? '' : (
+                                    <Button onClick={handleManageBilling}>
+                                        {customerPortal ? 'Redirecting To Customer Portal...' : 'Manage Subscription'}
+                                    </Button>
+                                ) }
+                                <Button onClick={confirmAccountDelete} className={styles.deleteButton}>
+                        Delete Account
                                 </Button>
                             </Space>
                         </Panel>
                     </Collapse>
-                    <Button onClick={deleteUser} className={styles.deleteButton}>
-                                                    Delete Account
-                    </Button>
                 </Space>
 
             </Layout>

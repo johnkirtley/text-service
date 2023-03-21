@@ -67,6 +67,10 @@ export default function Submit() {
     }, [ownerId, email]);
 
     useEffect(() => {
+        console.log('rol', plan);
+    }, [plan]);
+
+    useEffect(() => {
         if (ownerId.length > 0) {
             const colRef = collection(firestore, 'users');
             getQuery(colRef);
@@ -74,15 +78,17 @@ export default function Submit() {
     }, [ownerId, getQuery]);
 
     const addPendingRestock = async (reqRestockProduct) => {
-        setLoading(true);
-        const restockRef = doc(firestore, 'users', email);
+        if (plan !== '') {
+            setLoading(true);
+            const restockRef = doc(firestore, 'users', email);
 
-        await updateDoc(restockRef, { pendingOrders: arrayUnion(reqRestockProduct) });
+            await updateDoc(restockRef, { pendingOrders: arrayUnion(reqRestockProduct) });
 
-        setTimeout(() => {
-            setLoading(false);
-            setSuccess(true);
-        }, 1000);
+            setTimeout(() => {
+                setLoading(false);
+                setSuccess(true);
+            }, 1000);
+        }
     };
 
     const trimmedCustomerName = clientName.replace(' ', '%20');
