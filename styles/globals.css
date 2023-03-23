@@ -92,9 +92,15 @@ canvas {
     color: var(--primary-white) !important;
 }
 
-.ant-menu-item-selected, .ant-menu-item:hover {
+.ant-menu-item-selected, .ant-menu-item:hover, .ant-tabs-tab-active > .ant-tabs-tab-btn, .ant-tabs-tab-btn:hover {
     color: var(--highlight-blue) !important;
 }
+
+.ant-tabs-ink-bar {
+    background: var(--highlight-blue) !important;
+}
+
+
 
 .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item:hover::after, .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item-selected::after {
     border-color: var(--highlight-blue) !important;
@@ -123,6 +129,10 @@ canvas {
 
 .ant-collapse-header {
     text-align: center;
+}
+
+th, td {
+    text-align: center !important;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -29,7 +29,9 @@ export default function SignIn() {
     const [showError, setShowError] = useState(false);
     const [emailExists, setEmailExists] = useState(false);
     const [invalidEmail, setInvalidEmail] = useState(false);
+    const [invalidPass, setInvalidPass] = useState(false);
     // const [showAlert, setShowAlert] = useState(false);
+    const [registerAccount, setRegisterAccount] = useState(false);
     const provider = new GoogleAuthProvider();
     const router = useRouter();
 
@@ -78,12 +80,20 @@ export default function SignIn() {
             return;
         }
 
+        if (password.length < 6) {
+            setInvalidPass(true);
+            return;
+        }
+
+        setRegisterAccount(true);
+
         createUserWithEmailAndPassword(auth, username, password)
             .then((userCredential) => {
                 const { user } = userCredential;
                 setShowError(false);
                 setEmailExists(false);
                 setInvalidEmail(false);
+                setInvalidPass(false);
 
                 const usersRef = doc(collection(firestore, 'users'), user.email.toLowerCase());
 
@@ -96,11 +106,12 @@ export default function SignIn() {
                     uid: uuidv4(),
                     pendingOrders: [],
                 });
-
+                setRegisterAccount(false);
                 router.push('/');
             }).catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
+                setRegisterAccount(false);
 
                 if (errorMessage.includes('email-already-in-use')) {
                     setEmailExists(true);
@@ -119,25 +130,22 @@ export default function SignIn() {
         });
     }, [credentials]);
 
-    useEffect(() => {
-        console.log(credentials);
-    }, [credentials]);
-
     return (
         <>
             <Header className={`${styles.title} ${styles.header}`}>
             LOGO HERE
             </Header>
             <div className={styles.registerContainer}>
+                {invalidPass ? <Alert message="Password must be at least 6 characters" type="error" /> : ''}
                 {showError ? <Alert message="Error: Passwords do not match" type="error" /> : ''}
                 {emailExists ? <Alert message="Error: Email already exists" type="error" /> : ''}
                 {invalidEmail ? <Alert message="Error: Invalid email" type="error" /> : ''}
                 <Card title="Register">
                     <Form name="Register" onFinish={signUp} className={styles.registerForm}>
-                        <Form.Item label="Username" name="username" rules={[{ required: true, message: 'Please input username' }]}>
+                        <Form.Item label="Email" name="username" rules={[{ required: true, message: 'Please input email' }]}>
                             <Input name="username" value={credentials.username} onChange={handleChange} />
                         </Form.Item>
-                        <Form.Item label="Password" name="password" rules={[{ required: true, message: 'Please input password' }]}>
+                        <Form.Item label="Password" name="password" extra="Password must be at least 6 characters" rules={[{ required: true, message: 'Please input password' }]}>
                             <Input.Password name="password" value={credentials.password} onChange={handleChange} />
                         </Form.Item>
                         <Form.Item label="Confirm Password" name="confirmPass" rules={[{ required: true, message: 'Please input password' }]}>
@@ -145,7 +153,7 @@ export default function SignIn() {
                         </Form.Item>
                         <Form.Item>
                             <Button type="primary" htmlType="submit" className={styles.registerButton}>
-                        Register
+                                {registerAccount ? 'Registering...' : 'Register'}
                             </Button>
                         </Form.Item>
                     </Form>

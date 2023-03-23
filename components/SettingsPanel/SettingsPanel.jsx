@@ -220,7 +220,7 @@ export default function SettingsPanel() {
                                     )} */}
                                 <Space>
                                     <Button className={styles.viewPlansLink}>
-                                        <Link href="/plans">Upgrade Plan</Link>
+                                        <Link href="/plans">{isUserPremium.planName !== '' ? 'View Plans' : 'Choose A Plan'}</Link>
                                     </Button>
                                 </Space>
                                 {isUserPremium.planName === '' ? '' : (
