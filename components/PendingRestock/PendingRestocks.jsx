@@ -107,7 +107,6 @@ export default function PendingRestocks() {
             <Space direction="vertical" size="large" />
             <div>
                 <Tabs defaultActiveKey="1" items={tabItems} onChange={onTabChange} />
-                {!pendingRestocks || pendingRestocks.length < 1 ? 'No Pending Restock Requests' : ''}
                 {tabView === '1' && pendingRestocks ? <Table bordered size="middle" columns={tableColumns} dataSource={pendingRestocks} className={styles.customTable} /> : ''}
                 {tabView === '2' && pendingRestocks ? <Table bordered size="middle" columns={tableColumns} dataSource={pendingRestocks} className={styles.customTable} /> : ''}
             </div>
