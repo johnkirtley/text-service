@@ -26,6 +26,7 @@ const { Header } = Layout;
 export default function Login() {
     const [credentials, setCredentials] = useState(defaultCredentials);
     const [showError, setShowError] = useState(false);
+    const [loggingIn, setLoggingIn] = useState(false);
     const provider = new GoogleAuthProvider();
     const router = useRouter();
 
@@ -63,15 +64,17 @@ export default function Login() {
             return;
         }
 
+        setLoggingIn(true);
+
         signInWithEmailAndPassword(auth, username, password)
             .then((userCredential) => {
                 const { user } = userCredential;
-
+                setLoggingIn(false);
                 router.push('/');
             }).catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
-
+                setLoggingIn(false);
                 if (errorMessage) {
                     setShowError(true);
                 }
@@ -102,7 +105,7 @@ export default function Login() {
                         </Form.Item>
                         <Form.Item>
                             <Button type="primary" htmlType="submit" className={styles.loginButton}>
-                        Login
+                                {loggingIn ? 'Logging In...' : 'Login'}
                             </Button>
                         </Form.Item>
                     </Form>
@@ -113,7 +116,7 @@ export default function Login() {
                     onClick={() => signInWithGoogle()}
                     className={styles.signInWithGoogle}
                 >
-                    <Image src="/google.png" width={30} height={30} />
+                    <Image src="/google.png" width={30} height={30} alt="Google SSO Image" />
                     <p className={styles.googleSignInText}>Sign In With Google</p>
                 </button>
                 <div>
