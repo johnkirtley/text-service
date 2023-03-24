@@ -1,3 +1,13 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.207); /* Semi-transparent black background */
+    z-index: 10; /* Higher than other page elements */
+  }
+
 .contentContainer {
     width: 100%;
     display: flex;
@@ -5,9 +15,23 @@
 }
 
 .productInfoInputs {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
     min-width: 18rem;
     margin-bottom: 2rem;
+    margin-top: 2rem;
 
+}
+
+.configInputs {
+    /* margin-bottom: 3rem; */
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-flow: column;
 }
 
 .addProductPanel {
@@ -51,13 +75,14 @@
     margin-bottom: 6rem;
     width: 100%;
     padding: 0 2rem;
-    margin-top: 5rem;
+    margin-top: 2rem;
 
 }
 
 .productContainerDiv {
     flex-flow: column;
     min-width: 18rem;
+    margin-top: 2rem;
 }
 
 .selectProductsLabel {
@@ -89,8 +114,16 @@
 }
 
 .generateCodesButton {
-    margin: 2rem 0;
+    /* margin: 2rem 0; */
     max-width: 13rem;
+}
+
+.generatedCodesContainer {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 4rem;
 }
 
 .noProducts {
@@ -99,11 +132,15 @@
     flex-flow: column;
     justify-content: center;
     align-items: center;
-    width: 16rem;
+}
+
+.noProductSpan {
+    color: #b1b1b1cf;
 }
 
 .addProductContainer {
-    margin-bottom: 4rem;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
     display: flex;
     flex-flow: column;
     justify-content: center;
@@ -111,7 +148,26 @@
 }
 
 .codesLoading {
-    margin-top: 4rem;
+    margin-top: 1rem;
+    z-index: 11;
+}
+
+.searchProducts {
+    width: 50%;
+    margin: 1rem auto;
+}
+
+.spinnerBackground {
+    z-index: 15;
+    padding: 4rem;
+    border-radius: 45px;
+    background-color: var(--primary-white);
+}
+
+.prevNextButtons {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1rem;
 }
 
 @media (max-width: 500px) {
@@ -138,4 +194,11 @@
         margin: auto;
     }
 
+    .spinnerBackground {
+        padding: 2rem;
+    }
+
+    .searchProducts {
+        width: 80%;
+    }
 }
