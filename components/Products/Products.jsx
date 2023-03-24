@@ -1,12 +1,14 @@
+/* eslint-disable max-len */
+/* eslint-disable sonarjs/cognitive-complexity */
 import { useState, useContext, useEffect } from 'react';
 import {
-    Layout, Input, PageHeader, Space, Button, Checkbox, Spin, Select, Collapse,
+    Layout, Input, PageHeader, Space, Button, Checkbox, Spin, Select, Collapse, Steps, Empty, Alert,
 } from 'antd';
 import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import styles from './Products.module.css';
 import { firestore } from '../../firebase/clientApp';
 import {
-    RepContext, ClientContext, BusinessNameContext, ProductContext, OwnerIdContext,
+    RepContext, ClientContext, BusinessNameContext, ProductContext, OwnerIdContext, SelectedContext,
 } from '../../Context/Context';
 import { useAuth } from '../../Context/AuthContext';
 // Helper Functions
@@ -21,12 +23,18 @@ const { Panel } = Collapse;
 
 export default function Products() {
     const [newProduct, setNewProduct] = useState('');
-    const [selectedProducts, setSelectedProducts] = useState([]);
+    const { setSelectedProducts } = useContext(SelectedContext);
     const [selectedRep, setSelectedRep] = useState('');
     const [repOptions, setRepOptions] = useState([]);
     // const [customerName, setCustomerName] = useState('');
     const [qrCodes, setQRCodes] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [current, setCurrent] = useState(0);
+    const [productAdded, setProductAdded] = useState(false);
+    const [productRemoved, setProductRemoved] = useState(false);
+    const [alreadyAdded, setAlreadyAdded] = useState(false);
+    const [searchProduct, setSearchProduct] = useState('');
+    const [filteredProducts, setFilteredProducts] = useState([]);
     const { businessName } = useContext(BusinessNameContext);
     const { curProducts, setCurProducts } = useContext(ProductContext);
     const { user } = useAuth();
@@ -37,18 +45,81 @@ export default function Products() {
 
     const { planName } = usePremiumStatus(user);
 
+    const next = () => {
+        setCurrent(current + 1);
+        setSearchProduct('');
+    };
+
+    const previous = () => {
+        setCurrent(current - 1);
+        setSelectedProducts([]);
+        setQRCodes([]);
+
+        if (current === 1) {
+            setSelectedRep('');
+        }
+    };
+
+    const handleProductSearch = (e) => {
+        const searchValue = e.target.value;
+        setSearchProduct(searchValue);
+    };
+
+    useEffect(() => {
+        const filtered = curProducts.filter((prod) => prod.product.toLowerCase().includes(searchProduct.toLowerCase()));
+
+        if (searchProduct.trim() === '') {
+            setFilteredProducts(curProducts);
+        } else {
+            setFilteredProducts(filtered);
+        }
+    }, [searchProduct, curProducts]);
+
+    // const makeInactive = () => {
+    //     const newArr = [...curProducts];
+    //     const unchecked = newArr.map((obj) => ({
+    //         product: obj.product,
+    //         isChecked: false,
+    //     }));
+    //     setCurProducts(unchecked);
+    // };
+
+    // const reset = () => {
+    //     setCurrent(0);
+    //     setClientInfo('');
+    //     setSelectedProducts([]);
+    //     setQRCodes([]);
+    //     setSelectedRep('');
+    //     makeInactive();
+    // };
+
+    const steps = [
+        { title: 'Configure' },
+        { title: 'Select Products' },
+        { title: 'Generate QR Codes' },
+    ];
+
     const addProduct = async (val) => {
+        const noDupes = curProducts.some((product) => product.product.toLowerCase() === val.toLowerCase());
         if (val && val.length > 0) {
-            if (curProducts && !curProducts.includes(val)) {
+            if (curProducts && !noDupes) {
                 const productRef = doc(firestore, 'users', user.email);
 
                 await updateDoc(productRef, { products: arrayUnion(val) });
 
-                setCurProducts((oldProducts) => [...oldProducts, val]);
+                setCurProducts((oldProducts) => [{ product: val, isChecked: false }, ...oldProducts]);
+                setProductAdded(true);
+
+                setTimeout(() => {
+                    setProductAdded(false);
+                }, 1500);
                 setNewProduct('');
             } else {
                 setNewProduct('');
-                alert('Product Already Added');
+                setAlreadyAdded(true);
+                setTimeout(() => {
+                    setAlreadyAdded(false);
+                }, 1500);
             }
         }
     };
@@ -60,7 +131,7 @@ export default function Products() {
         await updateDoc(prodRemoveRef, { products: arrayRemove(dataToRemove) });
 
         // const filteredCur = curProducts.filter((prod) => prod !== val);
-        const filteredSelect = selectedProducts.filter((prod) => prod !== val);
+        const filteredSelect = curProducts.filter((prod) => prod.product.toLowerCase() !== val.toLowerCase());
 
         const copyArr = [...curProducts];
         const index = copyArr.indexOf(val);
@@ -72,29 +143,58 @@ export default function Products() {
 
             setCurProducts(copyArr);
         }
-        setSelectedProducts(filteredSelect);
+        setProductRemoved(true);
+        setCurProducts(filteredSelect);
         // setCurProducts(filteredCur);
+
+        setTimeout(() => {
+            setProductRemoved(false);
+        }, 1500);
     };
 
-    const onCheckChange = (e, product) => {
-        if (e.target.checked) {
-            selectedProducts.push(product);
+    const onCheckChange = (product, idx) => {
+        let newArr;
+
+        if (filteredProducts.length > 0) {
+            newArr = [...filteredProducts];
+        } else {
+            newArr = [...curProducts];
         }
 
-        if (!e.target.checked) {
-            setSelectedProducts(selectedProducts.filter((p) => p !== product));
+        newArr[idx].isChecked = !newArr[idx].isChecked;
+
+        if (newArr[idx].isChecked) {
+            setSelectedProducts([...newArr, { product, isChecked: newArr[idx].isChecked }]);
         }
+
+        if (!newArr[idx].isChecked) {
+            const filter = newArr.map((prod) => prod !== product);
+            setSelectedProducts(filter);
+        }
+        console.log('curret', curProducts);
+
+        // if (e.target.checked) {
+        //     const newArr = [...selectedProducts, product];
+        //     setSelectedProducts(newArr);
+        // }
+
+        // if (!e.target.checked) {
+        //     setSelectedProducts(selectedProducts.filter((p) => p !== product));
+        // }
         // setCheckedList(list);
         // setIndeterminate(!!list.length && list.length < products.length);
         // setCheckAll(list.length === products.length);
     };
+
+    const checkActive = () => curProducts.some((obj) => obj.isChecked);
+
     const generateCodes = () => {
         if (clientInfo.length < 1) {
             alert('Please Add Customer Name');
             return;
         }
 
-        if (selectedProducts.length < 1) {
+        if (!checkActive) {
             alert('Please Select Products');
             return;
         }
@@ -114,14 +214,15 @@ export default function Products() {
         }
 
         setLoading(true);
+        const checkedItems = curProducts.filter((product) => product.isChecked === true);
 
-        const links = selectedProducts.map((product) => {
+        const links = checkedItems.map((product) => {
             const trimmedCustomerName = clientInfo.replace(' ', '%20');
             // const message = `${product}%20to%20${trimmedCustomerName}`;
             // const trimmed = message.replace(' ', '%20');
-            const url = encodeURIComponent(`https://app.supplymate.io/submit?product=${product}&rep=${selectedRep}&clientName=${trimmedCustomerName}&ownerName=${businessName}&id=${ownerId}`);
+            const url = encodeURIComponent(`https://app.supplymate.io/submit?product=${product.product}&rep=${selectedRep}&clientName=${trimmedCustomerName}&ownerName=${businessName}&id=${ownerId}`);
             const codeString = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${url}`;
-            return { name: product, src: codeString };
+            return { name: product.product, src: codeString };
         });
 
         setQRCodes(links);
@@ -130,10 +231,9 @@ export default function Products() {
             generateCanvasImg(link.src, link.name, businessName);
             // add company name above QR code
         });
-
         setTimeout(() => {
             setLoading(false);
-        }, 4000);
+        }, 5000);
     };
 
     const handleRepChange = (val) => {
@@ -158,93 +258,134 @@ export default function Products() {
     return (
         <>
             <PageHeader title="" />
-            <Content className={styles.contentContainer}>
-                <Space direction="vertical" size="large" className={styles.productInfoInputs}>
-                    <div className={styles.infoInput}>
-                        <p className={styles.inputLabel}>Who Are These For?</p>
-                        <Input placeholder="Enter Customer Name" name="customerName" onChange={(e) => handleTextChange(e, setClientInfo)} type="text" value={clientInfo} />
-                    </div>
-                    <Space className={styles.productInfoInputs}>
-                        <div className={styles.infoInput}>
-                            <p className="input-label">Select a Rep</p>
 
-                            <Select
-                                defaultValue="Select a Rep"
-                                className={styles.selectRep}
-                                onChange={handleRepChange}
-                                options={repOptions}
-                            />
-                        </div>
-                    </Space>
+            <Steps current={current}>
+                {steps.map((step, index) => (
+                    <Steps.Step key={index} title={step.title} />
+                ))}
+
+            </Steps>
+            {productAdded ? <Alert message="Product Successfully Added" type="success" /> : ''}
+            {productRemoved ? <Alert message="Product Successfully Removed" type="warning" /> : ''}
+            {alreadyAdded ? <Alert message="Product Already Added" type="error" /> : ''}
+            {current === 0 ? (
+                <Space>
+                    <Content className={styles.contentContainer}>
+                        <Space direction="vertical" size="large" className={styles.productInfoInputs}>
+                            <div className={styles.configInputs}>
+                                <div className={styles.infoInput}>
+                                    <p className={styles.inputLabel}>Who Are These For?</p>
+                                    <Input placeholder="Enter Customer Name" name="customerName" onChange={(e) => handleTextChange(e, setClientInfo)} type="text" value={clientInfo} />
+                                </div>
+                                <Space className={styles.productInfoInputs}>
+                                    <div className={styles.infoInput}>
+                                        <p className="input-label">Select a Rep</p>
+
+                                        <Select
+                                            defaultValue="Select a Rep"
+                                            className={styles.selectRep}
+                                            onChange={handleRepChange}
+                                            options={repOptions}
+                                        />
+                                    </div>
+                                </Space>
+                            </div>
+                        </Space>
+                    </Content>
                 </Space>
 
-            </Content>
-            <Content className={styles.productContainer}>
-                <div className={styles.productContainerDiv}>
+            ) : ''}
+            {current === 1 ? (
+                <Space>
+                    <Content className={styles.productContainer}>
+                        <div className={styles.productContainerDiv}>
 
-                    {curProducts && curProducts.length > 0
-                        ? (
-                            <div>
-                                <div className={styles.selectProductsLabel}>
+                            {curProducts && curProducts.length > 0
+                                ? (
+                                    <div>
+                                        <div className={styles.selectProductsLabel}>
                 Select Products Below:
-                                </div>
+                                        </div>
+                                        <Input placeholder="Search For A Product..." value={searchProduct} name="searchProduct" onChange={handleProductSearch} className={styles.searchProducts} />
 
-                                <div className={styles.productScroll}>
-                                    {curProducts.map((product, idx) => (
-                                        <Space
-                                            key={idx}
-                                            className={styles.product}
-                                            size="large"
-                                        >
-                                            <Checkbox
-                                            // if box is checked, disable remove button
-                                                onChange={(e) => onCheckChange(e, product)}
-                                            >
-                                                {product}
-                                            </Checkbox>
-                                            <span className={styles.productRemove}>
-                                                <Button type="primary" danger onClick={() => removeProduct(product)}>Remove</Button>
-                                            </span>
-                                        </Space>
-                                    ))}
-                                </div>
-                                <Space />
-                                <Button type="primary" onClick={generateCodes} disabled={planName === '' ? true : ''} className={styles.generateCodesButton}>Generate QR Codes</Button>
+                                        <div className={styles.productScroll}>
+                                            {filteredProducts.map((product, idx) => (
+                                                <Space
+                                                    key={idx}
+                                                    className={styles.product}
+                                                    size="large"
+                                                >
+                                                    <Checkbox
+                                                    // if box is checked, disable remove button
+                                                        onChange={() => onCheckChange(product, idx)}
+                                                        checked={product.isChecked}
+                                                    >
+                                                        {product.product}
+                                                    </Checkbox>
+                                                    <span className={styles.productRemove}>
+                                                        <Button type="primary" danger onClick={() => removeProduct(product.product)}>Remove</Button>
+                                                    </span>
+                                                </Space>
+                                            ))}
+                                        </div>
+                                        <Space />
+                                    </div>
+                                )
+                                : (
+                                    <div className={styles.noProducts}>
+                                        <Empty description={<span className={styles.noProductSpan}>No Products Found. Please Add Some Below.</span>} />
+                                    </div>
+                                )}
+                            <div className={styles.addProductContainer}>
+                                <Collapse defaultActiveKey={curProducts.length < 1 ? '1' : ''}>
+                                    <Panel header="Add New Product" key="1">
+                                        <div className={styles.addProductPanel}>
+                                            <Input placeholder="Enter Product Name" name="newProduct" onChange={(e) => handleTextChange(e, setNewProduct)} type="text" value={newProduct} />
+                                            <Button type="primary" onClick={() => addProduct(newProduct)}>Add</Button>
+                                        </div>
+                                    </Panel>
+                                </Collapse>
+                            </div>
 
-                            </div>
-                        )
-                        : (
-                            <div className={styles.noProducts}>
-                                <p>No products found. Please Add Some below.</p>
-                            </div>
-                        )}
-                    <div className={styles.addProductContainer}>
-                        <Collapse>
-                            <Panel header="Add New Product">
-                                <div className={styles.addProductPanel}>
-                                    <Input placeholder="Enter Product Name" name="newProduct" onChange={(e) => handleTextChange(e, setNewProduct)} type="text" value={newProduct} />
-                                    <Button type="primary" onClick={() => addProduct(newProduct)}>Add</Button>
-                                </div>
-                            </Panel>
-                        </Collapse>
+                        </div>
+
+                    </Content>
+                </Space>
+            ) : ''}
+            {current === 2 ? (
+                <Space>
+
+                    <div className={styles.generatedCodesContainer}>
+
+                        {loading ? <><span className={styles.overlay} /><Space wrap className={styles.spinnerBackground}><Spin tip="Generating Codes. Please Wait..." size="large" className={styles.codesLoading} /></Space> </>
+                            : (
+                                <p className={styles.generatedCodes}>
+                            Preview Panel
+                                </p>
+                            )}
+                        <QRCode
+                            qrCodes={qrCodes}
+                            loading={loading}
+                            selectedRep={selectedRep}
+                            repOptions={repOptions}
+                            checkActive={checkActive}
+                            setCurrent={setCurrent}
+                            setSelectedRep={setSelectedRep}
+                            setClientInfo={setClientInfo}
+                            setQRCodes={setQRCodes}
+                            setSelectedProducts={setSelectedProducts}
+                        />
+                        {loading ? '' : <Button type="primary" onClick={generateCodes} disabled={planName === '' ? true : ''} className={styles.generateCodesButton}>{!checkActive() || qrCodes.length > 0 ? '' : 'Generate QR Codes'}</Button> }
                     </div>
+                </Space>
+            ) : ''}
 
-                </div>
-                <div className={styles.productInfoInputs}>
-                    <p className={styles.generatedCodes}>
-                            Generated Codes
-                    </p>
-                    {loading ? <Spin tip="Working Our Magic" className={styles.codesLoading} /> : ''}
-                    <QRCode
-                        qrCodes={qrCodes}
-                        loading={loading}
-                        selectedRep={selectedRep}
-                        repOptions={repOptions}
-                    />
-                </div>
-
-            </Content>
-
+            <div className={styles.prevNextButtons}>
+                {current > 0 && !loading ? <Button onClick={previous}>Prev</Button> : ''}
+                {current === 0 ? <Button type="primary" disabled={!selectedRep || !clientInfo ? true : ''} onClick={next}>Next</Button> : ''}
+                {current === 1 ? <Button type="primary" disabled={!checkActive() ? true : ''} onClick={next}>Next</Button> : ''}
+                {/* {current === steps.length - 1 ? <Button type="primary" onClick={reset}>Done</Button> : ''} */}
+            </div>
         </>
     );
 }

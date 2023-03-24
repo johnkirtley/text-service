@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable import/no-extraneous-dependencies */
 import { useState, useContext, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
@@ -44,11 +45,12 @@ export default function MainComponent() {
         // this could eliminate re render on product
         querySnapshot.forEach((document) => {
             if (document.data().email === user.email) {
+                const newArr = document.data().products.map((product) => ({ product, isChecked: false }));
                 console.log('firebase query', document.data());
                 setCustomerInfo(document.data());
                 setBusinessName(document.data().businessName);
                 setRepInfo(document.data().repNumbers);
-                setCurProducts(document.data().products);
+                setCurProducts(newArr);
                 setOwnerId(document.data().uid);
             }
         });

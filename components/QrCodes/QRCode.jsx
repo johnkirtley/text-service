@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable max-len */
 import { useState, useContext, useEffect } from 'react';
 import JSZip from 'jszip';
@@ -7,18 +8,31 @@ import {
 // import { saveAs } from 'file-saver';
 import axios from 'axios';
 import ClientContext from '../../Context/ClientContext';
+import ProductContext from '../../Context/ProductContext';
 
 // styles
 import styles from './QrCode.module.css';
 
 const { Content } = Layout;
 
-export default function QRCode({ qrCodes, loading, selectedRep, repOptions }) {
+export default function QRCode({
+    qrCodes, loading, selectedRep, repOptions, checkActive, setCurrent, setSelectedRep, setClientInfo, setSelectedProducts, setQRCodes,
+}) {
     const { clientInfo } = useContext(ClientContext);
     const [showModal, setShowModal] = useState(false);
     const [sending, setSending] = useState(false);
     const [sendingComplete, setSendingComplete] = useState(false);
     const [repName, setRepName] = useState('');
+    const { curProducts, setCurProducts } = useContext(ProductContext);
+
+    const makeInactive = () => {
+        const newArr = [...curProducts];
+        const unchecked = newArr.map((obj) => ({
+            product: obj.product,
+            isChecked: false,
+        }));
+        setCurProducts(unchecked);
+    };
 
     useEffect(() => {
         const selectedName = repOptions.filter((rep) => rep.value === selectedRep);
@@ -39,7 +53,6 @@ export default function QRCode({ qrCodes, loading, selectedRep, repOptions }) {
         const fileGeneration = () => new Promise((resolve) => {
             qrCodes.forEach((code, idx) => {
                 canvas[idx].toBlob((data) => {
-                    console.log(data);
                     codeFolder.file(`Code-${idx}.png`, data);
                 });
             });
@@ -61,7 +74,14 @@ export default function QRCode({ qrCodes, loading, selectedRep, repOptions }) {
                 });
                 setSending(false);
                 setSendingComplete(true);
+                // reset all qr code state after codes sent
                 setTimeout(() => {
+                    makeInactive();
+                    setCurrent(0);
+                    setClientInfo('');
+                    setSelectedProducts([]);
+                    setSelectedRep();
+                    setQRCodes([]);
                     setShowModal(false);
                     setSendingComplete(false);
                 }, 1000);
@@ -125,7 +145,8 @@ export default function QRCode({ qrCodes, loading, selectedRep, repOptions }) {
                         </Content>
 
                     </div>
-                ) : <Empty description="No Generated Codes. Please Select Products." />}
+                ) : ''}
+            {!checkActive() ? <Empty description="Please Select Products." /> : ''}
         </div>
     );
 }

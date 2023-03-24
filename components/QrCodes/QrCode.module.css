@@ -3,7 +3,7 @@
 }
 
 .showContainer {
-    margin-top: 3rem;
+    margin-top: 2rem;
 }
 
 .codeContainer {
@@ -20,7 +20,7 @@
 
 .codeSpacer {
     justify-content: space-between;
-    margin-bottom: 1rem;
+    margin-bottom: 5rem;
 }
 
 .qrContainer {
@@ -66,15 +66,17 @@
     }
 
     .qrContainer {
-        scale: 1;
-        height: 30rem !important;
-        margin-top: 5rem !important;
+        scale: 0.7;
+        height: 25rem !important;
+        margin-top: 0rem !important;
         gap: 0rem;
     }
 
     .codeSpacer {
         display: block;
-        width: -webkit-fill-available;
+        width: 20rem;
+        margin: auto;
+        margin-bottom: 1rem;
     }
 
     .sendForPrintingButton {
