@@ -11,13 +11,27 @@
     align-items: center;
 }
 
-.customTable {
+.customTablePending, .customTableCompleted {
     width: 47rem !important;
 }
 
+.filterCompleted {
+    width: 40%;
+    margin-bottom: 1rem;
+}
+
 @media (max-width: 500px) {
-    .customTable {
+    .customTableCompleted, .customTablePending {
         width: 20rem !important;
+    }
+
+    .customTablePending {
+        margin-right: 2rem;
+    }
+
+
+    .filterCompleted {
+        width: 90%;
     }
   }
 

@@ -75,6 +75,7 @@
 .searchRepsInput {
     width: 85%;
     margin: auto;
+    margin-bottom: 1rem;
 }
 
 .addRepLabel {
@@ -111,7 +112,7 @@
 .deleteButton {
     border-color: red !important;
     color: red !important;
-    margin-top: 5rem;
+    margin-top: 2rem;
 }
 
 .deleteButton:hover {

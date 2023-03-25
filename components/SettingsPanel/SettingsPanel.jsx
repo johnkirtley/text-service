@@ -37,6 +37,9 @@ export default function SettingsPanel() {
     const [filteredSearch, setFilteredSearch] = useState(repInfo);
     const [accountDeleteModal, setAccountDeleteModal] = useState(false);
     const [customerPortal, setCustomerPortal] = useState(false);
+    const [contactAlert, setContactAlert] = useState(false);
+    const [dupeNum, setDupeNum] = useState(false);
+    const [disableAddRep, setDisableAddRep] = useState(true);
     const { user } = useAuth();
     const isUserPremium = usePremiumStatus(user);
 
@@ -87,6 +90,16 @@ export default function SettingsPanel() {
 
         const data = { ...rep, number: sanitizedNum };
 
+        const checkDupeNumbers = repInfo.filter((num) => num.number === sanitizedNum);
+
+        if (checkDupeNumbers.length > 0) {
+            setDupeNum(true);
+            setTimeout(() => {
+                setDupeNum(false);
+            }, 2000);
+            return;
+        }
+
         setNewRep(data);
 
         if (rep.length < 1) {
@@ -108,6 +121,14 @@ export default function SettingsPanel() {
             name: `${name}`,
             number: `${num}`,
         };
+
+        if (repInfo.length === 1) {
+            setContactAlert(true);
+            setTimeout(() => {
+                setContactAlert(false);
+            }, 1500);
+            return;
+        }
 
         await updateDoc(repAddRef, { repNumbers: arrayRemove(dataToRemove) });
 
@@ -138,6 +159,14 @@ export default function SettingsPanel() {
         generatePortal();
     };
 
+    useEffect(() => {
+        if (newRep.name.length < 1 || newRep.number.length < 1) {
+            setDisableAddRep(true);
+        } else {
+            setDisableAddRep(false);
+        }
+    }, [newRep]);
+
     return (
         <div>
             {displayAlert ? <Alert message="Business name updated" type="success" className={styles.successAlert} /> : ''}
@@ -148,10 +177,10 @@ export default function SettingsPanel() {
                 </Modal>
                 <Space className={styles.settingsContainer}>
                     <Space className={styles.businessInput}>
-                        <Collapse defaultActiveKey={1}>
-                            <Panel header="Business Name" key={1}>
+                        <Collapse>
+                            <Panel header="Company Name">
                                 <div className={styles.businessNameContainer}>
-                                    <Input placeholder="Company Name" value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
+                                    <Input placeholder="Company Name..." value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
                                     <Button type="primary" onClick={() => saveBusinessName(businessName)}>Update</Button>
                                 </div>
                             </Panel>
@@ -168,7 +197,10 @@ export default function SettingsPanel() {
                                     <p>Phone Number</p>
                                     <Input placeholder="Enter Rep Number" value={newRep.number} name="number" onChange={handleRepChange} />
                                 </div>
-                                <Button type="primary" onClick={() => saveContact(newRep)}>Add</Button>
+                                <Button type="primary" disabled={disableAddRep} onClick={() => saveContact(newRep)}>Add</Button>
+                                <Space>
+                                    {dupeNum ? <Alert message="Number Already Exists" type="error" /> : ''}
+                                </Space>
                             </div>
                         </Card>
                         {/* input to add additional reps to contact list
@@ -178,6 +210,7 @@ export default function SettingsPanel() {
                                 <Panel header="List of Current Reps">
                                     <div className={styles.repScroll}>
                                         <Input placeholder="Search Reps..." value={searchRep} name="repSearch" onChange={handleRepSearch} className={styles.searchRepsInput} />
+                                        {contactAlert ? <Alert message="Must Have At Least 1 Contact" type="error" /> : ''}
                                         {filteredSearch && filteredSearch.length > 0
                                             ? filteredSearch.map((num, idx) => (
                                                 <div

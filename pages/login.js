@@ -42,7 +42,7 @@ export default function Login() {
 
         if (!userSnap.exists()) {
             setDoc(usersRef, {
-                email: `${user.email}`, repNumbers: [], products: [], businessName: '', accountCreatedTimestamp: serverTimestamp(), uid: uuidv4(),
+                email: `${user.email}`, repNumbers: [], products: [], businessName: '', accountCreatedTimestamp: serverTimestamp(), uid: uuidv4(), pendingOrders: [], completedOrders: [],
             }).then(() => {
                 router.push('/');
             });
