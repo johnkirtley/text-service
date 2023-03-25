@@ -196,6 +196,53 @@
     text-align: center;
 }
 
+.submitSpinner {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    height: 85vh;
+    font-size: 1.5rem;
+    gap: 2rem;
+}
+
+.newUserContainer {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.newUserRepInputContainer {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.newUserHeader {
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: underline;
+}
+
+.newUserLabels {
+    color: #aeaeae;
+}
+
+.newUserRepInputs {
+    display: flex;
+    flex-flow: column;
+    width: 88%;
+    gap: 0.5rem;
+}
+
+.newUserAddContactLabel {
+    font-weight: bold;
+}
+
 @media (max-width: 600px) {
   .grid {
     width: 100%;

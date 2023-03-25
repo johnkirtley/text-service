@@ -51,9 +51,11 @@ export default function SignIn() {
                 repNumbers: [],
                 products: [],
                 businessName: '',
+                completedOrders: [],
                 accountCreatedTimestamp: serverTimestamp(),
                 uid: uuidv4(),
                 pendingOrders: [],
+                firstLoad: true,
             }).then(() => {
                 router.push('/');
             });
@@ -105,6 +107,8 @@ export default function SignIn() {
                     accountCreatedTimestamp: serverTimestamp(),
                     uid: uuidv4(),
                     pendingOrders: [],
+                    completedOrders: [],
+                    firstLoad: true,
                 });
                 setRegisterAccount(false);
                 router.push('/');

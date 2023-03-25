@@ -100,6 +100,10 @@ canvas {
     background: var(--highlight-blue) !important;
 }
 
+.ant-steps {
+    width: 80% !important;
+}
+
 
 
 .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item:hover::after, .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item-selected::after {

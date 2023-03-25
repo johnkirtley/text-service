@@ -2,9 +2,13 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { useState, useContext, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import { Layout, Menu, Alert } from 'antd';
-import { HomeOutlined, BarcodeOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
-import { getDocs, collection, query, where } from 'firebase/firestore';
+import {
+    Layout, Menu, Alert, Modal, Button, Input,
+} from 'antd';
+import { LineChartOutlined, BarcodeOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
+import {
+    getDocs, collection, query, where, doc, updateDoc, arrayUnion,
+} from 'firebase/firestore';
 import {
     BusinessNameContext, CustomerContext, RepContext, ProductContext, OwnerIdContext,
 } from '../Context/Context';
@@ -14,8 +18,15 @@ import { firestore } from '../firebase/clientApp';
 import { useAuth } from '../Context/AuthContext';
 import usePremiumStatus from '../stripe/usePremiumStatus';
 
+import { handleTextChange } from '../utils/helpers';
+
 // Styles
 import styles from '../styles/Home.module.css';
+
+const defaultRep = {
+    name: '',
+    number: '',
+};
 
 export default function MainComponent() {
     const [view, setView] = useState('1');
@@ -23,13 +34,24 @@ export default function MainComponent() {
     const { businessName, setBusinessName } = useContext(BusinessNameContext);
     // const { authContext } = useContext(AuthContext);
     const { setRepInfo } = useContext(RepContext);
+    const [newRep, setNewRep] = useState(defaultRep);
     const { setCurProducts } = useContext(ProductContext);
     const { setOwnerId } = useContext(OwnerIdContext);
     const { user, loading } = useAuth();
     const [newUserAlert, setNewUserAlert] = useState(false);
+    const [firstLoad, setFirstLoad] = useState(false);
+    const [disableWalkthroughButton, setDisableWalkthroughButton] = useState(true);
     const router = useRouter();
 
     const { planName } = usePremiumStatus(user);
+
+    useEffect(() => {
+        if (newRep.name.length < 1 || newRep.number.length < 1 || businessName.length < 1) {
+            setDisableWalkthroughButton(true);
+        } else {
+            setDisableWalkthroughButton(false);
+        }
+    }, [newRep, businessName]);
 
     useEffect(() => {
         if (planName === '') {
@@ -52,6 +74,7 @@ export default function MainComponent() {
                 setRepInfo(document.data().repNumbers);
                 setCurProducts(newArr);
                 setOwnerId(document.data().uid);
+                setFirstLoad(document.data().firstLoad);
             }
         });
     }, [user, setCustomerInfo, setBusinessName, setRepInfo, setCurProducts, setOwnerId]);
@@ -80,16 +103,62 @@ export default function MainComponent() {
     }
 
     const items = [
-        getItem('Home', '1', <HomeOutlined />),
-        getItem('Products and QR Codes', '2', <BarcodeOutlined />),
+        getItem('Insights', '1', <LineChartOutlined />),
+        getItem('Generate Codes', '2', <BarcodeOutlined />),
         getItem('Pending Restocks', '3', <PlusCircleOutlined />),
         getItem('Settings', '4', <SettingOutlined />),
     ];
 
-    // useEffect(() => {
-    //     // eslint-disable-next-line no-unused-expressions
-    //     authContext !== null ? router.push('/') : router.push('/login');
-    // }, [authContext]);
+    const saveBusinessName = async (val) => {
+        const nameUpdateRef = doc(firestore, 'users', user.email);
+
+        console.log('bus', val);
+
+        await updateDoc(nameUpdateRef, { businessName: val });
+    };
+
+    const handleRepChange = (e) => {
+        setNewRep({
+            ...newRep,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const saveContact = async (rep) => {
+        // backend api call to store phone number in DB
+        const { number } = rep;
+
+        console.log('rep', rep);
+
+        const sanitizedNum = number.replace(/^(\+)|\D/g, '$1');
+
+        const data = { ...rep, number: sanitizedNum };
+
+        setNewRep(data);
+
+        if (rep.length < 1) {
+            alert('Enter Valid Phone Number');
+        } else {
+            const repAddRef = doc(firestore, 'users', user.email);
+
+            await updateDoc(repAddRef, { repNumbers: arrayUnion(newRep) });
+
+            setRepInfo((oldInfo) => [...oldInfo, newRep]);
+
+            setNewRep(defaultRep);
+        }
+    };
+
+    const completeWalkthrough = async (rep, business) => {
+        saveContact(rep);
+        saveBusinessName(business);
+
+        const userRef = doc(firestore, 'users', user.email);
+
+        await updateDoc(userRef, { firstLoad: false });
+
+        setFirstLoad(false);
+    };
 
     return (
         <div>
@@ -107,6 +176,30 @@ export default function MainComponent() {
                             onSelect={(key) => setView(key.key)}
                             className={styles.navMenu}
                         />
+                        {firstLoad ? (
+                            <Modal title="Welcome To Supply Mate!" open={firstLoad} footer={null} centered closable={false}>
+                                <div className={styles.newUserContainer}>
+                                    <p className={styles.newUserHeader}>Let&apos;s Add Some Basic Info To Get Started</p>
+                                    <div>
+                                        <Input placeholder="Company Name..." value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
+                                        <p className={styles.newUserLabels}>This can be updated under Settings.</p>
+                                    </div>
+                                    <div className={styles.newUserRepInputContainer}>
+                                        <p className={styles.newUserAddContactLabel}>Please Add Your First Contact.</p>
+                                        <p className={styles.newUserLabels}>Contacts can be managed under Settings.</p>
+                                        <div className={styles.newUserRepInputs}>
+                                            <div>
+                                                <Input placeholder="Name..." value={newRep.name} name="name" onChange={handleRepChange} />
+                                            </div>
+                                            <div>
+                                                <Input placeholder="Phone Number..." value={newRep.number} name="number" onChange={handleRepChange} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <Button disabled={disableWalkthroughButton} type="primary" onClick={() => completeWalkthrough(newRep, businessName)}>Complete Setup</Button>
+                                </div>
+                            </Modal>
+                        ) : ''}
                         {newUserAlert ? (
                             <div className={styles.signUpAlert}>
                                 <Alert message="Head To Settings To Choose Your Plan Before Generating Codes &#128522;" type="info" showIcon />

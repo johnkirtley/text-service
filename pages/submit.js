@@ -1,11 +1,15 @@
+/* eslint-disable sonarjs/cognitive-complexity */
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useEffect, useCallback } from 'react';
 import {
     getDocs, collection, query, where, doc, updateDoc, arrayUnion,
 } from 'firebase/firestore';
-import { Layout, Button, Modal } from 'antd';
+import { Layout, Button, Spin } from 'antd';
+import { uuidv4 } from '@firebase/util';
 import { firestore } from '../firebase/clientApp';
 import { querySubCollection } from '../firebase/getUserData';
+
 import styles from '../styles/Home.module.css';
 
 export default function Submit() {
@@ -20,8 +24,6 @@ export default function Submit() {
     const [success, setSuccess] = useState(false);
     const [gettingData, setGettingData] = useState(false);
 
-    // make firebase call based on uid in url to get updated plan status
-
     const { Content, Header } = Layout;
 
     if (typeof window !== 'undefined') {
@@ -32,7 +34,6 @@ export default function Submit() {
             setProduct(urlParams.get('product'));
             setRepNumber(urlParams.get('rep'));
             setClientName(urlParams.get('clientName'));
-            // setOwnerName(urlParams.get('ownerName'));
             setOwnerId(urlParams.get('id'));
         }, [urlParams]);
     }
@@ -41,9 +42,15 @@ export default function Submit() {
         const q = query(ref, where('uid', '==', ownerId));
         const querySnapshot = await getDocs(q);
 
+        setTimeout(() => {
+            if (querySnapshot.empty) {
+                setPlan('');
+                setGettingData(false);
+            }
+        }, 2500);
+
         querySnapshot.forEach((document) => {
             if (document.data().uid === ownerId) {
-                // setPlan(document.data().plan);
                 setEmail(document.data().email);
 
                 querySubCollection('customers', 'email', '==', email, 'subscriptions').then((subCollection) => {
@@ -54,12 +61,12 @@ export default function Submit() {
                             }
                             setTimeout(() => {
                                 setGettingData(false);
-                            }, 2000);
+                            }, 1500);
                         });
                     } else {
                         setTimeout(() => {
                             setGettingData(false);
-                        }, 2000);
+                        }, 1500);
                     }
                 });
             }
@@ -67,7 +74,7 @@ export default function Submit() {
     }, [ownerId, email]);
 
     useEffect(() => {
-        console.log('rol', plan);
+        console.log('role', plan);
     }, [plan]);
 
     useEffect(() => {
@@ -77,6 +84,10 @@ export default function Submit() {
         }
     }, [ownerId, getQuery]);
 
+    const getDate = () => {
+        const currentDate = new Date();
+        return currentDate.toLocaleString();
+    };
     const addPendingRestock = async (reqRestockProduct) => {
         if (plan !== '') {
             setLoading(true);
@@ -91,6 +102,10 @@ export default function Submit() {
         }
     };
 
+    if (gettingData) {
+        return <Spin tip="Loading Data..." className={styles.submitSpinner} size="large" />;
+    }
+
     const trimmedCustomerName = clientName.replace(' ', '%20');
     const fullMessage = `${product} Restock Requested For ${trimmedCustomerName}`;
     const trimmedMessage = fullMessage.replace(' ', '%20');
@@ -101,16 +116,11 @@ export default function Submit() {
         LOGO HERE
             </Header>
             <Layout style={{ minHeight: '100vh' }}>
-                {gettingData ? (
-                    <Modal title="Plan Status" open centered="true" footer={null}>
-                        <p>Loading...</p>
-                    </Modal>
-                ) : ''}
                 <Content className={styles.requestContainer}>
                     <div>You Are About To Request A Restock For The Following Product:</div>
                     <div className={styles.requestProduct}>{product}</div>
                     {/* on click, trigger email and send order to order status screen */}
-                    {!gettingData && plan === '' ? <Button disabled>Plan Not Active. Please Contact Account Owner.</Button> : <Button type="primary" loading={loading} disabled={success ? true : ''} onClick={() => addPendingRestock({ client: clientName, requestedProduct: product })}>{success ? 'Request Sent Successfully. You May Close This Page' : 'Request Restock'}</Button>}
+                    {!gettingData && plan === '' ? <Button disabled>Plan Not Active. Please Contact Account Owner.</Button> : <Button type="primary" loading={loading} disabled={success ? true : ''} onClick={() => addPendingRestock({ uid: uuidv4(), dateAdded: getDate(), client: clientName, requestedProduct: product })}>{success ? 'Request Sent Successfully. You May Close This Page' : 'Request Restock'}</Button>}
                     {plan === 'silver' || plan === '' ? '' : <Button type="default" href={`sms:${repNumber}&body=${trimmedMessage}`}>Text Rep Directly</Button> }
                     <div className={styles.poweredBy}>
                         Powered By Supply Mate
