@@ -13,6 +13,7 @@ async function createCheckoutSession(uid, planType) {
             success_url: window.location.origin,
             cancel_url: window.location.origin,
             timestamp: serverTimestamp(),
+            allow_promotion_codes: true,
         });
     }
 
@@ -22,6 +23,8 @@ async function createCheckoutSession(uid, planType) {
             success_url: window.location.origin,
             cancel_url: window.location.origin,
             timestamp: serverTimestamp(),
+            allow_promotion_codes: true,
+
         });
     }
 
@@ -31,6 +34,8 @@ async function createCheckoutSession(uid, planType) {
             success_url: window.location.origin,
             cancel_url: window.location.origin,
             timestamp: serverTimestamp(),
+            allow_promotion_codes: true,
+
         });
     }
 
