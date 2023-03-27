@@ -12,7 +12,7 @@ import {
 import Link from 'next/link';
 import { v4 as uuidv4 } from 'uuid';
 import { firebaseAuth, firestore } from '../firebase/clientApp';
-
+import sampleDashboard from '../public/sampleDashboard.jpg';
 // styles
 import styles from '../styles/Home.module.css';
 
@@ -94,34 +94,56 @@ export default function Login() {
             <Header className={`${styles.title} ${styles.header}`}>
             LOGO HERE
             </Header>
-            <div className={styles.loginContainer}>
-                {showError ? <Alert message="Error: Please Check Email and Password" type="error" /> : ''}
-                <Card title="Login">
-                    <Form name="Login" onFinish={signIn} className={styles.loginForm}>
-                        <Form.Item label="username" name="username" rules={[{ required: true, message: 'Please input username' }]}>
-                            <Input name="username" value={credentials.username} onChange={handleChange} />
-                        </Form.Item>
-                        <Form.Item label="password" name="password" rules={[{ required: true, message: 'Please input password' }]}>
-                            <Input.Password name="password" value={credentials.password} onChange={handleChange} />
-                        </Form.Item>
-                        <Form.Item>
-                            <Button type="primary" htmlType="submit" className={styles.loginButton}>
-                                {loggingIn ? 'Logging In...' : 'Login'}
-                            </Button>
-                        </Form.Item>
-                    </Form>
-                </Card>
-                <Divider className={styles.loginDivider} />
-                <button
-                    type="button"
-                    onClick={() => signInWithGoogle()}
-                    className={styles.signInWithGoogle}
-                >
-                    <Image src="/google.png" width={30} height={30} alt="Google SSO Image" />
-                    <p className={styles.googleSignInText}>Sign In With Google</p>
-                </button>
-                <div>
-                    <Link href="/register">Need To Register?</Link>
+            <div className={styles.registerMainContainer}>
+                <div className={styles.loginRegister}>
+                    <p className={styles.registerHeader}>Unlock Restock Insights.
+                    </p>
+                    <p className={styles.registerAdditionalInfo}>
+                    Utilize Supply Mate&apos;s Dashboard
+                    To See Analytics On Your Customers and Restocks.
+                    </p>
+                    {/* <Image src={LoginImage} alt="Caption" /> */}
+                    <div className={styles.dashImageContainer}>
+                        <Image src={sampleDashboard} alt="Sample Dashboard" className={styles.dashboardImage} fill />
+                    </div>
+                </div>
+                <div className={styles.loginContainer}>
+                    {showError ? <Alert message="Error: Please Check Email and Password" type="error" /> : ''}
+                    <div className={styles.getStartedTextContainer}>
+                        <p className={styles.getStartedText}>Welcome Back</p>
+                        {/* <p className={styles.getStartedSubText}>Login Below</p> */}
+                    </div>
+                    <button
+                        type="button"
+                        onClick={() => signInWithGoogle()}
+                        className={styles.signInWithGoogle}
+                    >
+                        <Image src="/google.png" width={30} height={30} alt="Google SSO Image" />
+                        <p className={styles.googleSignInText}>Sign In With Google</p>
+                    </button>
+                    <div className={styles.useEmailContainer}>
+                        <Divider className={styles.registerDivider} />
+                        <p className={styles.useEmailText}>Or Use Email</p>
+                        <Divider className={styles.registerDivider} />
+                    </div>
+                    <Card bordered={false}>
+                        <Form name="Login" onFinish={signIn} className={styles.loginForm}>
+                            <Form.Item required={false} label="Email" name="username" rules={[{ required: true, message: 'Please input email' }]} className={styles.formRow}>
+                                <Input placeholder="Enter Email..." name="username" value={credentials.username} onChange={handleChange} />
+                            </Form.Item>
+                            <Form.Item required={false} label="Password" name="password" rules={[{ required: true, message: 'Please input password' }]} className={styles.formRow}>
+                                <Input.Password placeholder="Enter Password..." name="password" value={credentials.password} onChange={handleChange} />
+                            </Form.Item>
+                            <Form.Item>
+                                <Button type="primary" htmlType="submit" className={styles.loginButton}>
+                                    {loggingIn ? 'Logging In...' : 'Login'}
+                                </Button>
+                            </Form.Item>
+                        </Form>
+                    </Card>
+                    <div className={styles.loginLink}>
+                        <span>Need To Register? </span><Link href="/register">Click Here</Link>
+                    </div>
                 </div>
             </div>
         </>
