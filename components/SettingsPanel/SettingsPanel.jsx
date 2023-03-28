@@ -176,16 +176,6 @@ export default function SettingsPanel() {
                 Are You Sure You Want To Delete Your Account?
                 </Modal>
                 <Space className={styles.settingsContainer}>
-                    <Space className={styles.businessInput}>
-                        <Collapse>
-                            <Panel header="Company Name">
-                                <div className={styles.businessNameContainer}>
-                                    <Input placeholder="Company Name..." value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
-                                    <Button type="primary" onClick={() => saveBusinessName(businessName)}>Update</Button>
-                                </div>
-                            </Panel>
-                        </Collapse>
-                    </Space>
                     <Space className={styles.repListContainer}>
                         <Card title="Add Reps">
                             <div className={styles.repInputBox}>
@@ -233,6 +223,16 @@ export default function SettingsPanel() {
                                 </Panel>
                             </Collapse>
                         </div>
+                        <Space className={styles.businessInput}>
+                            <Collapse>
+                                <Panel header="Company Name">
+                                    <div className={styles.businessNameContainer}>
+                                        <Input placeholder="Company Name..." value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
+                                        <Button type="primary" onClick={() => saveBusinessName(businessName)}>Update</Button>
+                                    </div>
+                                </Panel>
+                            </Collapse>
+                        </Space>
                     </Space>
                     <Collapse>
                         <Panel header="Manage Plan">

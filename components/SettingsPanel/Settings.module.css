@@ -107,6 +107,13 @@
 
 .viewPlansLink {
     margin-top: 2rem;
+    background-color: var(--primary-green);
+    color: var(--primary-white) !important;
+}
+
+.viewPlansLink:hover {
+    color: var(--primary-green) !important;
+    background-color: var(--primary-white) !important;
 }
 
 .deleteButton {

@@ -16,6 +16,7 @@
 .navMenu > li {
     width: 25% !important;
     text-align: center;
+    background-color: var(--background-blue) !important;
 }
 
 .container {
@@ -65,6 +66,7 @@
   display: flex;
   justify-content: space-between;
   background-color: var(--primary-blue);
+  padding: .5rem 3rem;
 }
 
 .title,
@@ -145,18 +147,23 @@
 
 .loginButton, .registerButton {
     color: white !important;
-    background-color: var(--primary-blue) !important;
-    border-color: var(--primary-blue) !important;
+    background-color: var(--primary-green) !important;
+    border-color: var(--primary-green) !important;
     width: 100%;
     border-radius: 10px;
 }
 
+.loginButton:hover, .registerButton:hover {
+    background-color: var(--primary-white) !important;
+    color: var(--primary-green) !important
+}
+
 .loginLink > a {
-    color: var(--secondary-blue) !important
+    color: var(--highlight-yellow) !important
 }
 
 .loginLink > a:hover {
-    color: var(--highlight-blue) !important;
+    color: var(--secondary-blue) !important;
     text-decoration: underline;
 }
 

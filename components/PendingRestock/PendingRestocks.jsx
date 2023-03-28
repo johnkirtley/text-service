@@ -197,7 +197,7 @@ export default function PendingRestocks() {
     ];
 
     if (loading) {
-        return <Spin tip="Loading..." />;
+        return <Spin tip="Loading Orders..." />;
     }
 
     return (
