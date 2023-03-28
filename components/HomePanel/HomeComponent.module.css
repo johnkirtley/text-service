@@ -1,0 +1,53 @@
+.insightHeader {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 500;
+    margin-bottom: 5rem;
+}
+
+.insightGridTop {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+    text-align: center;
+    gap: 6rem;
+    margin: 5rem;
+}
+
+.insightGridBottom {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-items: center;
+    text-align: center;
+    margin: 3rem;
+}
+
+.scanGraph {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-top: 6rem;
+}
+
+@media(max-width: 500px) {
+    .insightHeader {
+        margin-bottom: 3rem;
+    }
+
+    .insightGridTop {
+        display: flex;
+        flex-flow: column;
+        text-align: center;
+        gap: 2rem;
+        margin: 0;
+        margin-bottom: 2rem;
+ 
+    }
+    
+    .insightGridBottom {
+        display: flex;
+        flex-flow: column;
+        text-align: center;
+        gap: 2rem;
+        margin: 0rem;
+    }
+}

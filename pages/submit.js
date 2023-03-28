@@ -75,9 +75,27 @@ export default function Submit() {
         });
     }, [ownerId, email]);
 
+    const getDate = () => {
+        const currentDate = new Date();
+        return currentDate.toLocaleString();
+    };
+
     useEffect(() => {
-        console.log('role', plan);
-    }, [plan]);
+        const addScan = async () => {
+            if (plan !== '') {
+                const addScanAnalytics = {
+                    date: getDate(),
+                    type: 'scan',
+                    product,
+                    client: clientName,
+                };
+                const restockRef = doc(firestore, 'users', email);
+                await updateDoc(restockRef, { analytics: arrayUnion(addScanAnalytics) });
+            }
+        };
+
+        addScan();
+    }, [clientName, product, email, plan]);
 
     useEffect(() => {
         if (ownerId.length > 0) {
@@ -86,10 +104,6 @@ export default function Submit() {
         }
     }, [ownerId, getQuery]);
 
-    const getDate = () => {
-        const currentDate = new Date();
-        return currentDate.toLocaleString();
-    };
     const addPendingRestock = async (reqRestockProduct) => {
         if (plan !== '') {
             setLoading(true);
@@ -112,7 +126,14 @@ export default function Submit() {
                     setAlreadyAdded(false);
                 }, 3000);
             } else {
+                const addAnalyticsRestock = {
+                    date: getDate(),
+                    type: 'restock',
+                    product: reqRestockProduct.requestedProduct,
+                    client: reqRestockProduct.client,
+                };
                 await updateDoc(restockRef, { pendingOrders: arrayUnion(reqRestockProduct) });
+                await updateDoc(restockRef, { analytics: arrayUnion(addAnalyticsRestock) });
                 setTimeout(() => {
                     setLoading(false);
                     setSuccess(true);
