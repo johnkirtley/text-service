@@ -56,6 +56,7 @@ export default function SignIn() {
                 uid: uuidv4(),
                 pendingOrders: [],
                 firstLoad: true,
+                analytics: [],
             }).then(() => {
                 router.push('/');
             });
@@ -109,6 +110,7 @@ export default function SignIn() {
                     pendingOrders: [],
                     completedOrders: [],
                     firstLoad: true,
+                    analytics: [],
                 });
                 setRegisterAccount(false);
                 router.push('/');
