@@ -171,7 +171,6 @@ export default function Products() {
             const filter = newArr.map((prod) => prod !== product);
             setSelectedProducts(filter);
         }
-        console.log('curret', curProducts);
 
         // if (e.target.checked) {
         //     const newArr = [...selectedProducts, product];
@@ -274,15 +273,15 @@ export default function Products() {
                         <Space direction="vertical" size="large" className={styles.productInfoInputs}>
                             <div className={styles.configInputs}>
                                 <div className={styles.infoInput}>
-                                    <p className={styles.inputLabel}>Who Are These For?</p>
-                                    <Input placeholder="Enter Customer Name" name="customerName" onChange={(e) => handleTextChange(e, setClientInfo)} type="text" value={clientInfo} />
+                                    <p className={styles.inputLabel}>QR Code Location</p>
+                                    <Input placeholder="Enter location name..." name="customerName" onChange={(e) => handleTextChange(e, setClientInfo)} type="text" value={clientInfo} />
                                 </div>
                                 <Space className={styles.productInfoInputs}>
                                     <div className={styles.infoInput}>
-                                        <p className="input-label">Select a Rep</p>
+                                        <p className="input-label">Set Notification Number</p>
 
                                         <Select
-                                            defaultValue="Select a Rep"
+                                            defaultValue="Select a number..."
                                             className={styles.selectRep}
                                             onChange={handleRepChange}
                                             options={repOptions}

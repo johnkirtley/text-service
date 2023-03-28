@@ -184,11 +184,11 @@ export default function Home() {
     }, [ownerId, getQuery]);
 
     if (loading) {
-        return <Spin tip="Loading..." />;
+        return <Spin tip="Loading Data..." />;
     }
 
     if (isUserPremium.planName === '' || isUserPremium.planName === 'silver') {
-        return <div>Insights Not Available. Please Upgrade Plan.</div>;
+        return <div>Please Upgrade Plan To Unlock Insights.</div>;
     }
 
     const chartData = {
@@ -230,17 +230,17 @@ export default function Home() {
     return (
         <Content>
             <Space direction="vertical" size="large" />
-            <div className={styles.insightHeader}>Insights</div>
+            <div className={styles.insightHeader}>Overview</div>
             {showInsights ? (
                 <>
                     <div className={styles.insightGridTop}>
-                        {scanArr ? <Statistic title="Total Number of Scans" value={scanArr.length || 0} /> : ''}
-                        {restockArr ? <Statistic title="Total Number of Restocks" value={restockArr.length || 0} /> : ''}
-                        {largestScan ? <Statistic title="Most Scanned Product" value={largestScan} /> : ''}
+                        {scanArr ? <Statistic style={{ backgroundColor: '#fd9a0038', borderColor: '#fd9a0038' }} className={styles.statisticCard} title="Total Number of Scans" value={scanArr.length || 0} /> : ''}
+                        {restockArr ? <Statistic style={{ backgroundColor: '#3bef3b47', borderColor: '#3bef3b47' }} className={styles.statisticCard} title="Total Number of Restocks" value={restockArr.length || 0} /> : ''}
+                        {largestScan ? <Statistic style={{ backgroundColor: '#8000804a', borderColor: '#8000804a' }} className={styles.statisticCard} title="Most Scanned Product" value={largestScan} /> : ''}
                     </div>
                     <div className={styles.insightGridBottom}>
-                        {largestRestock ? <Statistic title="Most Restocked Product" value={largestRestock} /> : ''}
-                        {clientRestock ? <Statistic title="Client With Most Restocks" value={clientRestock} /> : ''}
+                        {largestRestock ? <Statistic style={{ backgroundColor: '#f9484861', borderColor: '#f9484861' }} className={styles.statisticCard} title="Most Restocked Product" value={largestRestock} /> : ''}
+                        {clientRestock ? <Statistic style={{ backgroundColor: '#fd9a0038', borderColor: '#fd9a0038' }} className={styles.statisticCard} title="Client With Most Restocks" value={clientRestock} /> : ''}
                     </div>
                 </>
             ) : <Empty description="No Insights Available At This Time. Data Will Populate As Codes Are Scanned." />}

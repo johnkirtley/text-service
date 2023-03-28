@@ -1,7 +1,11 @@
 html {
-    --primary-blue: #3f4bbd;
-    --secondary-blue: #646ecb;
-    --highlight-blue: #8a92d8;
+    --primary-blue: #1C1259;
+    --secondary-blue: #CACAEA;
+    --background-blue: rgb(243, 245, 249);
+    --primary-green: rgb(30, 172, 149);
+    --highlight-yellow: #fdaa2df0;
+    --secondary-yellow: #FFD28C;
+    --primary-red: #EE4266;
     --primary-black: #111111;
     --secondary-black: #2a2a2a;
     --primary-white: #ffffff;
@@ -29,10 +33,44 @@ canvas {
   margin: 1rem 0;
 }
 
+.ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-icon, .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title::after {
+    background-color: var(--primary-green) !important;
+    border-color: var(--primary-green) !important;
+}
+
+.ant-steps-item-finish .ant-steps-item-icon, .ant-pagination-item-active {
+    border-color: var(--primary-green) !important;
+}
+
+.ant-pagination-item-active a {
+    color: var(--primary-green) !important;
+}
+
+.ant-pagination-item a:hover {
+    color: var(--primary-green) !important;
+}
+
+.ant-table-thead > tr > th {
+    background-color: var(--background-blue) !important;
+}
+
+.ant-card-head {
+    background-color: var(--background-blue) !important;
+}
+
 .signOut-button {
     background: none;
-    border: none;
+    border: 1px solid var(--highlight-yellow);
     font-size: 1rem;
+    padding: 7px 20px;
+    border-radius: 20px;
+    color: var(--background-blue) !important;
+    background-color: var(--highlight-yellow);
+}
+
+.signOut-button:hover {
+    background-color: var(--background-blue);
+    color: var(--highlight-yellow) !important
 }
 
 .input-label {
@@ -53,21 +91,27 @@ canvas {
 }
 
 .ant-btn-primary {
-    background-color: var(--highlight-blue) !important;
-    border-color: var(--highlight-blue) !important;
+    background-color: var(--primary-green) !important;
+    border-color: var(--primary-green) !important;
     color: var(--primary-white) !important;
 }
 
 .ant-btn-primary:hover {
     background-color: var(--primary-white) !important;
-    border-color: var(--highlight-blue) !important;
-    color: var(--highlight-blue) !important;
+    border-color: var(--primary-green) !important;
+    color: var(--primary-green) !important;
 }
 
 .ant-btn-dangerous {
-    background-color: var(--primary-black) !important;
-    border-color: var(--primary-black) !important;
+    background-color: var(--primary-red) !important;
+    border-color: var(--primary-red) !important;
     color: var(--primary-white) !important;
+}
+
+.ant-btn-dangerous:hover {
+    background-color: var(--primary-white) !important;
+    border-color: var(--primary-red) !important;
+    color: var(--primary-red) !important;
 }
 
 .ant-btn-primary[disabled] {
@@ -77,27 +121,31 @@ canvas {
 
 .ant-btn[disabled] {
     background-color: var(--primary-white) !important;
-    border-color: var(--highlight-blue) !important;
-    color: var(--highlight-blue) !important; 
+    border-color: var(--primary-green) !important;
+    color: var(--primary-green) !important; 
 }
 
 .ant-btn-default {
-    border-color: var(--highlight-blue) !important;
-    color: var(--highlight-blue) !important;
+    border-color: var(--primary-green) !important;
+    color: var(--primary-green) !important;
 }
 
 .ant-btn-default:hover {
-    border-color: var(--highlight-blue) !important;
-    background-color: var(--highlight-blue) !important;
+    border-color: var(--primary-green) !important;
+    background-color: var(--primary-green) !important;
     color: var(--primary-white) !important;
 }
 
+.ant-menu-item {
+    color: var(--primary-blue) !important
+}
+
 .ant-menu-item-selected, .ant-menu-item:hover, .ant-tabs-tab-active > .ant-tabs-tab-btn, .ant-tabs-tab-btn:hover {
-    color: var(--highlight-blue) !important;
+    color: var(--highlight-yellow) !important;
 }
 
 .ant-tabs-ink-bar {
-    background: var(--highlight-blue) !important;
+    background: var(--highlight-yellow) !important;
 }
 
 .ant-steps {
@@ -107,7 +155,7 @@ canvas {
 
 
 .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item:hover::after, .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item-selected::after {
-    border-color: var(--highlight-blue) !important;
+    border-color: var(--highlight-yellow) !important;
 }
 
 .ant-card-body {
@@ -122,17 +170,32 @@ canvas {
     text-align: center;
 }
 
-.ant-card-head {
-    background-color: #fafafa !important;
+.ant-spin {
+    color: var(--primary-green) !important;
+}
+
+.ant-spin-dot-item {
+    background-color: var(--primary-green) !important;
 }
 
 .ant-collapse {
     width: 30rem;
     font-weight: 500;
+    background-color: var(--background-blue) !important;
 }
 
 .ant-collapse-header {
     text-align: center;
+}
+
+.statisticCard {
+    border: 1px solid black;
+    padding: 1.25rem !important;
+    border-radius: 8px;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
 }
 
 th, td {
