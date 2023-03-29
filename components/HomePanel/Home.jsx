@@ -232,26 +232,23 @@ export default function Home() {
             <Space direction="vertical" size="large" />
             <div className={styles.insightHeader}>Overview</div>
             {showInsights ? (
-                <>
-                    <div className={styles.insightGridTop}>
-                        {scanArr ? <Statistic style={{ backgroundColor: '#fd9a0038', borderColor: '#fd9a0038' }} className={styles.statisticCard} title="Total Number of Scans" value={scanArr.length || 0} /> : ''}
-                        {restockArr ? <Statistic style={{ backgroundColor: '#3bef3b47', borderColor: '#3bef3b47' }} className={styles.statisticCard} title="Total Number of Restocks" value={restockArr.length || 0} /> : ''}
-                        {largestScan ? <Statistic style={{ backgroundColor: '#8000804a', borderColor: '#8000804a' }} className={styles.statisticCard} title="Most Scanned Product" value={largestScan} /> : ''}
-                    </div>
-                    <div className={styles.insightGridBottom}>
-                        {largestRestock ? <Statistic style={{ backgroundColor: '#f9484861', borderColor: '#f9484861' }} className={styles.statisticCard} title="Most Restocked Product" value={largestRestock} /> : ''}
-                        {clientRestock ? <Statistic style={{ backgroundColor: '#fd9a0038', borderColor: '#fd9a0038' }} className={styles.statisticCard} title="Client With Most Restocks" value={clientRestock} /> : ''}
-                    </div>
-                </>
+                <div className={styles.insightGridTop}>
+                    {scanArr ? <Statistic className={styles.statisticCard} title="Total Number of Scans" value={scanArr.length || 0} /> : ''}
+                    {restockArr ? <Statistic className={styles.statisticCard} title="Total Number of Restocks" value={restockArr.length || 0} /> : ''}
+                    {largestScan ? <Statistic className={styles.statisticCard} title="Most Scanned Product" value={largestScan} /> : ''}
+                    {largestRestock ? <Statistic className={styles.statisticCard} title="Most Restocked Product" value={largestRestock} /> : ''}
+                    {clientRestock ? <Statistic className={styles.statisticCard} title="Client With Most Restocks" value={clientRestock} /> : ''}
+
+                </div>
             ) : <Empty description="No Insights Available At This Time. Data Will Populate As Codes Are Scanned." />}
             {showInsights ? (
                 <div className={styles.scanGraph}>
-                    <div>Restock Requests By Month</div>
-                    <div>
+                    <div className={styles.chart}>
+                        <div>Restock Requests By Month</div>
                         <Line data={lineChartDate} options={chartOptions} />
                     </div>
-                    <div>Restock Requests By Product</div>
-                    <div>
+                    <div className={styles.chart}>
+                        <div>Restock Requests By Product</div>
                         <Bar data={chartData} options={chartOptions} />
                     </div>
                 </div>

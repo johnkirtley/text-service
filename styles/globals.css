@@ -188,15 +188,11 @@ canvas {
     text-align: center;
 }
 
-.statisticCard {
-    border: 1px solid black;
-    padding: 1.25rem !important;
-    border-radius: 8px;
-    display: flex;
-    flex-flow: column;
-    justify-content: center;
-    align-items: center;
+.ant-statistic-content {
+    font-size: 1.1rem !important;
 }
+
+
 
 th, td {
     text-align: center !important;

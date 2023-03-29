@@ -2,27 +2,30 @@
     text-align: center;
     font-size: 2rem;
     font-weight: 500;
-    margin-bottom: 5rem;
+    margin-bottom: 4rem;
     color: var(--primary-blue) !important
 }
 
 .statisticCard {
-    border: 1px solid black;
+    border: 1px solid  var(--background-blue);
     padding: 1.25rem !important;
     border-radius: 8px;
     display: flex;
     flex-flow: column;
     justify-content: center;
     align-items: center;
+    background-color: var(--background-blue);
 }
 
 .insightGridTop {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     justify-items: center;
     text-align: center;
-    gap: 6rem;
+    gap: 2rem;
     margin: 1rem 5rem;
+    min-width: 11rem;
+    min-height: 10rem;
 }
 
 .insightGridBottom {
@@ -30,7 +33,16 @@
     grid-template-columns: repeat(2, 1fr);
     justify-items: center;
     text-align: center;
-    margin: 3rem 13rem;
+    margin: 3rem 7rem;
+}
+
+.chart {
+    position: relative;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem auto;
 }
 
 .scanGraph {
@@ -45,15 +57,14 @@
     }
 
     .insightGridTop {
-        display: flex;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
         flex-flow: column;
         text-align: center;
         gap: 2rem;
         margin: 0;
         margin-bottom: 2rem;
- 
-    }
-    
+    }    
     .insightGridBottom {
         display: flex;
         flex-flow: column;
