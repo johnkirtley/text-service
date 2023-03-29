@@ -167,6 +167,18 @@
     text-decoration: underline;
 }
 
+.prevNextButtons {
+        display: flex;
+        gap: 2rem;
+        margin-top: 1rem;
+}
+
+.stepsGetStarted {
+    margin: auto !important;
+    margin-bottom: 2rem !important;
+}
+
+
 .loginContainer, .registerContainer {
     display: flex;
     flex: 1;

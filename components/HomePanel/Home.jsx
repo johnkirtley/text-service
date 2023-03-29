@@ -5,10 +5,10 @@
 import { useState, useEffect, useCallback, useContext } from 'react';
 import { getDocs, collection, query, where } from 'firebase/firestore';
 import {
-    Layout, Space, Spin, Empty, Statistic,
+    Layout, Space, Spin, Empty, Statistic, Table, Input,
 } from 'antd';
 import { Chart, registerables } from 'chart.js';
-import { Bar, Line } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 
 import { firestore } from '../../firebase/clientApp';
 import { useAuth } from '../../Context/AuthContext';
@@ -24,11 +24,15 @@ export default function Home() {
     const [scanArr, setScanArr] = useState([]);
     const [restockArr, setRestockArr] = useState([]);
     const [largestRestock, setLargestRestock] = useState('');
-    const [largestScan, setLargestScan] = useState('');
+    const [productTableData, setProductTableData] = useState([]);
+    const [clientTableData, setClientTableData] = useState([]);
+    const [filterProductTable, setFilterProductTable] = useState([]);
+    const [filterClientTable, setFilterClientTable] = useState([]);
+    const [tableProductSearch, setTableProductSearch] = useState('');
+    const [tableClientSearch, setTableClientSearch] = useState('');
+    // const [setLargestScan] = useState('');
     const [clientRestock, setClientRestock] = useState(null);
-    const [chartLabels, setChartLabels] = useState([]);
     const [months] = useState(defaultMonths);
-    const [chartValues, setChartValues] = useState([]);
     const [chartDateData, setChartDateData] = useState([]);
     const { ownerId } = useContext(OwnerIdContext);
     const { user } = useAuth();
@@ -39,6 +43,36 @@ export default function Home() {
     const { Content } = Layout;
 
     Chart.register(...registerables);
+
+    const handleProductTableFilter = (e) => {
+        const searchValue = e.target.value;
+        setTableProductSearch(searchValue);
+    };
+
+    const handleClientTableFilter = (e) => {
+        const searchValue = e.target.value;
+        setTableClientSearch(searchValue);
+    };
+
+    useEffect(() => {
+        const filtered = clientTableData.filter((prod) => prod.client.toLowerCase().includes(tableClientSearch.toLowerCase()));
+
+        if (tableClientSearch.trim() === '') {
+            setFilterClientTable(clientTableData);
+        } else {
+            setFilterClientTable(filtered);
+        }
+    }, [filterClientTable, clientTableData, tableClientSearch]);
+
+    useEffect(() => {
+        const filtered = productTableData.filter((prod) => prod.product.toLowerCase().includes(tableProductSearch.toLowerCase()));
+
+        if (tableProductSearch.trim() === '') {
+            setFilterProductTable(productTableData);
+        } else {
+            setFilterProductTable(filtered);
+        }
+    }, [filterProductTable, productTableData, tableProductSearch]);
 
     const getQuery = useCallback(async (ref) => {
         const q = query(ref, where('email', '==', user.email.toLowerCase()));
@@ -85,6 +119,38 @@ export default function Home() {
         return objectToReturn;
     };
 
+    const makeProductTable = (data) => {
+        const newArr = [];
+        Object.keys(data).forEach((key) => {
+            const newObj = {
+                product: key,
+                count: data[key],
+            };
+
+            console.log('key', newObj);
+            newArr.push(newObj);
+        });
+
+        const sorted = newArr.sort((a, b) => b.count - a.count);
+        setProductTableData(sorted);
+    };
+
+    const makeClientTable = (data) => {
+        const newArr = [];
+        Object.keys(data).forEach((key) => {
+            const newObj = {
+                client: key,
+                count: data[key],
+            };
+
+            console.log('client', newObj);
+            newArr.push(newObj);
+        });
+
+        const sorted = newArr.sort((a, b) => b.count - a.count);
+        setClientTableData(sorted);
+    };
+
     useEffect(() => {
         const trackLargestScan = {};
         const trackLargestRestock = {};
@@ -103,7 +169,7 @@ export default function Home() {
 
             const largest = findLargestValue(trackLargestScan);
             console.log('large scan', largest);
-            setLargestScan(largest);
+            // setLargestScan(largest);
         }
 
         if (restockArr.length > 0) {
@@ -151,12 +217,6 @@ export default function Home() {
                 dateVals[month] += 1;
             });
 
-            const chartValArray = [];
-
-            for (const val of Object.values(chartVals)) {
-                chartValArray.push(val);
-            }
-
             const dateValArray = [];
 
             for (const val of Object.values(dateVals)) {
@@ -164,16 +224,21 @@ export default function Home() {
             }
 
             setChartDateData(dateValArray);
-            setChartLabels(labelArr);
-            setChartValues(chartValArray);
 
             const largest = findLargestValue(trackLargestRestock);
             const largestClientRestock = findLargestValue(clientMostRestocked);
 
             setLargestRestock(largest);
             setClientRestock(largestClientRestock);
+
+            makeProductTable(trackLargestRestock);
+            makeClientTable(clientMostRestocked);
         }
     }, [scanArr, restockArr]);
+
+    useEffect(() => {
+        console.log('table data', productTableData);
+    }, [productTableData]);
 
     useEffect(() => {
         setLoading(true);
@@ -191,23 +256,23 @@ export default function Home() {
         return <div>Please Upgrade Plan To Unlock Insights.</div>;
     }
 
-    const chartData = {
-        labels: chartLabels,
-        datasets: [
-            {
-                data: chartValues,
-                backgroundColor: [
-                    'rgba(241, 189, 93, 0.7)', // Color for January
-                    // More colors...
-                ],
-                borderColor: [
-                    'rgba(241, 189, 93, 0.7)', // Color for January
-                    // More colors...
-                ],
-                borderWidth: 1,
-            },
-        ],
-    };
+    // const chartData = {
+    //     labels: chartLabels,
+    //     datasets: [
+    //         {
+    //             data: chartValues,
+    //             backgroundColor: [
+    //                 'rgba(241, 189, 93, 0.7)', // Color for January
+    //                 // More colors...
+    //             ],
+    //             borderColor: [
+    //                 'rgba(241, 189, 93, 0.7)', // Color for January
+    //                 // More colors...
+    //             ],
+    //             borderWidth: 1,
+    //         },
+    //     ],
+    // };
 
     const lineChartDate = {
         labels: months,
@@ -227,6 +292,36 @@ export default function Home() {
         plugins: { legend: { display: false } },
     };
 
+    const productTableColumns = [
+        {
+            title: 'Product',
+            dataIndex: 'product',
+            key: 'product',
+
+        },
+        {
+            title: 'Restocks',
+            dataIndex: 'count',
+            key: 'count',
+
+        },
+    ];
+
+    const clientTableColumns = [
+        {
+            title: 'Location',
+            dataIndex: 'client',
+            key: 'client',
+
+        },
+        {
+            title: 'Restocks',
+            dataIndex: 'count',
+            key: 'count',
+
+        },
+    ];
+
     return (
         <Content>
             <Space direction="vertical" size="large" />
@@ -235,7 +330,7 @@ export default function Home() {
                 <div className={styles.insightGridTop}>
                     {scanArr ? <Statistic className={styles.statisticCard} title="Total Number of Scans" value={scanArr.length || 0} /> : ''}
                     {restockArr ? <Statistic className={styles.statisticCard} title="Total Number of Restocks" value={restockArr.length || 0} /> : ''}
-                    {largestScan ? <Statistic className={styles.statisticCard} title="Most Scanned Product" value={largestScan} /> : ''}
+                    {/* {largestScan ? <Statistic className={styles.statisticCard} title="Most Scanned Product" value={largestScan} /> : ''} */}
                     {largestRestock ? <Statistic className={styles.statisticCard} title="Most Restocked Product" value={largestRestock} /> : ''}
                     {clientRestock ? <Statistic className={styles.statisticCard} title="Client With Most Restocks" value={clientRestock} /> : ''}
 
@@ -247,10 +342,25 @@ export default function Home() {
                         <div>Restock Requests By Month</div>
                         <Line data={lineChartDate} options={chartOptions} />
                     </div>
-                    <div className={styles.chart}>
+                    {/* <div className={styles.chart}>
                         <div>Restock Requests By Product</div>
                         <Bar data={chartData} options={chartOptions} />
-                    </div>
+                    </div> */}
+                    {productTableData && clientTableData
+                        ? (
+                            <div className={styles.tableLayout}>
+                                <div>
+                                    <p>Product Restock Performance</p>
+                                    <Input placeholder="Search Products..." name="filterProductData" onChange={handleProductTableFilter} type="text" value={tableProductSearch} className={styles.filterInput} />
+                                    <Table rowKey={(record) => record.product} bordered size="middle" columns={productTableColumns} dataSource={filterProductTable} />
+                                </div>
+                                <div>
+                                    <p>Location Restock Performance</p>
+                                    <Input placeholder="Search Locations/Clients..." name="filterLocationData" onChange={handleClientTableFilter} type="text" value={tableClientSearch} className={styles.filterInput} />
+                                    <Table rowKey={(record) => record.client} bordered size="middle" columns={clientTableColumns} dataSource={filterClientTable} />
+                                </div>
+                            </div>
+                        ) : '' }
                 </div>
             ) : ''}
         </Content>
