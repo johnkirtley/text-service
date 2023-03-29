@@ -3,7 +3,7 @@
 import { useState, useContext, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import {
-    Layout, Menu, Alert, Modal, Button, Input,
+    Layout, Menu, Alert, Modal, Button, Input, Steps,
 } from 'antd';
 import { LineChartOutlined, BarcodeOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import {
@@ -35,6 +35,7 @@ export default function MainComponent() {
     // const { authContext } = useContext(AuthContext);
     const { setRepInfo } = useContext(RepContext);
     const [newRep, setNewRep] = useState(defaultRep);
+    const [getStarted, setGetStarted] = useState(0);
     const { setCurProducts } = useContext(ProductContext);
     const { setOwnerId } = useContext(OwnerIdContext);
     const { user, loading } = useAuth();
@@ -44,6 +45,14 @@ export default function MainComponent() {
     const router = useRouter();
 
     const { planName } = usePremiumStatus(user);
+
+    const next = () => {
+        setGetStarted(getStarted + 1);
+    };
+
+    const prev = () => {
+        setGetStarted(getStarted - 1);
+    };
 
     useEffect(() => {
         if (newRep.name.length < 1 || newRep.number.length < 1 || businessName.length < 1) {
@@ -160,6 +169,11 @@ export default function MainComponent() {
         setFirstLoad(false);
     };
 
+    const steps = [
+        { title: 'Business Name' },
+        { title: 'Add First Contact' },
+    ];
+
     return (
         <div>
             {user === null ? '' : (
@@ -178,25 +192,43 @@ export default function MainComponent() {
                         />
                         {firstLoad ? (
                             <Modal title="Welcome To Supply Mate!" open={firstLoad} footer={null} centered closable={false}>
+                                <Steps current={getStarted} className={styles.stepsGetStarted}>
+                                    {steps.map((step, index) => (
+                                        <Steps.Step key={index} title={step.title} />
+                                    ))}
+                                </Steps>
                                 <div className={styles.newUserContainer}>
-                                    <p className={styles.newUserHeader}>Let&apos;s Add Some Basic Info To Get Started</p>
-                                    <div>
-                                        <Input placeholder="Company Name..." value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
-                                        <p className={styles.newUserLabels}>This can be updated under Settings.</p>
-                                    </div>
-                                    <div className={styles.newUserRepInputContainer}>
-                                        <p className={styles.newUserAddContactLabel}>Please Add Your First Contact.</p>
-                                        <p className={styles.newUserLabels}>Contacts can be managed under Settings.</p>
-                                        <div className={styles.newUserRepInputs}>
+                                    {getStarted === 0 ? (
+                                        <>
                                             <div>
-                                                <Input placeholder="Name..." value={newRep.name} name="name" onChange={handleRepChange} />
+                                                <Input placeholder="Company Name..." value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
+                                                <p className={styles.newUserLabels}>This can be updated under Settings.</p>
                                             </div>
-                                            <div>
-                                                <Input placeholder="Phone Number..." value={newRep.number} name="number" onChange={handleRepChange} />
+                                            <div className={styles.prevNextButtons}>
+                                                <Button disabled={businessName.length < 1} onClick={next}>Next</Button>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <Button disabled={disableWalkthroughButton} type="primary" onClick={() => completeWalkthrough(newRep, businessName)}>Complete Setup</Button>
+                                        </>
+                                    ) : ''}
+                                    {getStarted === 1 ? (
+                                        <>
+                                            <div className={styles.newUserRepInputContainer}>
+                                                <p className={styles.newUserLabels}>Contacts can be managed under Settings.</p>
+                                                <div className={styles.newUserRepInputs}>
+                                                    <div>
+                                                        <Input placeholder="Name..." value={newRep.name} name="name" onChange={handleRepChange} />
+                                                    </div>
+                                                    <div>
+                                                        <Input placeholder="Phone Number..." value={newRep.number} name="number" onChange={handleRepChange} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className={styles.prevNextButtons}>
+                                                <Button onClick={prev}>Prev</Button>
+                                                <Button disabled={disableWalkthroughButton} type="primary" onClick={() => completeWalkthrough(newRep, businessName)}>Complete Setup</Button>
+                                            </div>
+                                        </>
+                                    ) : ''}
+
                                 </div>
                             </Modal>
                         ) : ''}

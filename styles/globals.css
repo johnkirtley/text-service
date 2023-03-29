@@ -152,6 +152,10 @@ canvas {
     width: 80% !important;
 }
 
+.ant-steps-finish-icon svg {
+    color: var(--primary-green) !important;
+}
+
 
 
 .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item:hover::after, .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item-selected::after {
