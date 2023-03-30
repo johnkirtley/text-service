@@ -177,17 +177,17 @@ export default function SettingsPanel() {
                 </Modal>
                 <Space className={styles.settingsContainer}>
                     <Space className={styles.repListContainer}>
-                        <Card title="Add Reps">
+                        <Card title="Add Contact">
                             <div className={styles.repInputBox}>
                                 <div>
                                     <p>Name</p>
-                                    <Input placeholder="Enter Rep Name" value={newRep.name} name="name" onChange={handleRepChange} />
+                                    <Input value={newRep.name} name="name" onChange={handleRepChange} />
                                 </div>
                                 <div>
                                     <p>Phone Number</p>
-                                    <Input placeholder="Enter Rep Number" value={newRep.number} name="number" onChange={handleRepChange} />
+                                    <Input value={newRep.number} name="number" onChange={handleRepChange} />
                                 </div>
-                                <Button type="primary" disabled={disableAddRep} onClick={() => saveContact(newRep)}>Add</Button>
+                                <Button className={styles.addButton} type="primary" disabled={disableAddRep} onClick={() => saveContact(newRep)}>Add</Button>
                                 <Space>
                                     {dupeNum ? <Alert message="Number Already Exists" type="error" /> : ''}
                                 </Space>
@@ -197,9 +197,9 @@ export default function SettingsPanel() {
                         iterate and show all added reps + numbers */}
                         <div>
                             <Collapse>
-                                <Panel header="List of Current Reps">
+                                <Panel header="Contact List">
                                     <div className={styles.repScroll}>
-                                        <Input placeholder="Search Reps..." value={searchRep} name="repSearch" onChange={handleRepSearch} className={styles.searchRepsInput} />
+                                        <Input placeholder="Search Contacts..." value={searchRep} name="repSearch" onChange={handleRepSearch} className={styles.searchRepsInput} />
                                         {contactAlert ? <Alert message="Must Have At Least 1 Contact" type="error" /> : ''}
                                         {filteredSearch && filteredSearch.length > 0
                                             ? filteredSearch.map((num, idx) => (
@@ -217,7 +217,68 @@ export default function SettingsPanel() {
                                                     </div>
                                                     <Button type="primary" danger onClick={() => removeRep(num?.name, num?.number)}>Remove</Button>
                                                 </div>
-                                            )) : <div><p>No Reps Found. Please Add One.</p></div>}
+                                            )) : <div><p>No Contacts Found. Please Add One.</p></div>}
+                                    </div>
+
+                                </Panel>
+                            </Collapse>
+                        </div>
+                        <div>
+                            <Collapse>
+                                <Panel header="Additional Features">
+                                    <div>
+                                        {isUserPremium.planName === 'bronze' || isUserPremium.planName === 'gold'
+
+                                            ? (
+                                                <div style={{ display: 'flex', flexFlow: 'column', gap: '2rem' }}>
+                                                    <div>
+
+                                                        <div>
+                                                    Allow Customer To Text Contact Directly
+                                                        </div>
+                                                        <div style={{
+                                                            display: 'flex', gap: '0.5rem', justifyContent: 'center', alignItems: 'center', marginTop: '0.5rem',
+                                                        }}
+                                                        >
+                                                            <Button>Yes</Button>
+                                                            <Button>No</Button>
+                                                        </div>
+                                                    </div>
+                                                    {isUserPremium.planName === 'gold' ? (
+                                                        <>
+                                                            <div>
+
+                                                                <div>
+                                                            Daily Emails - Pending Restocks
+                                                                </div>
+                                                                <div style={{
+                                                                    display: 'flex', gap: '0.5rem', justifyContent: 'center', alignItems: 'center', marginTop: '0.5rem',
+                                                                }}
+                                                                >
+                                                                    <Button>Yes</Button>
+                                                                    <Button>No</Button>
+                                                                </div>
+                                                            </div>
+                                                            <div>
+
+                                                                <div>
+                                                            End of Month Recap Emails
+                                                                </div>
+                                                                <div style={{
+                                                                    display: 'flex', gap: '0.5rem', justifyContent: 'center', alignItems: 'center', marginTop: '0.5rem',
+                                                                }}
+                                                                >
+                                                                    <Button>Yes</Button>
+                                                                    <Button>No</Button>
+                                                                </div>
+                                                            </div>
+                                                        </>
+                                                    ) : ''}
+
+                                                </div>
+                                            )
+
+                                            : <div>Features Only Available On Bronze and Gold Plans</div>}
                                     </div>
 
                                 </Panel>

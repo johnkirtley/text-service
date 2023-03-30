@@ -4,6 +4,7 @@
 /* eslint-disable consistent-return */
 import { useState, useEffect, useCallback, useContext } from 'react';
 import { getDocs, collection, query, where } from 'firebase/firestore';
+import Image from 'next/image';
 import {
     Layout, Space, Spin, Empty, Statistic, Table, Input,
 } from 'antd';
@@ -15,6 +16,8 @@ import { useAuth } from '../../Context/AuthContext';
 
 import OwnerIdContext from '../../Context/OwnerIdContext';
 import usePremiumStatus from '../../stripe/usePremiumStatus';
+
+import padlock from '../../public/icons/padlock.png';
 
 import styles from './HomeComponent.module.css';
 
@@ -253,7 +256,12 @@ export default function Home() {
     }
 
     if (isUserPremium.planName === '' || isUserPremium.planName === 'silver') {
-        return <div>Please Upgrade Plan To Unlock Insights.</div>;
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexFlow: 'column' }}>
+                <div style={{ marginBottom: '1rem' }}>Upgrade Plan To Unlock Insights.</div>
+                <Image src={padlock} alt="padlock" height={50} width={50} />
+            </div>
+        );
     }
 
     // const chartData = {

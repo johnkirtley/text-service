@@ -63,7 +63,7 @@
     padding: 0 2rem;
     display: flex;
     flex-flow: column;
-    gap: 2rem;
+    gap: 1rem;
     width: 25rem;
 }
 
@@ -122,6 +122,11 @@
     margin-top: 2rem;
 }
 
+.addButton {
+    width: 50%;
+    margin: auto;
+}
+
 .deleteButton:hover {
     background-color: red !important;
     border-color: red !important;
@@ -144,6 +149,11 @@
         display: flex;
         flex-flow: column;
         gap: 1rem;
+    }
+
+    .addButton {
+        width: 80%;
+        margin: auto;
     }
 
 }

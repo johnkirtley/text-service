@@ -162,7 +162,7 @@ export default function Submit() {
                     <div className={styles.requestProduct}>{product}</div>
                     {/* on click, trigger email and send order to order status screen */}
                     {!gettingData && plan === '' ? <Button disabled>Plan Not Active. Please Contact Account Owner.</Button> : <Button type="primary" loading={loading} disabled={success || alreadyAdded ? true : ''} onClick={() => addPendingRestock({ uid: uuidv4(), dateAdded: getDate(), client: clientName, requestedProduct: product })}>{success ? 'Request Sent Successfully. You May Close This Page' : 'Request Restock'}</Button>}
-                    {plan === 'silver' || plan === '' ? '' : <Button type="default" href={`sms:${repNumber}&body=${trimmedMessage}`}>Text Rep Directly</Button> }
+                    {plan === 'silver' || plan === '' ? '' : <Button className={styles.textRep} type="default" href={`sms:${repNumber}&body=${trimmedMessage}`}>Text Rep Directly</Button> }
                     <div className={styles.poweredBy}>
                         Powered By Supply Mate
                     </div>
