@@ -257,7 +257,6 @@ export default function Products() {
     return (
         <>
             <PageHeader title="" />
-
             <Steps current={current}>
                 {steps.map((step, index) => (
                     <Steps.Step key={index} title={step.title} />
@@ -270,7 +269,7 @@ export default function Products() {
             {current === 0 ? (
                 <Space>
                     <Content className={styles.contentContainer}>
-                        <Space direction="vertical" size="large" className={styles.productInfoInputs} style={{ padding: '1rem 3rem', boxShadow: '16px 10px 15px -8px rgb(77 77 77 / 18%), 0 0px 0px 0 rgb(77 77 77 / 4%)', borderRadius: '10px' }}>
+                        <Space direction="vertical" size="large" className={styles.productInfoInputs} style={{ padding: '1rem 3rem', boxShadow: '18px 13px 36px 7px rgb(77 77 77 / 18%), 39px 1px 26px -39px rgb(77 77 77 / 4%)', borderRadius: '10px' }}>
                             <div className={styles.configInputs}>
                                 <div className={styles.infoInput}>
                                     <p className={styles.inputLabel}>QR Code Location</p>
@@ -315,7 +314,7 @@ export default function Products() {
                                                     size="large"
                                                 >
                                                     <Checkbox
-                                                    // if box is checked, disable remove button
+                                                        // if box is checked, disable remove button
                                                         onChange={() => onCheckChange(product, idx)}
                                                         checked={product.isChecked}
                                                     >

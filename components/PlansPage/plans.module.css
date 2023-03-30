@@ -20,7 +20,7 @@
 
 .planPrice {
     font-weight: var(--primary-label-weight);
-    font-size: 1.75rem;
+    font-size: 2rem;
     margin-bottom: 1rem;
 }
 
@@ -35,6 +35,7 @@
 
 .feature {
     padding: 0.6rem 0;
+    list-style: none;
 }
 
 .goHome {
@@ -46,8 +47,23 @@
     margin: 1.25rem 0 0 1rem;
 }
 
+.planUl {
+    display: flex;
+    justify-content: center;
+    flex-flow: column;
+    align-items: flex-start;
+    width: 20rem;
+    padding: 0;
+}
+
 .goHome:hover {
     color: var(--primary-blue);
     cursor: pointer;
     
+}
+
+@media(max-width: 500px) {
+    .planUl {
+        width: 16rem;
+    }
 }
