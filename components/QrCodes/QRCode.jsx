@@ -133,7 +133,11 @@ export default function QRCode({
                         </Modal>
 
                         <Content className={styles.codesGenerated}>
+
                             <Space className={styles.codeSpacer} size="large">
+                                {/* <p className={styles.generatedCodes}>
+                            Preview Panel
+                                </p> */}
                                 <div
                                     id="qr-code-container"
                                     className={styles.qrContainer}

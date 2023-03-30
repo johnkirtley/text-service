@@ -88,6 +88,7 @@ canvas {
 .ant-btn {
   white-space: normal !important;
   height: fit-content !important;
+  border-radius: 10px !important;
 }
 
 .ant-btn-primary {
@@ -193,7 +194,7 @@ canvas {
 }
 
 .ant-statistic-content {
-    font-size: 1.1rem !important;
+    font-size: 1.3rem !important;
 }
 
 
@@ -229,5 +230,9 @@ th, td {
 
 .ant-collapse, .ant-card-body {
     width: 20rem;
+}
+
+.ant-statistic-content {
+    font-size: 1.1rem !important;
 }
 }

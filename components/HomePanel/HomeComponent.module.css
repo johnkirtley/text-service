@@ -12,10 +12,15 @@
     border-radius: 8px;
     display: flex;
     flex-flow: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-start !important;
     background-color: var(--background-blue);
     box-shadow: 16px 10px 15px -8px rgb(77 77 77 / 18%), 0 0px 0px 0 rgb(77 77 77 / 4%);
+    background-size: 80px 80px;
+    background-repeat: no-repeat;
+    background-blend-mode: overlay;
+    background-position: right bottom;
+    text-align: left;
 }
 
 .insightGridTop {
@@ -44,12 +49,16 @@
     justify-content: center;
     align-items: center;
     margin: 1rem auto;
+    border: 1px solid var(--background-blue);
+    box-shadow: 16px 10px 15px -8px rgb(77 77 77 / 18%), 0 0px 0px 0 rgb(77 77 77 / 4%);
+    padding: 1rem;
+    border-radius: 10px;
 }
 
 .scanGraph {
     font-size: 1.5rem;
     text-align: center;
-    margin-top: 6rem;
+    margin-top: 5rem;
 }
 
 .tableLayout {
@@ -59,9 +68,20 @@
     grid-gap: 4rem;
 }
 
+.tableData {
+    box-shadow: 16px 10px 15px -8px rgb(77 77 77 / 18%), 0 0px 0px 0 rgb(77 77 77 / 4%);
+    padding: 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--background-blue);
+}
+
 .filterInput {
     width: 80%;
     margin-bottom: 1rem;
+}
+
+.chartTitles {
+    font-size: 1.3rem;
 }
 
 @media(max-width: 500px) {
@@ -97,4 +117,17 @@
         width: 80%;
         margin-bottom: 1rem;
     }
+
+    .statisticCard {
+        text-align: left;
+        align-items: flex-start;
+        background-size: 60px 60px;
+    }
+
+    .scanGraph {
+    margin-top: 3rem;
+}
+.chartTitles {
+    font-size: 1rem;
+}
 }

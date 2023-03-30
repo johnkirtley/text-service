@@ -24,7 +24,7 @@
 }
 
 .qrContainer {
-    height: 30rem !important;
+    height: 29rem !important;
     display: flex;
     overflow-y: scroll;
     height: 20rem;
@@ -67,7 +67,7 @@
 
     .qrContainer {
         scale: 0.7;
-        height: 25rem !important;
+        height: 20rem !important;
         margin-top: 0rem !important;
         gap: 0rem;
     }

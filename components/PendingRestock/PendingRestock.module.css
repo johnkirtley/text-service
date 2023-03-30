@@ -13,6 +13,7 @@
 
 .customTablePending, .customTableCompleted {
     width: 47rem !important;
+    border-radius: 10px;
 }
 
 .filterCompleted {
