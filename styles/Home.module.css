@@ -447,7 +447,7 @@ margin-bottom: 0.5rem;
     }
 
     .loginForm, .registerForm {
-        width: 75%;
+        width: 100%;
     }
 
     .signInWithGoogle {

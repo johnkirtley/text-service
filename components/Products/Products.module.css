@@ -23,7 +23,6 @@
     min-width: 18rem;
     margin-bottom: 2rem;
     margin-top: 2rem;
-
 }
 
 .configInputs {
@@ -72,7 +71,7 @@
     justify-content: space-evenly;
     align-items: flex-start;
     text-align: center;
-    margin-bottom: 6rem;
+    margin-bottom: 2rem;
     width: 100%;
     padding: 0 2rem;
     margin-top: 2rem;
@@ -83,6 +82,9 @@
     flex-flow: column;
     min-width: 18rem;
     margin-top: 2rem;
+    padding: 1rem 3rem;
+    box-shadow: 16px 10px 15px -8px rgb(77 77 77 / 18%), 0 0px 0px 0 rgb(77 77 77 / 4%);
+    border-radius: 10px;
 }
 
 .selectProductsLabel {
@@ -179,6 +181,7 @@
 
     .productContainerDiv {
         min-width: 0rem;
+        width: 23rem;
     }
 
     .productInfoInputs {

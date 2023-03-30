@@ -192,13 +192,13 @@ export default function SignIn() {
                     <Card bordered={false}>
                         <Form name="Register" onFinish={signUp} className={styles.registerForm}>
                             <Form.Item label="Email" name="username" rules={[{ required: true, message: 'Please input email' }]} className={styles.formRow} required={false}>
-                                <Input placeholder="Enter Email..." name="username" value={credentials.username} onChange={handleChange} />
+                                <Input name="username" value={credentials.username} onChange={handleChange} />
                             </Form.Item>
                             <Form.Item label="Password" name="password" extra="Password must be at least 6 characters" rules={[{ required: true, message: 'Please input password' }]} className={styles.formRow} required={false}>
-                                <Input.Password placeholder="Enter Password..." name="password" value={credentials.password} onChange={handleChange} />
+                                <Input.Password name="password" value={credentials.password} onChange={handleChange} />
                             </Form.Item>
                             <Form.Item label="Confirm Password" name="confirmPass" rules={[{ required: true, message: 'Please input password' }]} className={styles.formRow} required={false}>
-                                <Input.Password placeholder="Confirm Password..." name="confirmPass" value={credentials.confirmPass} onChange={handleChange} />
+                                <Input.Password name="confirmPass" value={credentials.confirmPass} onChange={handleChange} />
                             </Form.Item>
                             <Form.Item>
                                 <Button type="primary" htmlType="submit" className={styles.registerButton}>

@@ -328,18 +328,18 @@ export default function Home() {
             <div className={styles.insightHeader}>Overview</div>
             {showInsights ? (
                 <div className={styles.insightGridTop}>
-                    {scanArr ? <Statistic className={styles.statisticCard} title="Total Number of Scans" value={scanArr.length || 0} /> : ''}
-                    {restockArr ? <Statistic className={styles.statisticCard} title="Total Number of Restocks" value={restockArr.length || 0} /> : ''}
+                    {scanArr ? <Statistic className={styles.statisticCard} style={{ backgroundImage: 'url(/icons/scan.png)' }} title="Total Number of Scans" value={scanArr.length || 0} /> : ''}
+                    {restockArr ? <Statistic className={styles.statisticCard} style={{ backgroundImage: 'url(/icons/inventory.png)' }} title="Total Number of Restocks" value={restockArr.length || 0} /> : ''}
                     {/* {largestScan ? <Statistic className={styles.statisticCard} title="Most Scanned Product" value={largestScan} /> : ''} */}
-                    {largestRestock ? <Statistic className={styles.statisticCard} title="Most Restocked Product" value={largestRestock} /> : ''}
-                    {clientRestock ? <Statistic className={styles.statisticCard} title="Client With Most Restocks" value={clientRestock} /> : ''}
+                    {largestRestock ? <Statistic className={styles.statisticCard} style={{ backgroundImage: 'url(/icons/winner.png)' }} title="Most Restocked Product" value={largestRestock} /> : ''}
+                    {clientRestock ? <Statistic className={styles.statisticCard} style={{ backgroundImage: 'url(/icons/building.png)' }} title="Client With Most Restocks" value={clientRestock} /> : ''}
 
                 </div>
             ) : <Empty description="No Insights Available At This Time. Data Will Populate As Codes Are Scanned." />}
             {showInsights ? (
                 <div className={styles.scanGraph}>
                     <div className={styles.chart}>
-                        <div>Restock Requests By Month</div>
+                        <p className={styles.chartTitles}>Restock Requests By Month</p>
                         <Line data={lineChartDate} options={chartOptions} />
                     </div>
                     {/* <div className={styles.chart}>
@@ -349,13 +349,13 @@ export default function Home() {
                     {productTableData && clientTableData
                         ? (
                             <div className={styles.tableLayout}>
-                                <div>
-                                    <p>Product Restock Performance</p>
+                                <div className={styles.tableData}>
+                                    <p className={styles.chartTitles}>Product Restock Performance</p>
                                     <Input placeholder="Search Products..." name="filterProductData" onChange={handleProductTableFilter} type="text" value={tableProductSearch} className={styles.filterInput} />
                                     <Table rowKey={(record) => record.product} bordered size="middle" columns={productTableColumns} dataSource={filterProductTable} />
                                 </div>
-                                <div>
-                                    <p>Location Restock Performance</p>
+                                <div className={styles.tableData}>
+                                    <p className={styles.chartTitles}>Location Restock Performance</p>
                                     <Input placeholder="Search Locations/Clients..." name="filterLocationData" onChange={handleClientTableFilter} type="text" value={tableClientSearch} className={styles.filterInput} />
                                     <Table rowKey={(record) => record.client} bordered size="middle" columns={clientTableColumns} dataSource={filterClientTable} />
                                 </div>

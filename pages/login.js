@@ -129,10 +129,10 @@ export default function Login() {
                     <Card bordered={false}>
                         <Form name="Login" onFinish={signIn} className={styles.loginForm}>
                             <Form.Item required={false} label="Email" name="username" rules={[{ required: true, message: 'Please input email' }]} className={styles.formRow}>
-                                <Input placeholder="Enter Email..." name="username" value={credentials.username} onChange={handleChange} />
+                                <Input name="username" value={credentials.username} onChange={handleChange} />
                             </Form.Item>
                             <Form.Item required={false} label="Password" name="password" rules={[{ required: true, message: 'Please input password' }]} className={styles.formRow}>
-                                <Input.Password placeholder="Enter Password..." name="password" value={credentials.password} onChange={handleChange} />
+                                <Input.Password name="password" value={credentials.password} onChange={handleChange} />
                             </Form.Item>
                             <Form.Item>
                                 <Button type="primary" htmlType="submit" className={styles.loginButton}>
