@@ -26,6 +26,12 @@ export default function PlansPage() {
             generatePortal();
         }
     };
+
+    const cardStyles = {
+        borderRadius: '10px',
+        boxShadow: '16px 10px 15px -8px rgb(77 77 77 / 18%), 0 0px 0px 0 rgb(77 77 77 / 4%)',
+
+    };
     return (
         <div>
             <Link href="/">
@@ -39,7 +45,7 @@ export default function PlansPage() {
             {planClicked ? <Modal open={planClicked} title="Redirecting To Stripe" footer={null} centered closable={false}>Loading...</Modal> : ''}
             <div className={styles.planGrid}>
                 {planInfo.map((plan, id) => (
-                    <Card title={plan.name} key={id}>
+                    <Card title={plan.name} key={id} style={cardStyles}>
                         <div className={styles.cardBody}>
                             <div className={styles.cardBody}>
                                 <div className={styles.planPrice}>{plan.price}</div>

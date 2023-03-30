@@ -257,7 +257,6 @@ export default function Products() {
     return (
         <>
             <PageHeader title="" />
-
             <Steps current={current}>
                 {steps.map((step, index) => (
                     <Steps.Step key={index} title={step.title} />
@@ -315,7 +314,7 @@ export default function Products() {
                                                     size="large"
                                                 >
                                                     <Checkbox
-                                                    // if box is checked, disable remove button
+                                                        // if box is checked, disable remove button
                                                         onChange={() => onCheckChange(product, idx)}
                                                         checked={product.isChecked}
                                                     >

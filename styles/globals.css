@@ -51,7 +51,8 @@ canvas {
 }
 
 .ant-table-thead > tr > th {
-    background-color: var(--background-blue) !important;
+    background-color: var(--primary-blue) !important;
+    color: white !important;
 }
 
 .ant-card-head {
@@ -142,7 +143,7 @@ canvas {
 }
 
 .ant-menu-item-selected, .ant-menu-item:hover, .ant-tabs-tab-active > .ant-tabs-tab-btn, .ant-tabs-tab-btn:hover {
-    color: var(--highlight-yellow) !important;
+    color: var(--primary-blue) !important;
 }
 
 .ant-tabs-ink-bar {

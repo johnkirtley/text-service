@@ -325,7 +325,7 @@ export default function Home() {
     return (
         <Content>
             <Space direction="vertical" size="large" />
-            <div className={styles.insightHeader}>Overview</div>
+            {/* <div className={styles.insightHeader}>Overview</div> */}
             {showInsights ? (
                 <div className={styles.insightGridTop}>
                     {scanArr ? <Statistic className={styles.statisticCard} style={{ backgroundImage: 'url(/icons/scan.png)' }} title="Total Number of Scans" value={scanArr.length || 0} /> : ''}

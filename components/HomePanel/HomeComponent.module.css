@@ -3,7 +3,13 @@
     font-size: 2rem;
     font-weight: 500;
     margin-bottom: 4rem;
-    color: var(--primary-blue) !important
+    color: white !important;
+    border: 1px solid white;
+    padding: 1rem;
+    border-radius: 10px;
+    width: 50%;
+    margin: 1rem auto 3rem auto;
+    background-color: var(--primary-blue);
 }
 
 .statisticCard {
@@ -16,7 +22,7 @@
     align-items: flex-start !important;
     background-color: var(--background-blue);
     box-shadow: 16px 10px 15px -8px rgb(77 77 77 / 18%), 0 0px 0px 0 rgb(77 77 77 / 4%);
-    background-size: 80px 80px;
+    background-size: 90px 90px;
     background-repeat: no-repeat;
     background-blend-mode: overlay;
     background-position: right bottom;
@@ -53,6 +59,7 @@
     box-shadow: 16px 10px 15px -8px rgb(77 77 77 / 18%), 0 0px 0px 0 rgb(77 77 77 / 4%);
     padding: 1rem;
     border-radius: 10px;
+    background-color: var(--background-blue);
 }
 
 .scanGraph {
@@ -73,6 +80,7 @@
     padding: 1rem;
     border-radius: 10px;
     border: 1px solid var(--background-blue);
+    background-color: var(--background-blue);
 }
 
 .filterInput {
@@ -87,6 +95,7 @@
 @media(max-width: 500px) {
     .insightHeader {
         margin-bottom: 3rem;
+        width: 80%;
     }
 
     .insightGridTop {
@@ -121,7 +130,7 @@
     .statisticCard {
         text-align: left;
         align-items: flex-start;
-        background-size: 60px 60px;
+        background-size: 70px 70px;
     }
 
     .scanGraph {

@@ -33,10 +33,18 @@
 .footer {
   display: flex;
   flex: 1;
-  padding: 2rem 0;
+  padding: 3rem 0;
   border-top: 1px solid #eaeaea;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
+}
+
+.footerLinks {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.5rem;
 }
 
 .footer a {
@@ -44,6 +52,12 @@
   justify-content: center;
   align-items: center;
   flex-grow: 1;
+  color: black;
+}
+
+.footer a:hover {
+    color: var(--highlight-yellow);
+    text-decoration: underline;
 }
 
 .title a {
