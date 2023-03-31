@@ -9,6 +9,7 @@ export default async function handler(req, res) {
         const customer = await stripe.customers.list({ email });
 
         console.log('customer', customer);
+
         const sub = await stripe.subscriptions.list({ customer: customer.data[0].id, limit: 1 });
 
         console.log('sub', sub);
