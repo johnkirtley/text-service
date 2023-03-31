@@ -41,7 +41,7 @@ export default function SettingsPanel() {
     const [dupeNum, setDupeNum] = useState(false);
     const [disableAddRep, setDisableAddRep] = useState(true);
     const { user } = useAuth();
-    const isUserPremium = usePremiumStatus(user);
+    const isUserPremium = usePremiumStatus(user.email);
 
     // const plans = ['silver', 'bronze', 'gold'];
 
@@ -156,7 +156,7 @@ export default function SettingsPanel() {
 
     const handleManageBilling = () => {
         setCustomerPortal(true);
-        generatePortal();
+        generatePortal(user.email);
     };
 
     useEffect(() => {

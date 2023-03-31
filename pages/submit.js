@@ -9,7 +9,7 @@ import {
 import { Layout, Button, Spin, Alert } from 'antd';
 import { uuidv4 } from '@firebase/util';
 import { firestore } from '../firebase/clientApp';
-import { querySubCollection } from '../firebase/getUserData';
+import usePremiumStatus from '../stripe/usePremiumStatus';
 
 import styles from '../styles/Home.module.css';
 
@@ -25,6 +25,12 @@ export default function Submit() {
     const [success, setSuccess] = useState(false);
     const [gettingData, setGettingData] = useState(false);
     const [alreadyAdded, setAlreadyAdded] = useState(false);
+
+    const { planName } = usePremiumStatus(email);
+
+    useEffect(() => {
+        setPlan(planName);
+    }, [email, planName]);
 
     const { Content, Header } = Layout;
 
@@ -54,26 +60,12 @@ export default function Submit() {
         querySnapshot.forEach((document) => {
             if (document.data().uid === ownerId) {
                 setEmail(document.data().email);
-
-                querySubCollection('customers', 'email', '==', email, 'subscriptions').then((subCollection) => {
-                    if (subCollection.length > 0) {
-                        subCollection.forEach((sub) => {
-                            if (sub.mostRecentSubDoc?.status === 'active' || sub.mostRecentSubDoc?.status === 'trialing') {
-                                setPlan(sub.mostRecentSubDoc?.role);
-                            }
-                            setTimeout(() => {
-                                setGettingData(false);
-                            }, 1500);
-                        });
-                    } else {
-                        setTimeout(() => {
-                            setGettingData(false);
-                        }, 1500);
-                    }
-                });
+                setTimeout(() => {
+                    setGettingData(false);
+                }, 1500);
             }
         });
-    }, [ownerId, email]);
+    }, [ownerId]);
 
     const getDate = () => {
         const currentDate = new Date();
@@ -89,12 +81,17 @@ export default function Submit() {
                     product,
                     client: clientName,
                 };
-                const restockRef = doc(firestore, 'users', email);
-                await updateDoc(restockRef, { analytics: arrayUnion(addScanAnalytics) });
+
+                if (email !== '') {
+                    const restockRef = doc(firestore, 'users', email);
+                    await updateDoc(restockRef, { analytics: arrayUnion(addScanAnalytics) });
+                }
             }
         };
 
-        addScan();
+        if (email !== '' && plan) {
+            addScan();
+        }
     }, [clientName, product, email, plan]);
 
     useEffect(() => {

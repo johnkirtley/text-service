@@ -7,7 +7,7 @@ export default function usePremiumStatus(user) {
     useEffect(() => {
         if (user) {
             const checkPremiumStatus = async () => {
-                setPremiumStatus(await isUserPremium());
+                setPremiumStatus(await isUserPremium(user));
             };
             checkPremiumStatus();
         }

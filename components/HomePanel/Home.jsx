@@ -41,7 +41,7 @@ export default function Home() {
     const { user } = useAuth();
     const [loading, setLoading] = useState(false);
     const [showInsights, setShowInsights] = useState(false);
-    const isUserPremium = usePremiumStatus(user);
+    const isUserPremium = usePremiumStatus(user.email);
 
     const { Content } = Layout;
 
