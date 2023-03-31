@@ -43,7 +43,7 @@ export default function Products() {
     const { clientInfo, setClientInfo } = useContext(ClientContext);
     const { ownerId } = useContext(OwnerIdContext);
 
-    const { planName } = usePremiumStatus(user);
+    const { planName } = usePremiumStatus(user?.email);
 
     const next = () => {
         setCurrent(current + 1);

@@ -1,11 +1,12 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 /* eslint-disable max-len */
 /* eslint-disable import/no-extraneous-dependencies */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Card, Button, Modal } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import Link from 'next/link';
-import createCheckoutSession from '../../stripe/createCheckoutSession';
+// import createCheckoutSession from '../../stripe/createCheckoutSession';
 import usePremiumStatus from '../../stripe/usePremiumStatus';
 import { useAuth } from '../../Context/AuthContext';
 import generatePortal from '../../stripe/createPortal';
@@ -17,17 +18,68 @@ import styles from './plans.module.css';
 
 export default function PlansPage() {
     const [planClicked, setPlanClicked] = useState(false);
+    const [showTrialText, setShowTrialText] = useState(false);
     const { user } = useAuth();
 
-    const isUserPremium = usePremiumStatus(user);
+    const isUserPremium = usePremiumStatus(user.email);
+
+    async function getSubscriber(email) {
+        const response = await fetch('/api/get-subscriber', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
+        });
+
+        const data = await response.json();
+        console.log('Customer:', data);
+        return data;
+    }
+
+    async function getCustomer(email) {
+        const response = await fetch('/api/get-customer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
+        });
+
+        const data = await response.json();
+        console.log('Customer:', data);
+        const trial = data.customer.data[0].metadata.usedFreeTrial !== 'true';
+        setShowTrialText(trial);
+        return data;
+    }
+
+    async function createCheckoutSessions(product, email) {
+        let data;
+        if (typeof window !== 'undefined') {
+            const response = await fetch('/api/create-checkout-session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ product, successUrl: window.location.origin, email }),
+            });
+
+            data = await response.json();
+            console.log('Success:', data);
+        }
+
+        return data;
+    }
+
+    useEffect(() => {
+        getSubscriber(user?.email);
+        getCustomer(user?.email);
+    }, [user]);
 
     const handleBilling = (planType) => {
         setPlanClicked(true);
 
         if (isUserPremium.planName === '') {
-            createCheckoutSession(user.uid, planType);
+            createCheckoutSessions(planType, user.email).then((res) => {
+                const { url } = res.session;
+                window.location.assign(url);
+            });
         } else {
-            generatePortal();
+            generatePortal(user.email);
         }
     };
 
@@ -55,7 +107,8 @@ export default function PlansPage() {
                             <div className={styles.cardBody}>
                                 <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
                                     <div className={styles.planPrice}>{plan.price}</div>
-                                    <div style={{ fontWeight: '500' }}>&#9200; 14 Day Free Trial</div>
+                                    {showTrialText ? <div style={{ fontWeight: '500' }}>&#9200; 14 Day Free Trial</div>
+                                        : ''}
                                 </div>
                                 <ul className={styles.planUl}>
                                     <div style={{ fontWeight: 'bold', textDecoration: 'underline' }}>Features:</div>
@@ -66,7 +119,7 @@ export default function PlansPage() {
                             </div>
                             <div>
                                 {isUserPremium.planName === plan.name ? <Button type="primary" className={styles.planButton} disabled>Current Plan</Button>
-                                    : <Button type="primary" className={styles.planButton} onClick={() => handleBilling(plan.name)}>Select {plan.name} Plan</Button>}
+                                    : <Button type="primary" className={styles.planButton} onClick={() => handleBilling(plan.id)}>Select {plan.name} Plan</Button>}
                             </div>
                         </div>
                     </Card>

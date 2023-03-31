@@ -1,21 +1,28 @@
-import { httpsCallable } from 'firebase/functions';
-import { firebaseFunctions } from '../firebase/clientApp';
+// import { httpsCallable } from 'firebase/functions';
+// import { firebaseFunctions } from '../firebase/clientApp';
 
-const generatePortal = () => {
-    const createPortalLink = httpsCallable(
-        firebaseFunctions,
-        'ext-firestore-stripe-payments-createPortalLink',
-    );
-
+async function createPortalSession(email) {
+    let data;
     if (typeof window !== 'undefined') {
-        createPortalLink({ returnUrl: window.location.origin })
-            .then((result) => {
-                const { url } = result.data;
-                window.location.assign(url);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+        const response = await fetch('/api/create-portal-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, returnUrl: window.location.origin }),
+        });
+
+        data = await response.json();
+        console.log('Success:', data);
+    }
+
+    return data;
+}
+
+const generatePortal = (email) => {
+    if (typeof window !== 'undefined') {
+        createPortalSession(email).then((res) => {
+            const { url } = res;
+            window.location.assign(url);
+        }).catch((err) => console.log(err));
     }
 };
 
