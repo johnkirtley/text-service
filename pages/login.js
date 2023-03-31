@@ -131,11 +131,14 @@ export default function Login() {
                             <Form.Item required={false} label="Email" name="username" rules={[{ required: true, message: 'Please input email' }]} className={styles.formRow}>
                                 <Input name="username" value={credentials.username} onChange={handleChange} />
                             </Form.Item>
-                            <Form.Item required={false} label="Password" name="password" rules={[{ required: true, message: 'Please input password' }]} className={styles.formRow}>
+                            <Form.Item style={{ marginBottom: '0' }} required={false} label="Password" name="password" rules={[{ required: true, message: 'Please input password' }]} className={styles.formRow}>
                                 <Input.Password name="password" value={credentials.password} onChange={handleChange} />
                             </Form.Item>
+                            <div className={styles.forgotPasswordText}>
+                                <Link href="/password-reset">Forgot Password?</Link>
+                            </div>
                             <Form.Item>
-                                <Button type="primary" htmlType="submit" className={styles.loginButton}>
+                                <Button type="primary" htmlType="submit" className={styles.loginButton} style={{ marginTop: '24px' }}>
                                     {loggingIn ? 'Logging In...' : 'Login'}
                                 </Button>
                             </Form.Item>

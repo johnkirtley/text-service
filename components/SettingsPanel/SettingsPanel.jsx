@@ -71,6 +71,33 @@ export default function SettingsPanel() {
         setSearchRep(searchValue);
     };
 
+    async function getCustomer(email) {
+        const response = await fetch('/api/get-customer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
+        });
+
+        return response.json();
+    }
+
+    const deleteStripeUser = async (email) => {
+        console.log('email', email);
+        const customerData = await getCustomer(email);
+        const customerId = customerData.customer.data[0].id;
+
+        console.log('id', customerId);
+        const response = await fetch('/api/delete-customer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ customerId }),
+        });
+
+        const data = await response.json();
+        console.log('Customer Deleted:', data);
+        return data;
+    };
+
     useEffect(() => {
         const filtered = repInfo.filter((rep) => rep.name.toLowerCase().includes(searchRep.toLowerCase())
         || rep.number.includes(searchRep));
@@ -147,10 +174,11 @@ export default function SettingsPanel() {
         setAccountDeleteModal(true);
     };
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (user) {
             const userRef = doc(firestore, 'users', user.email);
-            deleteDoc(userRef).then(() => deleteUser(user));
+            const storeEmail = user.email;
+            deleteDoc(userRef).then(() => deleteUser(user)).then(() => deleteStripeUser(storeEmail));
         }
     };
 
@@ -173,7 +201,7 @@ export default function SettingsPanel() {
 
             <Layout>
                 <Modal centered title="Account Delete Confirmation" open={accountDeleteModal} onOk={handleDelete} onCancel={() => setAccountDeleteModal(false)}>
-                Are You Sure You Want To Delete Your Account?
+                    <p style={{ fontSize: '1.1rem', margin: '0' }}>Are You Sure You Want To Delete Your Account?</p> <p>This Will Also Cancel Any Active Subscriptions.</p>
                 </Modal>
                 <Space className={styles.settingsContainer}>
                     <Space className={styles.repListContainer}>

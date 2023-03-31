@@ -175,9 +175,26 @@
     color: var(--highlight-yellow) !important
 }
 
-.loginLink > a:hover {
+.forgotPasswordText > a {
+    color: darkgray !important
+}
+
+.loginLink > a:hover, .forgotPasswordText > a:hover {
     color: var(--secondary-blue) !important;
     text-decoration: underline;
+}
+
+.forgotPasswordPage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+    border: 1px solid var(--secondary-blue);
+    width: 50%;
+    border-radius: 10px;
+    padding: 1rem;
+    background-color: var(--secondary-blue);
+    box-shadow: 12px 11px 0px 0 rgb(63 61 86), 39px 1px 26px -39px rgb(77 77 77 / 4%);
 }
 
 .prevNextButtons {
@@ -470,6 +487,10 @@ margin-bottom: 0.5rem;
 
     .loginForm, .registerForm {
         width: 100%;
+    }
+
+    .forgotPasswordPage {
+        width: 90%;
     }
 
     .signInWithGoogle {
