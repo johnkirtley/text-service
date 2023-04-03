@@ -11,7 +11,7 @@ import {
     getDocs, collection, query, where, doc, updateDoc, arrayUnion,
 } from 'firebase/firestore';
 import {
-    BusinessNameContext, CustomerContext, RepContext, ProductContext, OwnerIdContext,
+    BusinessNameContext, CustomerContext, RepContext, ProductContext, OwnerIdContext, PremiumSettingsContext,
 } from '../Context/Context';
 import { MetaHead, MainHeader, MainFooter } from '../components';
 import MainView from '../components/Main/MainView';
@@ -35,6 +35,7 @@ export default function MainComponent() {
     const { businessName, setBusinessName } = useContext(BusinessNameContext);
     // const { authContext } = useContext(AuthContext);
     const { setRepInfo } = useContext(RepContext);
+    const { setPremiumContext } = useContext(PremiumSettingsContext);
     const [newRep, setNewRep] = useState(defaultRep);
     const [getStarted, setGetStarted] = useState(0);
     const { setCurProducts } = useContext(ProductContext);
@@ -85,9 +86,10 @@ export default function MainComponent() {
                 setCurProducts(newArr);
                 setOwnerId(document.data().uid);
                 setFirstLoad(document.data().firstLoad);
+                setPremiumContext(document.data().premiumSettings);
             }
         });
-    }, [user, setCustomerInfo, setBusinessName, setRepInfo, setCurProducts, setOwnerId]);
+    }, [user, setCustomerInfo, setBusinessName, setRepInfo, setCurProducts, setOwnerId, setPremiumContext]);
 
     useEffect(() => {
         if (user) {

@@ -74,6 +74,11 @@ export default function SignIn() {
                 pendingOrders: [],
                 firstLoad: true,
                 analytics: [],
+                premiumSettings: {
+                    directText: false,
+                    pendingEmails: false,
+                    monthlyEmails: false,
+                },
             }).then(() => {
                 createStripeSubscription(user.email).then((res) => {
                     router.push('/');
@@ -130,6 +135,11 @@ export default function SignIn() {
                     completedOrders: [],
                     firstLoad: true,
                     analytics: [],
+                    premiumSettings: {
+                        directText: false,
+                        pendingEmails: false,
+                        monthlyEmails: false,
+                    },
                 });
                 createStripeSubscription(user.email).then((res) => {
                     setRegisterAccount(false);

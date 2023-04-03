@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable max-len */
 import { useContext, useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -8,7 +9,7 @@ import {
     doc, updateDoc, arrayUnion, arrayRemove, deleteDoc,
 } from 'firebase/firestore';
 import { deleteUser } from 'firebase/auth';
-import { RepContext, BusinessNameContext } from '../../Context/Context';
+import { RepContext, BusinessNameContext, PremiumSettingsContext } from '../../Context/Context';
 import { firestore } from '../../firebase/clientApp';
 // import createCheckoutSession from '../../stripe/createCheckoutSession';
 import usePremiumStatus from '../../stripe/usePremiumStatus';
@@ -26,6 +27,12 @@ const defaultRep = {
     number: '',
 };
 
+// const defaultPremiumSettings = {
+//     directText: false,
+//     pendingEmails: false,
+//     monthlyEmails: true,
+// };
+
 export default function SettingsPanel() {
     const { repInfo, setRepInfo } = useContext(RepContext);
     // const { customerInfo } = useContext(CustomerContext);
@@ -39,7 +46,10 @@ export default function SettingsPanel() {
     const [customerPortal, setCustomerPortal] = useState(false);
     const [contactAlert, setContactAlert] = useState(false);
     const [dupeNum, setDupeNum] = useState(false);
+    const [updateSetting, setUpdateSetting] = useState(false);
     const [disableAddRep, setDisableAddRep] = useState(true);
+    // const [premiumSettings, setPremiumSettings] = useState(defaultPremiumSettings);
+    const { premiumContext, setPremiumContext } = useContext(PremiumSettingsContext);
     const { user } = useAuth();
     const isUserPremium = usePremiumStatus(user.email);
 
@@ -195,6 +205,67 @@ export default function SettingsPanel() {
         }
     }, [newRep]);
 
+    const handlePremiumSettingsToggle = async (setting, state) => {
+        const premiumSettingsRef = doc(firestore, 'users', user.email);
+        setUpdateSetting(true);
+        if (setting === 'directText') {
+            if (state === 'enable') {
+                const newObj = { ...premiumContext, directText: true };
+                await updateDoc(premiumSettingsRef, { premiumSettings: newObj });
+
+                setPremiumContext(newObj);
+                console.log('update', premiumContext);
+            }
+
+            if (state === 'disable') {
+                const newObj = { ...premiumContext, directText: false };
+                await updateDoc(premiumSettingsRef, { premiumSettings: newObj });
+
+                setPremiumContext(newObj);
+                console.log('update', premiumContext);
+            }
+        }
+
+        if (setting === 'pendingEmails') {
+            if (state === 'enable') {
+                const newObj = { ...premiumContext, pendingEmails: true };
+                await updateDoc(premiumSettingsRef, { premiumSettings: newObj });
+
+                setPremiumContext(newObj);
+                console.log('update', premiumContext);
+            }
+
+            if (state === 'disable') {
+                const newObj = { ...premiumContext, pendingEmails: false };
+                await updateDoc(premiumSettingsRef, { premiumSettings: newObj });
+
+                setPremiumContext(newObj);
+                console.log('update', premiumContext);
+            }
+        }
+
+        if (setting === 'monthlyEmails') {
+            if (state === 'enable') {
+                const newObj = { ...premiumContext, monthlyEmails: true };
+                await updateDoc(premiumSettingsRef, { premiumSettings: newObj });
+
+                setPremiumContext(newObj);
+                console.log('update', premiumContext);
+            }
+
+            if (state === 'disable') {
+                const newObj = { ...premiumContext, monthlyEmails: false };
+                await updateDoc(premiumSettingsRef, { premiumSettings: newObj });
+                setPremiumContext(newObj);
+                console.log('update', premiumContext);
+            }
+        }
+
+        setTimeout(() => {
+            setUpdateSetting(false);
+        }, 1200);
+    };
+
     return (
         <div>
             {displayAlert ? <Alert message="Business name updated" type="success" className={styles.successAlert} /> : ''}
@@ -255,6 +326,7 @@ export default function SettingsPanel() {
                             <Collapse>
                                 <Panel header="Additional Features">
                                     <div>
+                                        {updateSetting ? <Alert message="Saving Settings..." type="warning" style={{ marginBottom: '1rem' }} /> : ''}
                                         {isUserPremium.planName === 'bronze' || isUserPremium.planName === 'gold'
 
                                             ? (
@@ -268,8 +340,8 @@ export default function SettingsPanel() {
                                                             display: 'flex', gap: '0.5rem', justifyContent: 'center', alignItems: 'center', marginTop: '0.5rem',
                                                         }}
                                                         >
-                                                            <Button>Yes</Button>
-                                                            <Button>No</Button>
+                                                            <Button type={premiumContext.directText ? 'primary' : ''} onClick={() => handlePremiumSettingsToggle('directText', 'enable')}>Yes</Button>
+                                                            <Button type={!premiumContext.directText ? 'primary' : ''} onClick={() => handlePremiumSettingsToggle('directText', 'disable')}>No</Button>
                                                         </div>
                                                     </div>
                                                     {isUserPremium.planName === 'gold' ? (
@@ -283,8 +355,8 @@ export default function SettingsPanel() {
                                                                     display: 'flex', gap: '0.5rem', justifyContent: 'center', alignItems: 'center', marginTop: '0.5rem',
                                                                 }}
                                                                 >
-                                                                    <Button>Yes</Button>
-                                                                    <Button>No</Button>
+                                                                    <Button type={premiumContext.pendingEmails ? 'primary' : ''} onClick={() => handlePremiumSettingsToggle('pendingEmails', 'enable')}>Yes</Button>
+                                                                    <Button type={!premiumContext.pendingEmails ? 'primary' : ''} onClick={() => handlePremiumSettingsToggle('pendingEmails', 'disable')}>No</Button>
                                                                 </div>
                                                             </div>
                                                             <div>
@@ -296,16 +368,14 @@ export default function SettingsPanel() {
                                                                     display: 'flex', gap: '0.5rem', justifyContent: 'center', alignItems: 'center', marginTop: '0.5rem',
                                                                 }}
                                                                 >
-                                                                    <Button>Yes</Button>
-                                                                    <Button>No</Button>
+                                                                    <Button type={premiumContext.monthlyEmails ? 'primary' : ''} onClick={() => handlePremiumSettingsToggle('monthlyEmails', 'enable')}>Yes</Button>
+                                                                    <Button type={!premiumContext.monthlyEmails ? 'primary' : ''} onClick={() => handlePremiumSettingsToggle('monthlyEmails', 'disable')}>No</Button>
                                                                 </div>
                                                             </div>
                                                         </>
                                                     ) : ''}
-
                                                 </div>
                                             )
-
                                             : <div>Features Only Available On Bronze and Gold Plans</div>}
                                     </div>
 
