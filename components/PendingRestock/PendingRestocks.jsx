@@ -205,10 +205,10 @@ export default function PendingRestocks() {
             <Space direction="vertical" size="large" />
             <div>
                 <Tabs defaultActiveKey="1" items={tabItems} onChange={onTabChange} />
-                {tabView === '1' && pendingRestocks ? <Table bordered size="middle" columns={tableColumns} dataSource={pendingRestocks} className={styles.customTablePending} /> : ''}
+                {tabView === '1' && pendingRestocks ? <Table rowKey={(record) => record.dateAdded} bordered size="middle" columns={tableColumns} dataSource={pendingRestocks} className={styles.customTablePending} /> : ''}
                 {tabView === '2' && completedRestocks ? (
                     <> <Input placeholder="Search Completed Orders..." name="searchCompleted" onChange={handleSearchCompleted} type="text" value={searchCompleted} className={styles.filterCompleted} />
-                        <Table bordered size="middle" columns={completedColumns} dataSource={filteredRestocks} className={styles.customTableCompleted} />
+                        <Table rowKey={(record) => record.dateCompleted} bordered size="middle" columns={completedColumns} dataSource={filteredRestocks} className={styles.customTableCompleted} />
                     </>
                 ) : ''}
             </div>

@@ -1,13 +1,19 @@
 import { useState } from 'react';
 import {
     RepContext, CustomerContext, ClientContext, BusinessNameContext, ProductContext,
-    OwnerIdContext, SelectedContext,
+    OwnerIdContext, SelectedContext, PremiumSettingsContext,
 } from '../Context/Context';
 import { AuthProvider } from '../Context/AuthContext';
 
 // Global Styles
 import '../styles/globals.css';
 import 'antd/dist/antd.css';
+
+const defaultPremiumSettings = {
+    directText: false,
+    pendingEmails: false,
+    monthlyEmails: false,
+};
 
 export default function MyApp({ Component, pageProps }) {
     const [repInfo, setRepInfo] = useState([]);
@@ -18,6 +24,7 @@ export default function MyApp({ Component, pageProps }) {
     const [curProducts, setCurProducts] = useState([]);
     const [ownerId, setOwnerId] = useState(null);
     const [selectedProducts, setSelectedProducts] = useState([]);
+    const [premiumContext, setPremiumContext] = useState(defaultPremiumSettings);
 
     return (
         <SelectedContext.Provider value={{ selectedProducts, setSelectedProducts }}>
@@ -27,9 +34,13 @@ export default function MyApp({ Component, pageProps }) {
                         <OwnerIdContext.Provider value={{ ownerId, setOwnerId }}>
                             <RepContext.Provider value={{ repInfo, setRepInfo }}>
                                 <ClientContext.Provider value={{ clientInfo, setClientInfo }}>
-                                    <AuthProvider>
-                                        <Component {...pageProps} />
-                                    </AuthProvider>
+                                    <PremiumSettingsContext.Provider
+                                        value={{ premiumContext, setPremiumContext }}
+                                    >
+                                        <AuthProvider>
+                                            <Component {...pageProps} />
+                                        </AuthProvider>
+                                    </PremiumSettingsContext.Provider>
                                 </ClientContext.Provider>
                             </RepContext.Provider>
                         </OwnerIdContext.Provider>
