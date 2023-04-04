@@ -340,8 +340,8 @@ export default function SettingsPanel() {
                                                             display: 'flex', gap: '0.5rem', justifyContent: 'center', alignItems: 'center', marginTop: '0.5rem',
                                                         }}
                                                         >
-                                                            <Button type={premiumContext.directText ? 'primary' : ''} onClick={() => handlePremiumSettingsToggle('directText', 'enable')}>Yes</Button>
-                                                            <Button type={!premiumContext.directText ? 'primary' : ''} onClick={() => handlePremiumSettingsToggle('directText', 'disable')}>No</Button>
+                                                            <Button className={premiumContext.directText ? styles.buttonSettingSelected : ''} type={premiumContext.directText ? 'primary' : ''} onClick={() => handlePremiumSettingsToggle('directText', 'enable')}>Yes</Button>
+                                                            <Button className={!premiumContext.directText ? styles.buttonSettingSelected : ''} type={!premiumContext.directText ? 'primary' : ''} onClick={() => handlePremiumSettingsToggle('directText', 'disable')}>No</Button>
                                                         </div>
                                                     </div>
                                                     {isUserPremium.planName === 'gold' ? (
@@ -355,8 +355,8 @@ export default function SettingsPanel() {
                                                                     display: 'flex', gap: '0.5rem', justifyContent: 'center', alignItems: 'center', marginTop: '0.5rem',
                                                                 }}
                                                                 >
-                                                                    <Button type={premiumContext.pendingEmails ? 'primary' : ''} onClick={() => handlePremiumSettingsToggle('pendingEmails', 'enable')}>Yes</Button>
-                                                                    <Button type={!premiumContext.pendingEmails ? 'primary' : ''} onClick={() => handlePremiumSettingsToggle('pendingEmails', 'disable')}>No</Button>
+                                                                    <Button className={premiumContext.pendingEmails ? styles.buttonSettingSelected : ''} type={premiumContext.pendingEmails ? 'primary' : ''} onClick={() => handlePremiumSettingsToggle('pendingEmails', 'enable')}>Yes</Button>
+                                                                    <Button className={!premiumContext.pendingEmails ? styles.buttonSettingSelected : ''} type={!premiumContext.pendingEmails ? 'primary' : ''} onClick={() => handlePremiumSettingsToggle('pendingEmails', 'disable')}>No</Button>
                                                                 </div>
                                                             </div>
                                                             <div>
@@ -368,8 +368,8 @@ export default function SettingsPanel() {
                                                                     display: 'flex', gap: '0.5rem', justifyContent: 'center', alignItems: 'center', marginTop: '0.5rem',
                                                                 }}
                                                                 >
-                                                                    <Button type={premiumContext.monthlyEmails ? 'primary' : ''} onClick={() => handlePremiumSettingsToggle('monthlyEmails', 'enable')}>Yes</Button>
-                                                                    <Button type={!premiumContext.monthlyEmails ? 'primary' : ''} onClick={() => handlePremiumSettingsToggle('monthlyEmails', 'disable')}>No</Button>
+                                                                    <Button className={premiumContext.monthlyEmails ? styles.buttonSettingSelected : ''} type={premiumContext.monthlyEmails ? 'primary' : ''} onClick={() => handlePremiumSettingsToggle('monthlyEmails', 'enable')}>Yes</Button>
+                                                                    <Button className={!premiumContext.monthlyEmails ? styles.buttonSettingSelected : ''} type={!premiumContext.monthlyEmails ? 'primary' : ''} onClick={() => handlePremiumSettingsToggle('monthlyEmails', 'disable')}>No</Button>
                                                                 </div>
                                                             </div>
                                                         </>

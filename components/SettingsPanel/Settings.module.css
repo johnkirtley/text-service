@@ -133,6 +133,12 @@
     color: var(--primary-white) !important
 }
 
+.buttonSettingSelected, .buttonSettingSelected:focus, .buttonSettingSelected:active {
+    background-color: var(--primary-green) !important;
+    color: white !important;
+    border-color: var(--primary-green) !important;
+}
+
 @media (max-width: 500px) {
     .repContainer {
         display: flex;

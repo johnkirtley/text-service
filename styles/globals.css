@@ -78,6 +78,10 @@ canvas {
   font-weight: 500;
 }
 
+.ant-input, .ant-select {
+    font-size: 16px !important;
+}
+
 .ant-layout {
     background-color: white !important;
 }
