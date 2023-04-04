@@ -11,12 +11,12 @@ const planInfo = [
         price: '$12.99',
         id: 'price_1MmgzZGYpJAcieX9hlUJPOOH',
     },
-    {
-        name: 'gold',
-        features: ['All Features From Gold', 'Credit Based Billing', 'Label Printer'],
-        price: '$19.99',
-        id: 'price_1MmgzqGYpJAcieX9yPRbIvYY',
-    },
+    // {
+    //     name: 'gold',
+    //     features: ['All Features From Gold', 'Credit Based Billing', 'Label Printer'],
+    //     price: '$19.99',
+    //     id: 'price_1MmgzqGYpJAcieX9yPRbIvYY',
+    // },
 ];
 
 export default planInfo;
