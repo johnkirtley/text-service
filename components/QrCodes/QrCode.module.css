@@ -27,12 +27,24 @@
     height: 29rem !important;
     display: flex;
     overflow-y: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+    -ms-overflow-style: scrollbar;
     height: 20rem;
     flex-flow: column;
     gap: 3rem;
     width: 100%;
     margin: auto;
     scale: 0.6;
+  }
+
+  .qrContainer::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .qrContainer::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
   }
 
   .sendForPrintingButton {
