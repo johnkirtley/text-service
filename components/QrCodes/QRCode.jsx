@@ -143,11 +143,11 @@ export default function QRCode({
                                     className={styles.qrContainer}
                                 />
                             </Space>
+
                             <Button onClick={sendEmail} type="primary" className={styles.sendForPrintingButton}>
                             Confirm and Download
                             </Button>
                         </Content>
-
                     </div>
                 ) : ''}
             {!checkActive() ? <Empty description="Please Select Products." /> : ''}

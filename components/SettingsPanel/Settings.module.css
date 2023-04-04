@@ -70,6 +70,18 @@
 .repScroll {
     overflow-y: scroll;
     height: 20rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+    -ms-overflow-style: scrollbar;
+}
+
+.repScroll::-webkit-scrollbar {
+    width: 10px;
+}
+
+.repScroll::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
 }
 
 .searchRepsInput {

@@ -98,6 +98,18 @@
     flex-flow: column;
     display: flex;
     height: 14rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+    -ms-overflow-style: scrollbar;
+}
+
+.productScroll::-webkit-scrollbar {
+    width: 10px;
+}
+
+.productScroll::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
 }
 
 .product {
