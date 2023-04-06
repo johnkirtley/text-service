@@ -150,6 +150,10 @@
     justify-content: center;
     align-items: center;
     height: 100%;
+    width: 60%;
+    margin: auto;
+    text-align: center;
+    margin-top: 3rem;
 }
 
 .registerHeader {
@@ -270,8 +274,8 @@
 .getStartedTextContainer {
     display: flex;
     flex-flow: column;
-    justify-content: flex-start;
-    width: 60%;
+    justify-content: center;
+    width: 90%;
 }
 
 .getStartedText {
@@ -311,13 +315,14 @@ margin-bottom: 0.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 45%;
-    max-width: 45%;
+    width: 16rem;
+    max-width: 16rem;
     padding: 0.5rem 0;
     background: none;
     margin: 2rem 0 1rem 0;
     border-radius: 10px;
     gap: 1rem;
+    border: 2px solid black;
 }
 
 .googleSignInText {
@@ -516,5 +521,6 @@ margin-bottom: 0.5rem;
     .registerMainContainer {
         height: 100%;
         margin-top: 2rem;
+        width: 90%;
     }
 }

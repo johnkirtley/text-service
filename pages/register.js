@@ -173,29 +173,6 @@ export default function SignIn() {
             LOGO HERE
             </Header>
             <div className={styles.registerMainContainer}>
-                <div className={styles.desktopRegister}>
-                    <p className={styles.registerHeader}>Transforming the way to communicate
-                    and receive customer orders.
-                    </p>
-                    <p className={styles.registerAdditionalInfo}>Elevate your distribution and sales
-                     funnel with the power of our Order Management QR Code solution today.
-                    </p>
-                    {/* <Image src={LoginImage} alt="Caption" /> */}
-                    <div className={styles.captionContainer}>
-                        <div className={styles.captionContentContainer}>
-                            <p> I&apos;m impressed with the results I&apos;ve
-                            seen since starting to use Supply Mate. My clients love it.
-                            </p>
-                        </div>
-                        <div className={styles.captionUserContainer}>
-                            <Image src={CaptionImage} alt="Caption Image" width={70} height={50} className={styles.captionImage} />
-                            <div className={styles.captionUserText}>
-                                <p>James Kim</p>
-                                <p>AirBnB Host</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div className={styles.registerContainer}>
                     {invalidPass ? <Alert message="Password must be at least 6 characters" type="error" /> : ''}
                     {showError ? <Alert message="Error: Passwords do not match" type="error" /> : ''}

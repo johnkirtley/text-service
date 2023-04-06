@@ -109,22 +109,10 @@ export default function Login() {
             LOGO HERE
             </Header>
             <div className={styles.registerMainContainer}>
-                <div className={styles.loginRegister}>
-                    <p className={styles.registerHeader}>Unlock Restock Insights.
-                    </p>
-                    <p className={styles.registerAdditionalInfo}>
-                    Utilize Supply Mate&apos;s Dashboard
-                    To See Analytics On Your Customers and Restocks.
-                    </p>
-                    {/* <Image src={LoginImage} alt="Caption" /> */}
-                    <div className={styles.dashImageContainer}>
-                        <Image src={sampleDashboard} alt="Sample Dashboard" className={styles.dashboardImage} fill />
-                    </div>
-                </div>
                 <div className={styles.loginContainer}>
                     {showError ? <Alert message="Error: Please Check Email and Password" type="error" /> : ''}
                     <div className={styles.getStartedTextContainer}>
-                        <p className={styles.getStartedText}>Welcome Back</p>
+                        <p className={styles.getStartedText}>Welcome Back &#128075;</p>
                         {/* <p className={styles.getStartedSubText}>Login Below</p> */}
                     </div>
                     <button

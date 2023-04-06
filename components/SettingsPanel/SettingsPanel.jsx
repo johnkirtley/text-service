@@ -274,8 +274,8 @@ export default function SettingsPanel() {
                 <Modal centered title="Account Delete Confirmation" open={accountDeleteModal} onOk={handleDelete} onCancel={() => setAccountDeleteModal(false)}>
                     <p style={{ fontSize: '1.1rem', margin: '0' }}>Are You Sure You Want To Delete Your Account?</p> <p>This Will Also Cancel Any Active Subscriptions.</p>
                 </Modal>
-                <Space className={styles.settingsContainer}>
-                    <Space className={styles.repListContainer}>
+                <Space className={styles.settingsContainer} style={{ gap: '15px' }}>
+                    <Space className={styles.repListContainer} style={{ gap: '15px' }}>
                         <Card title="Add Contact">
                             <div className={styles.repInputBox}>
                                 <div>
@@ -376,7 +376,7 @@ export default function SettingsPanel() {
                                                     ) : ''}
                                                 </div>
                                             )
-                                            : <div>Features Only Available On Bronze and Gold Plans</div>}
+                                            : <div>Features Only Available On Bronze Plan</div>}
                                     </div>
 
                                 </Panel>
