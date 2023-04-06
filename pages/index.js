@@ -115,9 +115,9 @@ export default function MainComponent() {
     }
 
     const items = [
-        getItem('Insights', '1', <LineChartOutlined />),
-        getItem('Generate Codes', '2', <BarcodeOutlined />),
-        getItem('Pending Restocks', '3', <PlusCircleOutlined />),
+        getItem('Generate Codes', '1', <BarcodeOutlined />),
+        getItem('Pending Restocks', '2', <PlusCircleOutlined />),
+        getItem('Insights', '3', <LineChartOutlined />),
         getItem('Settings', '4', <SettingOutlined />),
     ];
 

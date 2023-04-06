@@ -12,9 +12,9 @@ function MainView({ view }) {
 
             <Content className={styles.main}>
 
-                {view === '1' ? <Home /> : ''}
-                {view === '2' ? <Products /> : ''}
-                {view === '3' ? <PendingRestocks /> : ''}
+                {view === '3' ? <Home /> : ''}
+                {view === '1' ? <Products /> : ''}
+                {view === '2' ? <PendingRestocks /> : ''}
                 {view === '4' ? <SettingsPanel /> : ''}
 
             </Content>

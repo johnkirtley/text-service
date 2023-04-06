@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next/font": "^13.2.4",
     "@stripe/stripe-js": "^1.49.0",
     "antd": "^4.23.5",
     "axios": "^1.1.2",
