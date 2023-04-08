@@ -13,12 +13,6 @@ const handleTextChange = (e, cb) => {
     cb(e.target.value);
 };
 
-// const calcMaxWidth = (context, productText, customerName) => {
-//     const productTextWidth = context.measureText(productText).width;
-//     const customerNameWidth = context.measureText(customerName).width;
-//     return Math.max(productTextWidth, 125);
-// };
-
 const generateCanvasImg = (imgSrc, productText, customerName) => {
     setTimeout(() => {
         document.querySelector('#qr-code-container').innerHTML = '';
