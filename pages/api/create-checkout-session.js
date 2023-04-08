@@ -32,7 +32,7 @@ export default async function handler(req, res) {
                 customer: customer.data[0].id,
                 // customer_email: email,
                 allow_promotion_codes: true,
-                subscription_data: { trial_period_days: 14 },
+                subscription_data: { trial_period_days: 7 },
                 line_items: [
                     { price: product, quantity: 1 },
                 ],
