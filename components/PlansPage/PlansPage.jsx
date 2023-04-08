@@ -107,7 +107,7 @@ export default function PlansPage() {
                             <div className={styles.cardBody}>
                                 <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
                                     <div className={styles.planPrice}>{plan.price}</div>
-                                    {showTrialText ? <div style={{ fontWeight: '500' }}>&#9200; 14 Day Free Trial</div>
+                                    {showTrialText ? <div style={{ fontWeight: '500' }}>&#9200; 7 Day Free Trial</div>
                                         : ''}
                                 </div>
                                 <ul className={styles.planUl}>
