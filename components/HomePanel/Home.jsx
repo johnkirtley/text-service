@@ -17,7 +17,7 @@ import { useAuth } from '../../Context/AuthContext';
 import OwnerIdContext from '../../Context/OwnerIdContext';
 import usePremiumStatus from '../../stripe/usePremiumStatus';
 
-import padlock from '../../public/icons/padlock.png';
+// import padlock from '../../public/icons/padlock.png';
 
 import styles from './HomeComponent.module.css';
 
@@ -258,8 +258,9 @@ export default function Home() {
     if (isUserPremium.planName === '' || isUserPremium.planName === 'silver') {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexFlow: 'column' }}>
-                <div style={{ marginBottom: '1rem' }}>Upgrade Plan To Unlock Insights.</div>
-                <Image src={padlock} alt="padlock" height={50} width={50} />
+                <div style={{ marginBottom: '1rem' }}>Please Upgrade Plan To Unlock Insights.</div>
+                {/* <Image src={padlock} alt="padlock" height={50} width={50} /> */}
+                <Image src="/empty_analytics.svg" width={400} height={400} style={{ opacity: '.3' }} alt="No analytics" />
             </div>
         );
     }

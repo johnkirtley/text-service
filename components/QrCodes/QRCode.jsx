@@ -80,7 +80,7 @@ export default function QRCode({
                     setCurrent(0);
                     setClientInfo('');
                     setSelectedProducts([]);
-                    setSelectedRep();
+                    setSelectedRep('');
                     setQRCodes([]);
                     setShowModal(false);
                     setSendingComplete(false);

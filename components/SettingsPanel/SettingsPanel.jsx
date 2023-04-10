@@ -123,11 +123,11 @@ export default function SettingsPanel() {
         // backend api call to store phone number in DB
         const { number } = rep;
 
-        const sanitizedNum = number.replace(/^(\+)|\D/g, '$1');
+        const sanitizedNum = number.replace(/\D/g, '');
 
         const data = { ...rep, number: sanitizedNum };
 
-        const checkDupeNumbers = repInfo.filter((num) => num.number === sanitizedNum);
+        const checkDupeNumbers = repInfo.filter((num) => num.number.replace(/\D/g, '') === sanitizedNum);
 
         if (checkDupeNumbers.length > 0) {
             setDupeNum(true);
@@ -284,7 +284,7 @@ export default function SettingsPanel() {
                                 </div>
                                 <div>
                                     <p>Phone Number</p>
-                                    <Input value={newRep.number} name="number" onChange={handleRepChange} />
+                                    <Input placeholder="(xxx)-xxx-xxxx" maxLength={18} value={newRep.number} name="number" onChange={handleRepChange} />
                                 </div>
                                 <Button className={styles.addButton} type="primary" disabled={disableAddRep} onClick={() => saveContact(newRep)}>Add</Button>
                                 <Space>
