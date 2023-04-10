@@ -17,7 +17,7 @@ import { useAuth } from '../../Context/AuthContext';
 import OwnerIdContext from '../../Context/OwnerIdContext';
 import usePremiumStatus from '../../stripe/usePremiumStatus';
 
-import padlock from '../../public/icons/padlock.png';
+// import padlock from '../../public/icons/padlock.png';
 
 import styles from './HomeComponent.module.css';
 
