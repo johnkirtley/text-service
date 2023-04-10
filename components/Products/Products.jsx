@@ -338,7 +338,7 @@ export default function Products() {
                                 <Collapse defaultActiveKey={curProducts.length < 1 ? '1' : ''}>
                                     <Panel header="Add New Product" key="1">
                                         <div className={styles.addProductPanel}>
-                                            <Input maxLength={30} placeholder="Enter Product Name" name="newProduct" onChange={(e) => handleTextChange(e, setNewProduct)} type="text" value={newProduct} />
+                                            <Input maxLength={40} placeholder="Enter Product Name" name="newProduct" onChange={(e) => handleTextChange(e, setNewProduct)} type="text" value={newProduct} />
                                             <Button type="primary" onClick={() => addProduct(newProduct)}>Add</Button>
                                         </div>
                                     </Panel>
