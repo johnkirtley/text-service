@@ -204,7 +204,7 @@ export default function MainComponent() {
                                     {getStarted === 0 ? (
                                         <>
                                             <div>
-                                                <Input placeholder="Company Name..." value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
+                                                <Input maxLength={30} placeholder="Company Name..." value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
                                                 <p className={styles.newUserLabels}>This can be updated under Settings.</p>
                                             </div>
                                             <div className={styles.prevNextButtons}>
@@ -218,10 +218,10 @@ export default function MainComponent() {
                                                 <p className={styles.newUserLabels}>Contacts can be managed under Settings.</p>
                                                 <div className={styles.newUserRepInputs}>
                                                     <div>
-                                                        <Input placeholder="Name..." value={newRep.name} name="name" onChange={handleRepChange} />
+                                                        <Input maxLength={30} placeholder="Name..." value={newRep.name} name="name" onChange={handleRepChange} />
                                                     </div>
                                                     <div>
-                                                        <Input placeholder="Phone Number..." value={newRep.number} name="number" onChange={handleRepChange} />
+                                                        <Input maxLength={30} placeholder="Phone Number..." value={newRep.number} name="number" onChange={handleRepChange} />
                                                     </div>
                                                 </div>
                                             </div>

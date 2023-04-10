@@ -280,7 +280,7 @@ export default function SettingsPanel() {
                             <div className={styles.repInputBox}>
                                 <div>
                                     <p>Name</p>
-                                    <Input value={newRep.name} name="name" onChange={handleRepChange} />
+                                    <Input maxLength={30} value={newRep.name} name="name" onChange={handleRepChange} />
                                 </div>
                                 <div>
                                     <p>Phone Number</p>
