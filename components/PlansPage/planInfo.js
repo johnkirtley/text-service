@@ -7,7 +7,7 @@ const planInfo = [
     },
     {
         name: 'silver',
-        features: ['All Features From Silver', 'Customer Usage Analytics', 'Direct Customer Communication'],
+        features: ['All Features From Bronze', 'Customer Usage Analytics', 'Direct Customer Communication'],
         price: '$29.99',
         id: 'price_1MulNWGYpJAcieX9qzmHsQ5z',
     },

@@ -327,7 +327,7 @@ export default function SettingsPanel() {
                                 <Panel header="Additional Features">
                                     <div>
                                         {updateSetting ? <Alert message="Saving Settings..." type="warning" style={{ marginBottom: '1rem' }} /> : ''}
-                                        {isUserPremium.planName === 'bronze' || isUserPremium.planName === 'gold'
+                                        {isUserPremium.planName === 'silver' || isUserPremium.planName === 'gold'
 
                                             ? (
                                                 <div style={{ display: 'flex', flexFlow: 'column', gap: '2rem' }}>
@@ -376,7 +376,7 @@ export default function SettingsPanel() {
                                                     ) : ''}
                                                 </div>
                                             )
-                                            : <div>Features Only Available On Bronze Plan</div>}
+                                            : <div>Features Only Available On The Silver Plan</div>}
                                     </div>
 
                                 </Panel>

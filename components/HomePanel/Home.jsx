@@ -255,7 +255,7 @@ export default function Home() {
         return <Spin tip="Loading Data..." />;
     }
 
-    if (isUserPremium.planName === '' || isUserPremium.planName === 'silver') {
+    if (isUserPremium.planName === '' || isUserPremium.planName === 'bronze') {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexFlow: 'column' }}>
                 <div style={{ marginBottom: '1rem' }}>Please Upgrade Plan To Unlock Insights.</div>

@@ -7,9 +7,9 @@ import initStripe from './initStripe';
 async function createCheckoutSession(uid, planType) {
     const checkoutSessionsRef = collection(doc(firestore, 'customers', uid), 'checkout_sessions');
 
-    if (planType === 'silver') {
+    if (planType === 'bronze') {
         await addDoc(checkoutSessionsRef, {
-            price: 'price_1MmgyjGYpJAcieX9UlKd8cfj',
+            price: 'price_1MulMuGYpJAcieX9neiQ7EPs',
             success_url: window.location.origin,
             cancel_url: window.location.origin,
             timestamp: serverTimestamp(),
@@ -28,9 +28,9 @@ async function createCheckoutSession(uid, planType) {
         });
     }
 
-    if (planType === 'bronze') {
+    if (planType === 'silver') {
         await addDoc(checkoutSessionsRef, {
-            price: 'price_1MmgzZGYpJAcieX9hlUJPOOH',
+            price: 'price_1MulNWGYpJAcieX9qzmHsQ5z',
             success_url: window.location.origin,
             cancel_url: window.location.origin,
             timestamp: serverTimestamp(),
