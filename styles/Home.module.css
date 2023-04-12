@@ -13,6 +13,19 @@
     display: flex;
 }
 
+.logoContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+}
+
+.logoText {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 300;
+}
+
 .navMenu > li {
     width: 25% !important;
     text-align: center;
@@ -457,6 +470,10 @@ margin-bottom: 0.5rem;
     width: 100%;
     flex-direction: column;
   }
+
+.logoText {
+    font-size: 1rem;
+}
 }
 
 @media (prefers-color-scheme: dark) {

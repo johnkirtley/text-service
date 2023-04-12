@@ -13,6 +13,7 @@ function MainFooter() {
             </div>
             <div className={styles.footerLinks}>
                 <Link href="/">Home</Link>
+                <a target="_blank" href="https://supplymate.io/faq" rel="noreferrer">FAQ</a>
                 <Link href="/plans">Pricing</Link>
                 <Link href="/">About</Link>
                 <Link href="/">Contact</Link>

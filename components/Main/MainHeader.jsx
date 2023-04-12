@@ -1,5 +1,6 @@
 /* eslint-disable react/destructuring-assignment */
 import { useContext } from 'react';
+import Image from 'next/image';
 import { signOut } from 'firebase/auth';
 import { Layout } from 'antd';
 import { firebaseAuth } from '../../firebase/clientApp';
@@ -23,7 +24,10 @@ export default function MainHeader({ companyName }) {
         .catch((error) => console.log(error));
     return (
         <Header className={`${styles.title} ${styles.header}`}>
-            LOGO HERE
+            <div className={styles.logoContainer}>
+                <Image src="/supplymate-logo-nobg.png" alt="supply mate logo" width={30} height={30} />
+                <p className={styles.logoText}>SUPPLY MATE</p>
+            </div>
             <button type="button" className="signOut-button" onClick={signOutButton}>
                 Sign Out
             </button>
