@@ -3,6 +3,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import {
     getDocs, collection, query, where, doc, updateDoc, arrayUnion,
 } from 'firebase/firestore';
@@ -152,7 +153,10 @@ export default function Submit() {
     return (
         <>
             <Header className={`${styles.title} ${styles.header}`}>
-        LOGO HERE
+                <div className={styles.logoContainer}>
+                    <Image src="/supplymate-logo-nobg.png" alt="supply mate logo" width={30} height={30} />
+                    <p className={styles.logoText}>SUPPLY MATE</p>
+                </div>
             </Header>
             <Layout style={{ minHeight: '100vh' }}>
                 <Content className={styles.requestContainer}>
