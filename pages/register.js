@@ -170,7 +170,10 @@ export default function SignIn() {
     return (
         <>
             <Header className={`${styles.title} ${styles.header}`}>
-            LOGO HERE
+                <div className={styles.logoContainer}>
+                    <Image src="/supplymate-logo-nobg.png" alt="supply mate logo" width={30} height={30} />
+                    <p className={styles.logoText}>SUPPLY MATE</p>
+                </div>
             </Header>
             <div className={styles.registerMainContainer}>
                 <div className={styles.registerContainer}>
