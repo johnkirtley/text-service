@@ -1,5 +1,6 @@
 import { Layout } from 'antd';
 import Link from 'next/link';
+import Image from 'next/image';
 
 import styles from '../../styles/Home.module.css';
 
@@ -9,7 +10,10 @@ function MainFooter() {
     return (
         <Footer className={styles.footer}>
             <div>
-                Logo
+                <div className={styles.logoContainer}>
+                    <Image src="/supplymate-logo-nobg.png" alt="supply mate logo" width={30} height={30} />
+                    <p className={styles.logoText}>SUPPLY MATE</p>
+                </div>
             </div>
             <div className={styles.footerLinks}>
                 <Link href="/">Home</Link>
