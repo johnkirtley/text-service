@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { useEffect, useState } from 'react';
 import {
     Input, Button, Form, Card, Layout,
@@ -9,7 +10,7 @@ import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 
 import styles from '../styles/Home.module.css';
 
-import forgotPasswordImage from '../public/icons/forgotpass.svg';
+// import forgotPasswordImage from '../public/icons/forgotpass.svg';
 
 const defaultCredentials = { username: '' };
 
@@ -57,7 +58,10 @@ export default function PasswordReset() {
     return (
         <>
             <Header className={`${styles.title} ${styles.header}`}>
-        LOGO HERE
+                <div className={styles.logoContainer}>
+                    <Image src="/supplymate-logo-nobg.png" alt="supply mate logo" width={30} height={30} />
+                    <p className={styles.logoText}>SUPPLY MATE</p>
+                </div>
             </Header>
             <Content style={{
                 height: '60vh', display: 'flex', justifyContent: 'center', alignItems: 'center', flexFlow: 'column',
@@ -65,7 +69,7 @@ export default function PasswordReset() {
             >
                 <div className={styles.forgotPasswordPage}>
                     <p style={{ fontSize: '1.5rem' }}>Password Reset</p>
-                    <Card bordered={false} style={{ backgroundColor: 'var(--secondary-blue)' }}>
+                    <Card bordered={false} style={{ backgroundColor: 'rgb(202 202 234 / 3%)' }}>
                         {!emailSent ? (
                             <Form name="passwordReset" onFinish={handleForgotPassword} className={styles.loginForm}>
                                 <Form.Item required={false} name="username" rules={[{ required: true, message: 'Please input email' }]} className={styles.formRow}>
@@ -80,9 +84,9 @@ export default function PasswordReset() {
                         ) : <div style={{ textAlign: 'center' }}><p>Password Reset Successfully Sent. Please Check Email. </p><Link href="/">Return to Login</Link></div>}
                     </Card>
                 </div>
-                <div style={{ position: 'absolute', bottom: '-23px' }}>
+                {/* <div style={{ position: 'absolute', bottom: '-23px' }}>
                     <Image src={forgotPasswordImage} alt="forgot password image" height={250} width={400} />
-                </div>
+                </div> */}
             </Content>
         </>
     );

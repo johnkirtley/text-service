@@ -207,11 +207,11 @@
     align-items: center;
     flex-flow: column;
     z-index: 999;
-    border: 1px solid var(--secondary-blue);
+    border: 1px solid rgba(202, 202, 234, 0.28);
     max-width: 60%;
     border-radius: 10px;
     padding: 1rem;
-    background-color: var(--secondary-blue);
+    background-color: rgba(202, 202, 234, 0.28);
     box-shadow: 12px 11px 0px 0 rgb(63 61 86), 39px 1px 26px -39px rgb(77 77 77 / 4%);
 }
 
@@ -537,7 +537,8 @@ margin-bottom: 0.5rem;
 
     .registerMainContainer {
         height: 100%;
-        margin-top: 2rem;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
         width: 90%;
     }
 }
