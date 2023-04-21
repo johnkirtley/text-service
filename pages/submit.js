@@ -10,6 +10,7 @@ import {
 } from 'firebase/firestore';
 import { Layout, Button, Spin, Alert } from 'antd';
 import { uuidv4 } from '@firebase/util';
+import axios from 'axios';
 import { firestore } from '../firebase/clientApp';
 import usePremiumStatus from '../stripe/usePremiumStatus';
 
@@ -112,7 +113,7 @@ export default function Submit() {
         }
     }, [ownerId, getQuery]);
 
-    const addPendingRestock = async (reqRestockProduct) => {
+    const addPendingRestock = async (reqRestockProduct, message, num) => {
         if (plan !== '') {
             setLoading(true);
             const restockRef = doc(firestore, 'users', email);
@@ -142,6 +143,26 @@ export default function Submit() {
                 };
                 await updateDoc(restockRef, { pendingOrders: arrayUnion(reqRestockProduct) });
                 await updateDoc(restockRef, { analytics: arrayUnion(addAnalyticsRestock) });
+
+                const data = {
+                    message,
+                    number: num,
+                };
+
+                if (num.length < 1) {
+                    setNumAlert(true);
+                    setTimeout(() => {
+                        setNumAlert(false);
+                    }, 2500);
+                    return;
+                }
+
+                axios.post('https://text-service-mailer.herokuapp.com/api/code_submission/text', data)
+                    .then((res) => {
+                        console.log(res);
+                    })
+                    .catch((err) => console.log(err));
+
                 setTimeout(() => {
                     setLoading(false);
                     setSuccess(true);
@@ -185,7 +206,15 @@ export default function Submit() {
                     <div>You Are About To Request A Restock For The Following Product:</div>
                     <div className={styles.requestProduct}>{product}</div>
                     {/* on click, trigger email and send order to order status screen */}
-                    {!gettingData && plan === '' ? <Button disabled>Plan Not Active. Please Contact Account Owner.</Button> : <Button type="primary" loading={loading} disabled={success || alreadyAdded ? true : ''} onClick={() => addPendingRestock({ uid: uuidv4(), dateAdded: getDate(), client: clientName, requestedProduct: product })}>{success ? 'Request Sent Successfully. You May Close This Page' : 'Request Restock'}</Button>}
+                    {!gettingData && plan === '' ? <Button disabled>Plan Not Active. Please Contact Account Owner.</Button> : (
+                        <Button
+                            type="primary"
+                            loading={loading}
+                            disabled={success || alreadyAdded ? true : ''}
+                            onClick={() => addPendingRestock({ uid: uuidv4(), dateAdded: getDate(), client: clientName, requestedProduct: product }, fullMessage, repText)}
+                        >{success ? 'Request Sent Successfully. You May Close This Page' : 'Request Restock'}
+                        </Button>
+                    )}
                     {plan === 'bronze' || plan === '' || !premiumSettings?.directText ? '' : <Button className={styles.textRep} type="default" onClick={() => checkForRep(repText)}>Text Rep Directly</Button> }
                     {/* <div className={styles.poweredBy}>
                         Powered By Supply Mate
