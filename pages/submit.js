@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-redundant-jump */
 /* eslint-disable max-len */
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable import/no-extraneous-dependencies */
@@ -16,7 +17,8 @@ import styles from '../styles/Home.module.css';
 
 export default function Submit() {
     const [product, setProduct] = useState('');
-    const [repNumber, setRepNumber] = useState('');
+    const [repId, setRepId] = useState('');
+    const [repText, setRepText] = useState('');
     const [clientName, setClientName] = useState('');
     // const [ownerName, setOwnerName] = useState('');
     const [ownerId, setOwnerId] = useState('');
@@ -27,6 +29,7 @@ export default function Submit() {
     const [gettingData, setGettingData] = useState(false);
     const [alreadyAdded, setAlreadyAdded] = useState(false);
     const [premiumSettings, setPremiumSettings] = useState(null);
+    const [numAlert, setNumAlert] = useState(false);
 
     const { planName } = usePremiumStatus(email);
 
@@ -42,7 +45,7 @@ export default function Submit() {
 
         useEffect(() => {
             setProduct(urlParams.get('product'));
-            setRepNumber(urlParams.get('rep'));
+            setRepId(urlParams.get('rep'));
             setClientName(urlParams.get('clientName'));
             setOwnerId(urlParams.get('id'));
         }, [urlParams]);
@@ -63,12 +66,17 @@ export default function Submit() {
             if (document.data().uid === ownerId) {
                 setEmail(document.data().email);
                 setPremiumSettings(document.data().premiumSettings);
+                document.data().repNumbers.forEach((repNum) => {
+                    if (repNum.id === repId) {
+                        setRepText(repNum.number);
+                    }
+                });
                 setTimeout(() => {
                     setGettingData(false);
                 }, 1500);
             }
         });
-    }, [ownerId]);
+    }, [ownerId, repId]);
 
     const getDate = () => {
         const currentDate = new Date();
@@ -150,6 +158,18 @@ export default function Submit() {
     const fullMessage = `${product} Restock Requested For ${trimmedCustomerName}`;
     const trimmedMessage = fullMessage.replace(' ', '%20');
 
+    const checkForRep = (num) => {
+        if (num.length < 1) {
+            setNumAlert(true);
+            setTimeout(() => {
+                setNumAlert(false);
+            }, 2500);
+            return;
+        }
+
+        window.location.href = `sms:${num}&body=${trimmedMessage}`;
+    };
+
     return (
         <>
             <Header className={`${styles.title} ${styles.header}`}>
@@ -161,14 +181,15 @@ export default function Submit() {
             <Layout style={{ minHeight: '100vh' }}>
                 <Content className={styles.requestContainer}>
                     {alreadyAdded ? <Alert message="Product Already Requested and In Process of Being Fulfilled." type="warning" /> : '' }
+                    {numAlert ? <Alert message="Number No Longer Active. Please Contact Owner." type="warning" /> : ''}
                     <div>You Are About To Request A Restock For The Following Product:</div>
                     <div className={styles.requestProduct}>{product}</div>
                     {/* on click, trigger email and send order to order status screen */}
                     {!gettingData && plan === '' ? <Button disabled>Plan Not Active. Please Contact Account Owner.</Button> : <Button type="primary" loading={loading} disabled={success || alreadyAdded ? true : ''} onClick={() => addPendingRestock({ uid: uuidv4(), dateAdded: getDate(), client: clientName, requestedProduct: product })}>{success ? 'Request Sent Successfully. You May Close This Page' : 'Request Restock'}</Button>}
-                    {plan === 'bronze' || plan === '' || !premiumSettings?.directText ? '' : <Button className={styles.textRep} type="default" href={`sms:${repNumber}&body=${trimmedMessage}`}>Text Rep Directly</Button> }
-                    <div className={styles.poweredBy}>
+                    {plan === 'bronze' || plan === '' || !premiumSettings?.directText ? '' : <Button className={styles.textRep} type="default" onClick={() => checkForRep(repText)}>Text Rep Directly</Button> }
+                    {/* <div className={styles.poweredBy}>
                         Powered By Supply Mate
-                    </div>
+                    </div> */}
                 </Content>
             </Layout>
         </>

@@ -10,6 +10,7 @@ import { LineChartOutlined, BarcodeOutlined, PlusCircleOutlined, SettingOutlined
 import {
     getDocs, collection, query, where, doc, updateDoc, arrayUnion,
 } from 'firebase/firestore';
+import { v4 as uuidv4 } from 'uuid';
 import {
     BusinessNameContext, CustomerContext, RepContext, ProductContext, OwnerIdContext, PremiumSettingsContext,
 } from '../Context/Context';
@@ -144,7 +145,7 @@ export default function MainComponent() {
 
         const sanitizedNum = number.replace(/^(\+)|\D/g, '$1');
 
-        const data = { ...rep, number: sanitizedNum };
+        const data = { ...rep, number: sanitizedNum, id: uuidv4() };
 
         setNewRep(data);
 
@@ -153,15 +154,22 @@ export default function MainComponent() {
         } else {
             const repAddRef = doc(firestore, 'users', user.email);
 
-            await updateDoc(repAddRef, { repNumbers: arrayUnion(newRep) });
+            await updateDoc(repAddRef, { repNumbers: arrayUnion(data) });
 
-            setRepInfo((oldInfo) => [...oldInfo, newRep]);
+            setRepInfo((oldInfo) => [...oldInfo, data]);
 
             setNewRep(defaultRep);
         }
     };
 
     const completeWalkthrough = async (rep, business) => {
+        const checkNumLength = rep.number.replace(/\D/g, '');
+
+        if (checkNumLength.length < 1) {
+            alert('Invalid Number');
+            return;
+        }
+
         saveContact(rep);
         saveBusinessName(business);
 

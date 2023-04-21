@@ -67,9 +67,12 @@ export default function QRCode({
                         base64Codes: content,
                         clientName: `${sanitizedFileName}`,
                     };
-                    window.location = `data:application/zip;base64,${content}`;
+
                     axios.post('https://text-service-mailer.herokuapp.com/api/code_submission/send', data)
-                        .then((res) => console.log(res))
+                        .then((res) => {
+                            console.log(res);
+                            window.location = `data:application/zip;base64,${content}`;
+                        })
                         .catch((err) => console.log(err));
                 });
                 setSending(false);
