@@ -175,8 +175,8 @@ export default function Submit() {
         return <Spin tip="Loading Data..." className={styles.submitSpinner} size="large" />;
     }
 
-    const trimmedCustomerName = clientName.replace(' ', '%20');
-    const fullMessage = `${product} Restock Requested For ${trimmedCustomerName}`;
+    // const trimmedCustomerName = clientName.replace(' ', '%20');
+    const fullMessage = `${product} Restock Requested For ${clientName}`;
     const trimmedMessage = fullMessage.replace(' ', '%20');
 
     const checkForRep = (num) => {
