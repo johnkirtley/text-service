@@ -9,6 +9,7 @@ import {
     doc, updateDoc, arrayUnion, arrayRemove, deleteDoc,
 } from 'firebase/firestore';
 import { deleteUser } from 'firebase/auth';
+import { v4 as uuidv4 } from 'uuid';
 import { RepContext, BusinessNameContext, PremiumSettingsContext } from '../../Context/Context';
 import { firestore } from '../../firebase/clientApp';
 // import createCheckoutSession from '../../stripe/createCheckoutSession';
@@ -125,9 +126,15 @@ export default function SettingsPanel() {
 
         const sanitizedNum = number.replace(/\D/g, '');
 
-        const data = { ...rep, number: sanitizedNum };
+        const data = { ...rep, number: sanitizedNum, id: uuidv4() };
 
         const checkDupeNumbers = repInfo.filter((num) => num.number.replace(/\D/g, '') === sanitizedNum);
+        const checkNumLength = data.number.replace(/\D/g, '');
+
+        if (checkNumLength.length < 1) {
+            alert('Invalid Number');
+            return;
+        }
 
         if (checkDupeNumbers.length > 0) {
             setDupeNum(true);
@@ -144,19 +151,20 @@ export default function SettingsPanel() {
         } else {
             const repAddRef = doc(firestore, 'users', user.email);
 
-            await updateDoc(repAddRef, { repNumbers: arrayUnion(newRep) });
+            await updateDoc(repAddRef, { repNumbers: arrayUnion(data) });
 
-            setRepInfo((oldInfo) => [...oldInfo, newRep]);
+            setRepInfo((oldInfo) => [...oldInfo, data]);
 
             setNewRep(defaultRep);
         }
     };
 
-    const removeRep = async (name, num) => {
+    const removeRep = async (name, num, id) => {
         const repAddRef = doc(firestore, 'users', user.email);
         const dataToRemove = {
             name: `${name}`,
             number: `${num}`,
+            id: `${id}`,
         };
 
         if (repInfo.length === 1) {
@@ -314,7 +322,7 @@ export default function SettingsPanel() {
                                                         </p>
                                                         <p>{num?.number}</p>
                                                     </div>
-                                                    <Button type="primary" danger onClick={() => removeRep(num?.name, num?.number)}>Remove</Button>
+                                                    <Button type="primary" danger onClick={() => removeRep(num?.name, num?.number, num?.id)}>Remove</Button>
                                                 </div>
                                             )) : <div><p>No Contacts Found. Please Add One.</p></div>}
                                     </div>

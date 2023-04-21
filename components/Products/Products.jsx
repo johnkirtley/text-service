@@ -240,7 +240,7 @@ export default function Products() {
     };
 
     useEffect(() => {
-        const newArr = repInfo.map((rep) => ({ value: rep.number, label: `${rep.name} - ${rep.number}` }));
+        const newArr = repInfo.map((rep) => ({ value: rep.id, label: `${rep.name} - ${rep.number}` }));
 
         setRepOptions(newArr);
     }, [repInfo]);
