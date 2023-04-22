@@ -344,6 +344,7 @@ export default function SettingsPanel() {
                                                         <div>
                                                     Allow Customer To Text Contact Directly
                                                         </div>
+                                                        <p style={{ fontSize: '.75rem', fontWeight: '300' }}>Msg/data rates apply.</p>
                                                         <div style={{
                                                             display: 'flex', gap: '0.5rem', justifyContent: 'center', alignItems: 'center', marginTop: '0.5rem',
                                                         }}
