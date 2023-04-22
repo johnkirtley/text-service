@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-unused-vars */
 import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
@@ -7,7 +8,7 @@ import {
 } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import {
-    Form, Input, Button, Alert, Divider, Card, Layout,
+    Form, Input, Button, Alert, Divider, Card, Layout, Checkbox,
 } from 'antd';
 import Link from 'next/link';
 import { v4 as uuidv4 } from 'uuid';
@@ -32,6 +33,7 @@ export default function SignIn() {
     const [emailExists, setEmailExists] = useState(false);
     const [invalidEmail, setInvalidEmail] = useState(false);
     const [invalidPass, setInvalidPass] = useState(false);
+    const [checkbox, setCheckbox] = useState(false);
     // const [showAlert, setShowAlert] = useState(false);
     const [registerAccount, setRegisterAccount] = useState(false);
     const provider = new GoogleAuthProvider();
@@ -167,6 +169,10 @@ export default function SignIn() {
         });
     }, [credentials]);
 
+    const checkBoxChange = (e) => {
+        setCheckbox(e.target.checked);
+    };
+
     return (
         <>
             <Header className={`${styles.title} ${styles.header}`}>
@@ -210,7 +216,12 @@ export default function SignIn() {
                                 <Input.Password name="confirmPass" value={credentials.confirmPass} onChange={handleChange} />
                             </Form.Item>
                             <Form.Item>
-                                <Button type="primary" htmlType="submit" className={styles.registerButton}>
+                                <Checkbox onChange={checkBoxChange}>
+                                    <p style={{ fontSize: '.75rem' }}>Authorize Supply Mate for restock-related text alerts. Msg/data rates apply.</p>
+                                </Checkbox>
+                            </Form.Item>
+                            <Form.Item>
+                                <Button type="primary" htmlType="submit" className={styles.registerButton} disabled={!checkbox}>
                                     {registerAccount ? 'Registering...' : 'Register'}
                                 </Button>
                             </Form.Item>
