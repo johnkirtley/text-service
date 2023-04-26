@@ -106,11 +106,21 @@ export default function SignIn() {
 
         if (password !== confirmPass) {
             setShowError(true);
+            setCheckbox(false);
+
+            setTimeout(() => {
+                setShowError(false);
+            }, 1200);
             return;
         }
 
         if (password.length < 6) {
             setInvalidPass(true);
+            setCheckbox(false);
+
+            setTimeout(() => {
+                setInvalidPass(false);
+            }, 1200);
             return;
         }
 
@@ -154,10 +164,20 @@ export default function SignIn() {
 
                 if (errorMessage.includes('email-already-in-use')) {
                     setEmailExists(true);
+                    setCheckbox(false);
+
+                    setTimeout(() => {
+                        setEmailExists(false);
+                    }, 1200);
                 }
 
                 if (errorMessage.includes('invalid-email')) {
                     setInvalidEmail(true);
+                    setCheckbox(false);
+
+                    setTimeout(() => {
+                        setInvalidEmail(false);
+                    }, 1200);
                 }
             });
     };
@@ -183,10 +203,6 @@ export default function SignIn() {
             </Header>
             <div className={styles.registerMainContainer}>
                 <div className={styles.registerContainer}>
-                    {invalidPass ? <Alert message="Password must be at least 6 characters" type="error" /> : ''}
-                    {showError ? <Alert message="Error: Passwords do not match" type="error" /> : ''}
-                    {emailExists ? <Alert message="Error: Email already exists" type="error" /> : ''}
-                    {invalidEmail ? <Alert message="Error: Invalid email" type="error" /> : ''}
                     <div className={styles.getStartedTextContainer}>
                         <p className={styles.getStartedText}>Get Started</p>
                         <p className={styles.getStartedSubText}>Create Your Account Below</p>
@@ -204,6 +220,10 @@ export default function SignIn() {
                         <p className={styles.useEmailText}>Or Use Email</p>
                         <Divider className={styles.registerDivider} />
                     </div>
+                    {invalidPass ? <Alert message="Password must be at least 6 characters" type="error" /> : ''}
+                    {showError ? <Alert message="Error: Passwords do not match" type="error" /> : ''}
+                    {emailExists ? <Alert message="Error: Email already exists" type="error" /> : ''}
+                    {invalidEmail ? <Alert message="Error: Invalid email" type="error" /> : ''}
                     <Card bordered={false}>
                         <Form name="Register" onFinish={signUp} className={styles.registerForm}>
                             <Form.Item label="Email" name="username" rules={[{ required: true, message: 'Please input email' }]} className={styles.formRow} required={false}>
@@ -216,7 +236,7 @@ export default function SignIn() {
                                 <Input.Password name="confirmPass" value={credentials.confirmPass} onChange={handleChange} />
                             </Form.Item>
                             <Form.Item>
-                                <Checkbox onChange={checkBoxChange}>
+                                <Checkbox onChange={checkBoxChange} checked={checkbox}>
                                     <p style={{ fontSize: '.75rem' }}>Authorize Supply Mate for restock-related text alerts. Msg/data rates apply.</p>
                                 </Checkbox>
                             </Form.Item>
