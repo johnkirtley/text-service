@@ -92,6 +92,10 @@ export default function Login() {
                 setLoggingIn(false);
                 if (errorMessage) {
                     setShowError(true);
+
+                    setTimeout(() => {
+                        setShowError(false);
+                    }, 1200);
                 }
             });
     };
@@ -113,7 +117,6 @@ export default function Login() {
             </Header>
             <div className={styles.registerMainContainer}>
                 <div className={styles.loginContainer}>
-                    {showError ? <Alert message="Error: Please Check Email and Password" type="error" /> : ''}
                     <div className={styles.getStartedTextContainer}>
                         <p className={styles.getStartedText}>Welcome Back &#128075;</p>
                         {/* <p className={styles.getStartedSubText}>Login Below</p> */}
@@ -131,6 +134,7 @@ export default function Login() {
                         <p className={styles.useEmailText}>Or Use Email</p>
                         <Divider className={styles.registerDivider} />
                     </div>
+                    {showError ? <Alert message="Error: Please Check Email and Password" type="error" /> : ''}
                     <Card bordered={false}>
                         <Form name="Login" onFinish={signIn} className={styles.loginForm}>
                             <Form.Item required={false} label="Email" name="username" rules={[{ required: true, message: 'Please input email' }]} className={styles.formRow}>

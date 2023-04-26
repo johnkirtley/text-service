@@ -3,15 +3,15 @@
 import { useContext, useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
-    Layout, Input, Button, Space, Alert, Card, Collapse, Modal,
+    Layout, Input, Button, Space, Alert, Card, Collapse, Modal, Form,
 } from 'antd';
 import {
     doc, updateDoc, arrayUnion, arrayRemove, deleteDoc,
 } from 'firebase/firestore';
-import { deleteUser } from 'firebase/auth';
+import { deleteUser, signOut, updatePassword } from 'firebase/auth';
 import { v4 as uuidv4 } from 'uuid';
 import { RepContext, BusinessNameContext, PremiumSettingsContext } from '../../Context/Context';
-import { firestore } from '../../firebase/clientApp';
+import { firestore, firebaseAuth } from '../../firebase/clientApp';
 // import createCheckoutSession from '../../stripe/createCheckoutSession';
 import usePremiumStatus from '../../stripe/usePremiumStatus';
 import { useAuth } from '../../Context/AuthContext';
@@ -28,6 +28,11 @@ const defaultRep = {
     number: '',
 };
 
+const credentials = {
+    changePassword: '',
+    confirmPassword: '',
+};
+
 // const defaultPremiumSettings = {
 //     directText: false,
 //     pendingEmails: false,
@@ -40,6 +45,13 @@ export default function SettingsPanel() {
     const { businessName, setBusinessName } = useContext(BusinessNameContext);
     const [newRep, setNewRep] = useState(defaultRep);
     const [displayAlert, setDisplayAlert] = useState(false);
+    const [changePassword, setChangePassword] = useState(credentials);
+    const [changePasswordSubmitting, setChangePasswordSubmitting] = useState(false);
+    const [passwordMatchInvalid, setPasswordMatchInvalid] = useState(false);
+    const [invalidLength, setInvalidLength] = useState(false);
+    const [passwordChangeSuccess, setPasswordChangeSuccess] = useState(false);
+    const [changePasswordError, setChangePasswordError] = useState(false);
+    const [showReAuthModal, setShowReAuthModal] = useState(false);
     // const [planClicked, setPlanClicked] = useState(false);
     const [searchRep, setSearchRep] = useState('');
     const [filteredSearch, setFilteredSearch] = useState(repInfo);
@@ -53,6 +65,8 @@ export default function SettingsPanel() {
     const { premiumContext, setPremiumContext } = useContext(PremiumSettingsContext);
     const { user } = useAuth();
     const isUserPremium = usePremiumStatus(user.email);
+
+    console.log('user', user);
 
     // const plans = ['silver', 'bronze', 'gold'];
 
@@ -95,7 +109,7 @@ export default function SettingsPanel() {
     const deleteStripeUser = async (email) => {
         console.log('email', email);
         const customerData = await getCustomer(email);
-        const customerId = customerData.customer.data[0].id;
+        const customerId = customerData.customer.data[0]?.id;
 
         console.log('id', customerId);
         const response = await fetch('/api/delete-customer', {
@@ -196,7 +210,18 @@ export default function SettingsPanel() {
         if (user) {
             const userRef = doc(firestore, 'users', user.email);
             const storeEmail = user.email;
-            deleteDoc(userRef).then(() => deleteUser(user)).then(() => deleteStripeUser(storeEmail));
+            deleteDoc(userRef).then(() => {
+                deleteUser(user).then(() => {
+                    deleteStripeUser(storeEmail);
+                })
+                    .catch((error) => {
+                        if (error.message.includes('auth/requires-recent-login')) {
+                            console.log('error', error.message);
+                            setShowReAuthModal(true);
+                            setAccountDeleteModal(false);
+                        }
+                    });
+            });
         }
     };
 
@@ -274,13 +299,61 @@ export default function SettingsPanel() {
         }, 1200);
     };
 
+    const handlePasswordChange = (e) => {
+        setChangePassword({
+            ...changePassword,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const submitChangePassword = () => {
+        if (changePassword.changePassword !== changePassword.confirmPassword) {
+            setPasswordMatchInvalid(true);
+
+            setTimeout(() => {
+                setPasswordMatchInvalid(false);
+            }, 2000);
+            return;
+        }
+
+        if (changePassword.changePassword.length < 6) {
+            setInvalidLength(true);
+
+            setTimeout(() => {
+                setInvalidLength(false);
+            }, 2000);
+            return;
+        }
+        setChangePasswordSubmitting(true);
+
+        updatePassword(user, changePassword.changePassword).then(() => {
+            setPasswordChangeSuccess(true);
+            setChangePasswordSubmitting(false);
+
+            setTimeout(() => {
+                setPasswordChangeSuccess(false);
+            }, 1000);
+        }).catch((error) => {
+            setChangePasswordError(true);
+
+            if (error.message.includes('auth/requires-recent-login')) {
+                setShowReAuthModal(true);
+            }
+
+            setTimeout(() => {
+                setChangePasswordError(false);
+            }, 2000);
+        });
+    };
+
     return (
         <div>
-            {displayAlert ? <Alert message="Business name updated" type="success" className={styles.successAlert} /> : ''}
-
             <Layout>
                 <Modal centered title="Account Delete Confirmation" open={accountDeleteModal} onOk={handleDelete} onCancel={() => setAccountDeleteModal(false)}>
                     <p style={{ fontSize: '1.1rem', margin: '0' }}>Are You Sure You Want To Delete Your Account?</p> <p>This Will Also Cancel Any Active Subscriptions.</p>
+                </Modal>
+                <Modal centered title="Reauthentication Required" open={showReAuthModal} onOk={() => signOut(firebaseAuth)} okText="Sign Out" onCancel={() => setShowReAuthModal(false)}>
+                    <p style={{ fontSize: '1.1rem', margin: '0' }}>Please Sign Back In To Make Account Changes</p>
                 </Modal>
                 <Space className={styles.settingsContainer} style={{ gap: '15px' }}>
                     <Space className={styles.repListContainer} style={{ gap: '15px' }}>
@@ -393,11 +466,37 @@ export default function SettingsPanel() {
                         </div>
                         <Space className={styles.businessInput}>
                             <Collapse>
-                                <Panel header="Company Name">
+                                <Panel header="Account Settings">
+                                    {displayAlert ? <Alert message="Business name updated" type="success" className={styles.successAlert} /> : ''}
+
                                     <div className={styles.businessNameContainer}>
+                                        <p style={{ marginBottom: '0' }}>Company Name</p>
                                         <Input placeholder="Company Name..." value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
                                         <Button type="primary" onClick={() => saveBusinessName(businessName)}>Update</Button>
                                     </div>
+                                    {user.providerData[0].providerId.includes('google') ? '' : (
+                                        <div className={styles.businessNameContainer}>
+                                            <p style={{ marginBottom: '0' }}>Update Password</p>
+                                            {passwordMatchInvalid ? <Alert message="Passwords Do Not Match" type="error" className={styles.successAlert} /> : ''}
+                                            {invalidLength ? <Alert message="Password Must Be At Least 6 Characters" type="error" className={styles.successAlert} /> : ''}
+                                            {passwordChangeSuccess ? <Alert message="Password Successfully Updated" type="success" className={styles.successAlert} /> : ''}
+                                            {changePasswordError ? <Alert message="Error Updating Password. Please Try Again." type="error" className={styles.successAlert} /> : ''}
+                                            <Form name="ChangePassword" onFinish={submitChangePassword} className={styles.registerForm} layout="vertical">
+                                                <Form.Item label="Password" name="password" extra="Password must be at least 6 characters" rules={[{ required: true, message: 'Please input password' }]} className={styles.formRow} required={false}>
+                                                    <Input.Password name="changePassword" value={credentials.changePassword} onChange={handlePasswordChange} />
+                                                </Form.Item>
+                                                <Form.Item label="Confirm Password" name="confirmPass" rules={[{ required: true, message: 'Please input password' }]} className={styles.formRow} required={false}>
+                                                    <Input.Password name="confirmPassword" value={credentials.confirmPassword} onChange={handlePasswordChange} />
+                                                </Form.Item>
+                                                <Form.Item>
+                                                    <Button type="primary" htmlType="submit" className={styles.registerButton} disabled={changePassword.confirmPassword.length < 1 || changePassword.changePassword.length < 1}>
+                                                        {changePasswordSubmitting ? 'Updating...' : 'Change'}
+                                                    </Button>
+                                                </Form.Item>
+                                            </Form>
+                                        </div>
+                                    )}
+
                                 </Panel>
                             </Collapse>
                         </Space>
