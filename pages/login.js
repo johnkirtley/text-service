@@ -32,6 +32,21 @@ export default function Login() {
 
     const auth = firebaseAuth;
 
+    async function createStripeSubscription(email) {
+        const response = await fetch('/api/create-on-register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Success:', data);
+        } else {
+            console.error('Error:', response.statusText);
+        }
+    }
+
     const signInWithGoogle = async () => signInWithPopup(auth, provider).then(async (result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const { accessToken } = credential;
@@ -59,7 +74,9 @@ export default function Login() {
                 },
 
             }).then(() => {
-                router.push('/');
+                createStripeSubscription(user.email).then((res) => {
+                    router.push('/');
+                }).catch((err) => console.log(err));
             });
         } else {
             router.push('/');

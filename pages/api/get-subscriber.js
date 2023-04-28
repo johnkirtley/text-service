@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
         console.log('customer', customer);
 
-        const sub = await stripe.subscriptions.list({ customer: customer.data[0].id, limit: 1 });
+        const sub = await stripe.subscriptions.list({ customer: customer.data[0]?.id, limit: 1 });
 
         console.log('sub', sub);
         if (sub) {
