@@ -541,4 +541,13 @@ margin-bottom: 0.5rem;
         margin-bottom: 1rem;
         width: 90%;
     }
+
+    .footer {
+        flex-flow: column;
+        gap: 2rem;
+    }
+
+    .footerLinks {
+        align-items: center;
+    }
 }

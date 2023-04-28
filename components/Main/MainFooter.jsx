@@ -19,9 +19,9 @@ function MainFooter() {
                 <Link href="/">Home</Link>
                 <a target="_blank" href="https://supplymate.io/faq" rel="noreferrer">FAQ</a>
                 <Link href="/plans">Pricing</Link>
-                <Link href="/">About</Link>
-                <Link href="/">Contact</Link>
-                <Link href="/">Terms & Privacy</Link>
+                <Link href="mailto:john@greycloudllc.com">Contact Us</Link>
+                <Link href="https://supplymate.io/termsofservice" target="_blank" rel="noreferrer">Terms of Service</Link>
+                <Link href="https://supplymate.io/privacypolicy" target="_blank" rel="noreferrer">Privacy Policy</Link>
             </div>
         </Footer>
     );
