@@ -2,14 +2,14 @@ const planInfo = [
     {
         name: 'bronze',
         features: ['Order Request Portal', 'SMS Notifications'],
-        price: '$19.99',
-        id: 'price_1MulMuGYpJAcieX9neiQ7EPs',
+        price: '$29',
+        id: 'price_1N1xAxCHTaDRPPC844MvHeCm',
     },
     {
         name: 'silver',
         features: ['All Features From Bronze', 'Customer Usage Analytics', 'Direct Customer Communication'],
-        price: '$29.99',
-        id: 'price_1MulNWGYpJAcieX9qzmHsQ5z',
+        price: '$39',
+        id: 'price_1N1xBgCHTaDRPPC8VRwxQaBe',
     },
     // {
     //     name: 'gold',

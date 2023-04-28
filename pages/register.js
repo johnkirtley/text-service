@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 /* eslint-disable no-unused-vars */
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import Image from 'next/image';
 import { GoogleAuthProvider, createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import {
@@ -14,7 +14,6 @@ import Link from 'next/link';
 import { v4 as uuidv4 } from 'uuid';
 import { firebaseAuth, firestore } from '../firebase/clientApp';
 // import LoginImage from '../public/login.png';
-import CaptionImage from '../public/captionPic.webp';
 
 // styles
 import styles from '../styles/Home.module.css';
