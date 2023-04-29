@@ -32,6 +32,21 @@ export default function Login() {
 
     const auth = firebaseAuth;
 
+    async function addToSib(email) {
+        const response = await fetch('/api/sib-add-user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ newUserEmail: email }),
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log('SIB User Added: ', data);
+        } else {
+            console.error('Error:', response);
+        }
+    }
+
     async function createStripeSubscription(email) {
         const response = await fetch('/api/create-on-register', {
             method: 'POST',
@@ -75,6 +90,7 @@ export default function Login() {
 
             }).then(() => {
                 createStripeSubscription(user.email).then((res) => {
+                    addToSib(user.email);
                     router.push('/');
                 }).catch((err) => console.log(err));
             });

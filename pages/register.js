@@ -40,6 +40,18 @@ export default function SignIn() {
 
     const auth = firebaseAuth;
 
+    async function addToSib(email) {
+        const response = await fetch('/api/sib-add-user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ newUserEmail: email }),
+        });
+
+        const data = await response.json();
+        console.log('SIB User Added: ', data);
+        return data;
+    }
+
     async function createStripeSubscription(email) {
         const response = await fetch('/api/create-on-register', {
             method: 'POST',
@@ -82,6 +94,7 @@ export default function SignIn() {
                 },
             }).then(() => {
                 createStripeSubscription(user.email).then((res) => {
+                    addToSib(user.email);
                     router.push('/');
                 }).catch((err) => console.log(err));
             });
@@ -154,6 +167,7 @@ export default function SignIn() {
                 });
                 createStripeSubscription(user.email).then((res) => {
                     setRegisterAccount(false);
+                    addToSib(user.email);
                     router.push('/');
                 }).catch((err) => console.log(err));
             }).catch((error) => {
