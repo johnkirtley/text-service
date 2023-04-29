@@ -67,6 +67,8 @@ export default function Login() {
         const { accessToken } = credential;
         const { user } = result;
 
+        console.log('token', accessToken);
+
         const usersRef = doc(firestore, 'users', user.email);
         const userSnap = await getDoc(usersRef);
 
@@ -98,9 +100,9 @@ export default function Login() {
             router.push('/');
         }
     }).catch((error) => {
+        console.log(error);
         const errorCode = error.code;
         const errorMessage = error.message;
-        const { email } = error.customData;
         const credential = GoogleAuthProvider.credentialFromError(error);
     });
 
