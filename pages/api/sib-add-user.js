@@ -7,7 +7,7 @@ export default function handler(req, res) {
         const defaultClient = SibApiV3Sdk.ApiClient.instance;
         const apiKey = defaultClient.authentications['api-key'];
 
-        apiKey.apiKey = process.env.SIB_API_KEY;
+        apiKey.apiKey = process.env.NEXT_PUBLIC_SIB_API_KEY;
 
         const apiInstance = new SibApiV3Sdk.ContactsApi();
 
