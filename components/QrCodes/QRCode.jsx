@@ -9,6 +9,7 @@ import {
 import axios from 'axios';
 import ClientContext from '../../Context/ClientContext';
 import ProductContext from '../../Context/ProductContext';
+import { useAuth } from '../../Context/AuthContext';
 
 // styles
 import styles from './QrCode.module.css';
@@ -24,6 +25,7 @@ export default function QRCode({
     const [sendingComplete, setSendingComplete] = useState(false);
     const [repName, setRepName] = useState('');
     const { curProducts, setCurProducts } = useContext(ProductContext);
+    const { user } = useAuth();
 
     const makeInactive = () => {
         const newArr = [...curProducts];
@@ -66,6 +68,7 @@ export default function QRCode({
                     const data = {
                         base64Codes: content,
                         clientName: `${sanitizedFileName}`,
+                        email: user.email,
                     };
 
                     axios.post('https://text-service-mailer.herokuapp.com/api/code_submission/send', data)

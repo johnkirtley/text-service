@@ -367,6 +367,7 @@ export default function Products() {
                             setSelectedRep={setSelectedRep}
                             setClientInfo={setClientInfo}
                             setQRCodes={setQRCodes}
+                            email={user.email}
                             setSelectedProducts={setSelectedProducts}
                         />
                         {loading ? '' : <Button type="primary" onClick={generateCodes} disabled={planName === '' ? true : ''} className={styles.generateCodesButton}>{!checkActive() || qrCodes.length > 0 ? '' : 'Generate QR Codes'}</Button> }
