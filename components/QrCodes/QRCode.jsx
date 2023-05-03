@@ -45,7 +45,7 @@ export default function QRCode({
         }
     }, [selectedRep]);
 
-    const sanitizedFileName = clientInfo.replace(' ', '-');
+    const sanitizedFileName = clientInfo.replace(/ /g, '-');
     const zipImages = () => {
         setSending(true);
         const zip = new JSZip();
