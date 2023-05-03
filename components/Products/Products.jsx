@@ -216,7 +216,7 @@ export default function Products() {
         const checkedItems = curProducts.filter((product) => product.isChecked === true);
 
         const links = checkedItems.map((product) => {
-            const trimmedCustomerName = clientInfo.replace(' ', '%20');
+            const trimmedCustomerName = clientInfo.replace(/ /g, '%20');
             // const message = `${product}%20to%20${trimmedCustomerName}`;
             // const trimmed = message.replace(' ', '%20');
             const url = encodeURIComponent(`https://app.supplymate.io/submit?product=${product.product}&rep=${selectedRep}&clientName=${trimmedCustomerName}&ownerName=${businessName}&id=${ownerId}`);
@@ -367,7 +367,6 @@ export default function Products() {
                             setSelectedRep={setSelectedRep}
                             setClientInfo={setClientInfo}
                             setQRCodes={setQRCodes}
-                            email={user.email}
                             setSelectedProducts={setSelectedProducts}
                         />
                         {loading ? '' : <Button type="primary" onClick={generateCodes} disabled={planName === '' ? true : ''} className={styles.generateCodesButton}>{!checkActive() || qrCodes.length > 0 ? '' : 'Generate QR Codes'}</Button> }
