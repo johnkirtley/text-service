@@ -10,7 +10,7 @@ import {
 } from 'firebase/firestore';
 import { Layout, Button, Spin, Alert } from 'antd';
 import { uuidv4 } from '@firebase/util';
-import axios from 'axios';
+// import axios from 'axios';
 import { firestore } from '../firebase/clientApp';
 import usePremiumStatus from '../stripe/usePremiumStatus';
 
@@ -144,10 +144,10 @@ export default function Submit() {
                 await updateDoc(restockRef, { pendingOrders: arrayUnion(reqRestockProduct) });
                 await updateDoc(restockRef, { analytics: arrayUnion(addAnalyticsRestock) });
 
-                const data = {
-                    message,
-                    number: num,
-                };
+                // const data = {
+                //     message,
+                //     number: num,
+                // };
 
                 if (num.length < 1) {
                     setNumAlert(true);
@@ -157,11 +157,11 @@ export default function Submit() {
                     return;
                 }
 
-                axios.post('https://text-service-mailer.herokuapp.com/api/code_submission/text', data)
-                    .then((res) => {
-                        console.log(res);
-                    })
-                    .catch((err) => console.log(err));
+                // axios.post('https://text-service-mailer.herokuapp.com/api/code_submission/text', data)
+                //     .then((res) => {
+                //         console.log(res);
+                //     })
+                //     .catch((err) => console.log(err));
 
                 setTimeout(() => {
                     setLoading(false);
