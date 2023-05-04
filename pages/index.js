@@ -79,12 +79,7 @@ export default function MainComponent() {
         // this could eliminate re render on product
         querySnapshot.forEach((document) => {
             if (document.data().email === user.email) {
-                // const newArr = document.data().products.map((product) => ({ product, isChecked: false }));
-                const newArr = [];
-
-                for (let i = 0; i < 500; i += 1) {
-                    newArr.push({ product: `product ${i}`, isChecked: true });
-                }
+                const newArr = document.data().products.map((product) => ({ product, isChecked: false }));
                 console.log('firebase query', document.data());
                 setCustomerInfo(document.data());
                 setBusinessName(document.data().businessName);
