@@ -173,6 +173,15 @@ export default function SettingsPanel() {
         }
     };
 
+    const handleContactDelete = async (ref, data, num) => {
+        await updateDoc(ref, { repNumbers: arrayRemove(data) });
+
+        const filtered = repInfo.filter((rep) => rep.number !== num);
+
+        setRepInfo(filtered);
+        setNewRep(defaultRep);
+    };
+
     const removeRep = async (name, num, id) => {
         const repAddRef = doc(firestore, 'users', user.email);
         const dataToRemove = {
@@ -189,12 +198,16 @@ export default function SettingsPanel() {
             return;
         }
 
-        await updateDoc(repAddRef, { repNumbers: arrayRemove(dataToRemove) });
-
-        const filtered = repInfo.filter((rep) => rep.number !== num);
-
-        setRepInfo(filtered);
-        setNewRep(defaultRep);
+        Modal.confirm({
+            title: 'Contact Delete Confirmation',
+            content: <div><p>Warning: If this contact is connected to any active QR Codes, you must regenerate new codes with an existing contact to continue receiving mobile alerts for those products.</p><br /><p>Confirming Deletion of: <b>{name}</b></p></div>,
+            okText: 'Delete',
+            okType: 'primary',
+            cancelText: 'Cancel',
+            onOk() {
+                handleContactDelete(repAddRef, dataToRemove, num);
+            },
+        });
     };
 
     // const handleBilling = (planType) => {
@@ -380,6 +393,13 @@ export default function SettingsPanel() {
                                 <Panel header="Contact List">
                                     <div className={styles.repScroll}>
                                         <Input placeholder="Search Contacts..." value={searchRep} name="repSearch" onChange={handleRepSearch} className={styles.searchRepsInput} />
+                                        <div
+                                            className={styles.repContainerTop}
+                                        >
+                                            <p>Name</p>
+                                            <p>Number</p>
+                                            <p>Action</p>
+                                        </div>
                                         {contactAlert ? <Alert message="Must Have At Least 1 Contact" type="error" /> : ''}
                                         {filteredSearch && filteredSearch.length > 0
                                             ? filteredSearch.map((num, idx) => (
@@ -387,12 +407,10 @@ export default function SettingsPanel() {
                                                     className={styles.repContainer}
                                                     key={idx}
                                                 >
-                                                    <p className={styles.repName}>{num?.name}</p>
-
                                                     <div className={styles.repInfo}>
-                                                        <p className={styles.repBold}>
-                                                    Phone Number:
-                                                        </p>
+                                                        <p className={styles.repName}>{num?.name}</p>
+                                                    </div>
+                                                    <div className={styles.repInfo}>
                                                         <p>{num?.number}</p>
                                                     </div>
                                                     <Button type="primary" danger onClick={() => removeRep(num?.name, num?.number, num?.id)}>Remove</Button>
