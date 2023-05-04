@@ -54,8 +54,10 @@ export default function QRCode({
 
         const fileGeneration = () => new Promise((resolve) => {
             qrCodes.forEach((code, idx) => {
+                console.log('code', code);
                 canvas[idx].toBlob((data) => {
-                    codeFolder.file(`Code-${idx}.png`, data);
+                    const formattedName = code.name.replace(/ /g, '-');
+                    codeFolder.file(`${formattedName}.png`, data);
                 });
             });
             resolve();
@@ -74,9 +76,41 @@ export default function QRCode({
                     axios.post('https://text-service-mailer.herokuapp.com/api/code_submission/send', data)
                         .then((res) => {
                             console.log(res);
-                            window.location = `data:application/zip;base64,${content}`;
+                            // const blobUrl = URL.createObjectURL(content);
+
+                            // // Create a link element for the download
+                            // const link = document.createElement('a');
+                            // link.href = blobUrl;
+                            // link.download = `${sanitizedFileName}.zip`;
+
+                            // // Append the link to the document body
+                            // document.body.appendChild(link);
+
+                            // // Programmatically trigger the download
+                            // link.click();
+
+                            // // Clean up the Blob URL
+                            // URL.revokeObjectURL(blobUrl);
                         })
-                        .catch((err) => console.log(err));
+                        .catch((err) => {
+                            console.log(err);
+
+                            // const blobUrl = URL.createObjectURL(content);
+
+                            // // Create a link element for the download
+                            // const link = document.createElement('a');
+                            // link.href = blobUrl;
+                            // link.download = `${sanitizedFileName}.zip`;
+
+                            // // Append the link to the document body
+                            // document.body.appendChild(link);
+
+                            // // Programmatically trigger the download
+                            // link.click();
+
+                            // // Clean up the Blob URL
+                            // URL.revokeObjectURL(blobUrl);
+                        });
                 });
                 setSending(false);
                 setSendingComplete(true);
@@ -117,6 +151,7 @@ export default function QRCode({
                             title="QR Code Confirmation"
                             open={showModal}
                             onOk={handleOk}
+                            okText="Email My Codes"
                             onCancel={handleCancel}
                             okButtonProps={sending || sendingComplete ? { disabled: true } : { disabled: false }}
                             cancelButtonProps={sending || sendingComplete ? { disabled: true } : { disabled: false }}
@@ -151,7 +186,7 @@ export default function QRCode({
                             </Space>
 
                             <Button onClick={sendEmail} type="primary" className={styles.sendForPrintingButton}>
-                            Confirm and Download
+                            Confirm Codes
                             </Button>
                         </Content>
                     </div>
