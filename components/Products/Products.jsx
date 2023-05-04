@@ -221,15 +221,21 @@ export default function Products() {
             // const trimmed = message.replace(' ', '%20');
             const url = encodeURIComponent(`https://app.supplymate.io/submit?product=${product.product}&rep=${selectedRep}&clientName=${trimmedCustomerName.toLowerCase()}&ownerName=${businessName}&id=${ownerId}`);
             const codeString = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${url}`;
-            return { name: product.product, src: codeString };
+            return { name: product.product, src: codeString, businessName };
         });
 
         setQRCodes(links);
 
-        links.forEach((link) => {
-            generateCanvasImg(link.src, link.name, businessName);
-            // add company name above QR code
-        });
+        setTimeout(() => {
+            document.querySelector('#qr-code-container').innerHTML = '';
+
+            generateCanvasImg(links).then((arr) => {
+                arr.forEach((canvas) => {
+                    document.querySelector('#qr-code-container').appendChild(canvas);
+                });
+            });
+        }, 10);
+
         setTimeout(() => {
             setLoading(false);
         }, 5000);
