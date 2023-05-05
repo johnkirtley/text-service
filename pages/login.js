@@ -56,7 +56,6 @@ export default function Login() {
 
         if (response.ok) {
             const data = await response.json();
-            console.log('Success:', data);
         } else {
             console.error('Error:', response.statusText);
         }
@@ -66,8 +65,6 @@ export default function Login() {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const { accessToken } = credential;
         const { user } = result;
-
-        console.log('token', accessToken);
 
         const usersRef = doc(firestore, 'users', user.email);
         const userSnap = await getDoc(usersRef);
@@ -100,7 +97,6 @@ export default function Login() {
             router.push('/');
         }
     }).catch((error) => {
-        console.log(error);
         const errorCode = error.code;
         const errorMessage = error.message;
         const credential = GoogleAuthProvider.credentialFromError(error);
@@ -154,7 +150,6 @@ export default function Login() {
                 <div className={styles.loginContainer}>
                     <div className={styles.getStartedTextContainer}>
                         <p className={styles.getStartedText}>Welcome Back &#128075;</p>
-                        {/* <p className={styles.getStartedSubText}>Login Below</p> */}
                     </div>
                     <button
                         type="button"

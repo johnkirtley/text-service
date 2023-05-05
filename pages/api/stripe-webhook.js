@@ -19,22 +19,16 @@ export default async function handler(request, response) {
 
         let event;
 
-        console.log('webhook');
-
         try {
             event = stripe.webhooks.constructEvent(buf, sig, endpointSecret);
         } catch (err) {
-            console.error('Webhook signature verification failed:', err);
-
             response.status(400).send(`Webhook Error: ${err.message}`);
             return;
         }
 
-        console.log('event', event.data.object.customer);
         // Handle the event
         if (event.type === 'checkout.session.completed' || event.type === 'customer.subscription.deleted' || event.type === 'customer.subscription.updated') {
             const session = event.data.object;
-            console.log('customer', session);
             await updateCustomerWithTrial(session.customer);
         }
 

@@ -130,7 +130,6 @@ export default function Home() {
                 count: data[key],
             };
 
-            console.log('key', newObj);
             newArr.push(newObj);
         });
 
@@ -146,7 +145,6 @@ export default function Home() {
                 count: data[key],
             };
 
-            console.log('client', newObj);
             newArr.push(newObj);
         });
 
@@ -158,8 +156,6 @@ export default function Home() {
         const trackLargestScan = {};
         const trackLargestRestock = {};
         const clientMostRestocked = {};
-        console.log('scan arr', scanArr);
-        console.log('restock arr', restockArr);
         if (scanArr.length > 0) {
             scanArr.forEach((scan) => {
                 if (!trackLargestScan[scan.product]) {
@@ -168,7 +164,6 @@ export default function Home() {
                     trackLargestScan[scan.product] += 1;
                 }
             });
-            console.log('obj scan', trackLargestScan);
 
             const largest = findLargestValue(trackLargestScan);
             console.log('large scan', largest);
@@ -240,7 +235,7 @@ export default function Home() {
     }, [scanArr, restockArr]);
 
     useEffect(() => {
-        console.log('table data', productTableData);
+        console.log('checking table data...');
     }, [productTableData]);
 
     useEffect(() => {
@@ -259,29 +254,10 @@ export default function Home() {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexFlow: 'column' }}>
                 <div style={{ marginBottom: '1rem' }}>Please Upgrade Plan To Unlock Insights.</div>
-                {/* <Image src={padlock} alt="padlock" height={50} width={50} /> */}
                 <Image src="/empty_analytics.svg" width={400} height={400} style={{ opacity: '.3' }} alt="No analytics" />
             </div>
         );
     }
-
-    // const chartData = {
-    //     labels: chartLabels,
-    //     datasets: [
-    //         {
-    //             data: chartValues,
-    //             backgroundColor: [
-    //                 'rgba(241, 189, 93, 0.7)', // Color for January
-    //                 // More colors...
-    //             ],
-    //             borderColor: [
-    //                 'rgba(241, 189, 93, 0.7)', // Color for January
-    //                 // More colors...
-    //             ],
-    //             borderWidth: 1,
-    //         },
-    //     ],
-    // };
 
     const lineChartDate = {
         labels: months,
@@ -334,7 +310,6 @@ export default function Home() {
     return (
         <Content>
             <Space direction="vertical" size="large" />
-            {/* <div className={styles.insightHeader}>Overview</div> */}
             {showInsights ? (
                 <div className={styles.insightGridTop}>
                     {scanArr ? <Statistic className={styles.statisticCard} style={{ backgroundImage: 'url(/icons/scan.png)' }} title="Total Number of Scans" value={scanArr.length || 0} /> : ''}
@@ -351,10 +326,6 @@ export default function Home() {
                         <p className={styles.chartTitles}>Restock Requests By Month</p>
                         <Line data={lineChartDate} options={chartOptions} />
                     </div>
-                    {/* <div className={styles.chart}>
-                        <div>Restock Requests By Product</div>
-                        <Bar data={chartData} options={chartOptions} />
-                    </div> */}
                     {productTableData && clientTableData
                         ? (
                             <div className={styles.tableLayout}>

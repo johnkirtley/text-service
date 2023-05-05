@@ -9,13 +9,6 @@ export default async function handler(req, res) {
             metadata: { usedFreeTrial: false },
         });
 
-        // const subscription = await stripe.subscriptions.create({
-        //     customer: customer.id,
-        //     items: [{ price: 'price_1MmgzZGYpJAcieX9hlUJPOOH' }],
-        //     trial_period_days: 14,
-        //     trial_settings: { end_behavior: { missing_payment_method: 'cancel' } },
-        // });
-
         const createdUser = { customer };
 
         res.status(200).json({ message: 'Customer Created', createdUser });

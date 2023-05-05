@@ -5,10 +5,7 @@ export default async function handler(req, res) {
         const { successUrl, product, email } = req.body;
 
         const customer = await stripe.customers.list({ email, limit: 1 });
-        console.log('customer checkout', customer);
         const checkForTrial = customer.data[0].metadata.usedFreeTrial;
-
-        console.log('free trial', checkForTrial);
 
         if (checkForTrial === 'true') {
             const session = await stripe.checkout.sessions.create({

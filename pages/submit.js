@@ -205,7 +205,6 @@ export default function Submit() {
                     {numAlert ? <Alert message="Number No Longer Active. Please Contact Owner." type="warning" /> : ''}
                     <div>You Are About To Request A Restock For The Following Product:</div>
                     <div className={styles.requestProduct}>{product}</div>
-                    {/* on click, trigger email and send order to order status screen */}
                     {!gettingData && plan === '' ? <Button disabled>Plan Not Active. Please Contact Account Owner.</Button> : (
                         <Button
                             type="primary"
