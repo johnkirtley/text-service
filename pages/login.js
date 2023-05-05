@@ -27,39 +27,11 @@ export default function Login() {
     const [credentials, setCredentials] = useState(defaultCredentials);
     const [showError, setShowError] = useState(false);
     const [loggingIn, setLoggingIn] = useState(false);
+    const [notFound, setNotFound] = useState(false);
     const provider = new GoogleAuthProvider();
     const router = useRouter();
 
     const auth = firebaseAuth;
-
-    async function addToSib(email) {
-        const response = await fetch('/api/sib-add-user', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ newUserEmail: email }),
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            console.log('SIB User Added: ', data);
-        } else {
-            console.error('Error:', response);
-        }
-    }
-
-    async function createStripeSubscription(email) {
-        const response = await fetch('/api/create-on-register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email }),
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-        } else {
-            console.error('Error:', response.statusText);
-        }
-    }
 
     const signInWithGoogle = async () => signInWithPopup(auth, provider).then(async (result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
@@ -70,29 +42,7 @@ export default function Login() {
         const userSnap = await getDoc(usersRef);
 
         if (!userSnap.exists()) {
-            setDoc(usersRef, {
-                email: `${user.email}`,
-                repNumbers: [],
-                products: [],
-                businessName: '',
-                accountCreatedTimestamp: serverTimestamp(),
-                uid: uuidv4(),
-                pendingOrders: [],
-                completedOrders: [],
-                firstLoad: true,
-                analytics: [],
-                premiumSettings: {
-                    directText: false,
-                    pendingEmails: false,
-                    monthlyEmails: false,
-                },
-
-            }).then(() => {
-                createStripeSubscription(user.email).then((res) => {
-                    addToSib(user.email);
-                    router.push('/');
-                }).catch((err) => console.log(err));
-            });
+            setNotFound(true);
         } else {
             router.push('/');
         }
@@ -151,6 +101,7 @@ export default function Login() {
                     <div className={styles.getStartedTextContainer}>
                         <p className={styles.getStartedText}>Welcome Back &#128075;</p>
                     </div>
+                    {notFound ? <Alert message="Account Not Found. Please Register...." type="error" /> : ''}
                     <button
                         type="button"
                         onClick={() => signInWithGoogle()}
