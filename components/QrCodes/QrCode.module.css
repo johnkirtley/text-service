@@ -2,6 +2,28 @@
     visibility: hidden;
 }
 
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.207); /* Semi-transparent black background */
+    z-index: -1; /* Higher than other page elements */
+  }
+
+  .spinnerBackground {
+    z-index: 15;
+    padding: 4rem;
+    border-radius: 45px;
+    background-color: var(--primary-white);
+}
+
+.codesLoading {
+    margin-top: 1rem;
+    z-index: 11;
+}
+
 .showContainer {
     margin-top: 2rem;
 }
