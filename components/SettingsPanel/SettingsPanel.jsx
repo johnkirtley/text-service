@@ -33,12 +33,6 @@ const credentials = {
     confirmPassword: '',
 };
 
-// const defaultPremiumSettings = {
-//     directText: false,
-//     pendingEmails: false,
-//     monthlyEmails: true,
-// };
-
 export default function SettingsPanel() {
     const { repInfo, setRepInfo } = useContext(RepContext);
     // const { customerInfo } = useContext(CustomerContext);
@@ -65,10 +59,6 @@ export default function SettingsPanel() {
     const { premiumContext, setPremiumContext } = useContext(PremiumSettingsContext);
     const { user } = useAuth();
     const isUserPremium = usePremiumStatus(user.email);
-
-    console.log('user', user);
-
-    // const plans = ['silver', 'bronze', 'gold'];
 
     const { Panel } = Collapse;
 
@@ -107,11 +97,9 @@ export default function SettingsPanel() {
     }
 
     const deleteStripeUser = async (email) => {
-        console.log('email', email);
         const customerData = await getCustomer(email);
         const customerId = customerData.customer.data[0]?.id;
 
-        console.log('id', customerId);
         const response = await fetch('/api/delete-customer', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -210,11 +198,6 @@ export default function SettingsPanel() {
         });
     };
 
-    // const handleBilling = (planType) => {
-    //     setPlanClicked(true);
-    //     createCheckoutSession(user.uid, planType);
-    // };
-
     const confirmAccountDelete = async () => {
         setAccountDeleteModal(true);
     };
@@ -260,7 +243,6 @@ export default function SettingsPanel() {
                 await updateDoc(premiumSettingsRef, { premiumSettings: newObj });
 
                 setPremiumContext(newObj);
-                console.log('update', premiumContext);
             }
 
             if (state === 'disable') {
@@ -268,7 +250,6 @@ export default function SettingsPanel() {
                 await updateDoc(premiumSettingsRef, { premiumSettings: newObj });
 
                 setPremiumContext(newObj);
-                console.log('update', premiumContext);
             }
         }
 
@@ -278,7 +259,6 @@ export default function SettingsPanel() {
                 await updateDoc(premiumSettingsRef, { premiumSettings: newObj });
 
                 setPremiumContext(newObj);
-                console.log('update', premiumContext);
             }
 
             if (state === 'disable') {
@@ -286,7 +266,6 @@ export default function SettingsPanel() {
                 await updateDoc(premiumSettingsRef, { premiumSettings: newObj });
 
                 setPremiumContext(newObj);
-                console.log('update', premiumContext);
             }
         }
 
@@ -296,14 +275,12 @@ export default function SettingsPanel() {
                 await updateDoc(premiumSettingsRef, { premiumSettings: newObj });
 
                 setPremiumContext(newObj);
-                console.log('update', premiumContext);
             }
 
             if (state === 'disable') {
                 const newObj = { ...premiumContext, monthlyEmails: false };
                 await updateDoc(premiumSettingsRef, { premiumSettings: newObj });
                 setPremiumContext(newObj);
-                console.log('update', premiumContext);
             }
         }
 
@@ -368,8 +345,8 @@ export default function SettingsPanel() {
                 <Modal centered title="Reauthentication Required" open={showReAuthModal} onOk={() => signOut(firebaseAuth)} okText="Sign Out" onCancel={() => setShowReAuthModal(false)}>
                     <p style={{ fontSize: '1.1rem', margin: '0' }}>Please Sign Back In To Make Account Changes</p>
                 </Modal>
-                <Space className={styles.settingsContainer} style={{ gap: '15px' }}>
-                    <Space className={styles.repListContainer} style={{ gap: '15px' }}>
+                <Space className={styles.settingsContainer}>
+                    <Space className={styles.repListContainer}>
                         <Card title="Add Contact">
                             <div className={styles.repInputBox}>
                                 <div>
@@ -489,7 +466,7 @@ export default function SettingsPanel() {
 
                                     <div className={styles.businessNameContainer}>
                                         <p style={{ marginBottom: '0' }}>Company Name</p>
-                                        <Input placeholder="Company Name..." value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
+                                        <Input placeholder="Business Name..." value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
                                         <Button type="primary" onClick={() => saveBusinessName(businessName)}>Update</Button>
                                     </div>
                                     {user.providerData[0].providerId.includes('google') ? '' : (
@@ -526,16 +503,6 @@ export default function SettingsPanel() {
                                 <div className={styles.currentPlan}>
                             Current Plan: {isUserPremium.planName || 'No Active Plan'}
                                 </div>
-                                {/* {planClicked ? <Button type="primary" loading>Redirecting To Stripe...</Button>
-                                    : (
-                                        <div className={styles.plans}>
-                                            {plans.map((plan, idx) => (
-                                                isUserPremium.planName === plan ? <Button type="primary" key={idx} className={styles.planButton} disabled>Current Plan</Button>
-                                                    : <Button type="primary" key={idx} className={styles.planButton} onClick={() => handleBilling(plan)}>Select {plan} Plan</Button>
-                                            ))}
-
-                                        </div>
-                                    )} */}
                                 <Space>
                                     <Button className={styles.viewPlansLink}>
                                         <Link href="/plans">{isUserPremium.planName !== '' ? 'View Plans' : 'Choose A Plan'}</Link>

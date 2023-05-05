@@ -8,14 +8,12 @@ async function getSubscriber(email) {
     });
 
     const data = await response.json();
-    console.log('Success:', data);
+    console.log('Success:', data.message);
     return data;
 }
 
 async function isUserPremium(email) {
-    console.log('email', email);
     const subscriber = await getSubscriber(email);
-    console.log('subscriber', subscriber);
 
     let role;
     let planStatus;

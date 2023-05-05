@@ -9,6 +9,7 @@
     flex-flow: column;
     background-color: var(--primary-white);
     width: 100%;
+    gap: 15px;
 }
 
 .billingContainer {
@@ -57,6 +58,7 @@
     align-items: center;
     flex-flow: column;
     text-align: center;
+    gap: 15px;
 }
 
 .repInputBox {

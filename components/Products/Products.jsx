@@ -75,24 +75,6 @@ export default function Products() {
         }
     }, [searchProduct, curProducts]);
 
-    // const makeInactive = () => {
-    //     const newArr = [...curProducts];
-    //     const unchecked = newArr.map((obj) => ({
-    //         product: obj.product,
-    //         isChecked: false,
-    //     }));
-    //     setCurProducts(unchecked);
-    // };
-
-    // const reset = () => {
-    //     setCurrent(0);
-    //     setClientInfo('');
-    //     setSelectedProducts([]);
-    //     setQRCodes([]);
-    //     setSelectedRep('');
-    //     makeInactive();
-    // };
-
     const steps = [
         { title: 'Configure' },
         { title: 'Select Products' },
@@ -139,8 +121,6 @@ export default function Products() {
         if (index !== -1) {
             copyArr.splice(index, 1);
 
-            console.log(copyArr);
-
             setCurProducts(copyArr);
         }
         setProductRemoved(true);
@@ -171,18 +151,6 @@ export default function Products() {
             const filter = newArr.map((prod) => prod !== product);
             setSelectedProducts(filter);
         }
-
-        // if (e.target.checked) {
-        //     const newArr = [...selectedProducts, product];
-        //     setSelectedProducts(newArr);
-        // }
-
-        // if (!e.target.checked) {
-        //     setSelectedProducts(selectedProducts.filter((p) => p !== product));
-        // }
-        // setCheckedList(list);
-        // setIndeterminate(!!list.length && list.length < products.length);
-        // setCheckAll(list.length === products.length);
     };
 
     const checkActive = () => curProducts.some((obj) => obj.isChecked);
@@ -217,8 +185,6 @@ export default function Products() {
 
         const links = checkedItems.map((product) => {
             const trimmedCustomerName = clientInfo.replace(/ /g, '%20');
-            // const message = `${product}%20to%20${trimmedCustomerName}`;
-            // const trimmed = message.replace(' ', '%20');
             const url = encodeURIComponent(`https://app.supplymate.io/submit?product=${product.product}&rep=${selectedRep}&clientName=${trimmedCustomerName.toLowerCase()}&ownerName=${businessName}&id=${ownerId}`);
             const codeString = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${url}`;
             return { name: product.product, src: codeString, businessName };
@@ -250,15 +216,6 @@ export default function Products() {
 
         setRepOptions(newArr);
     }, [repInfo]);
-
-    // this is firing twice causing 2 network calls ?????
-    // Firebase subscription listeners??
-    // useEffect(() => {
-    //     if (authContext) {
-    //         const colRef = collection(firestore, 'users');
-    //         getQuery(colRef);
-    //     }
-    // }, [authContext, getQuery]);
 
     return (
         <>

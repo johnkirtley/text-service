@@ -61,7 +61,6 @@ export default function SignIn() {
 
         if (response.ok) {
             const data = await response.json();
-            console.log('Success:', data);
         } else {
             console.error('Error:', response.statusText);
         }
@@ -249,12 +248,10 @@ export default function SignIn() {
                                 <Input.Password name="confirmPass" value={credentials.confirmPass} onChange={handleChange} />
                             </Form.Item>
                             <Form.Item>
-                                <Checkbox onChange={checkBoxChange} checked={checkbox}>
-                                    <p style={{ fontSize: '.75rem' }}>Authorize Supply Mate for restock-related text alerts. Msg/data rates apply.</p>
-                                </Checkbox>
+                                <p style={{ fontSize: '.75rem' }}>By registering, I authorize Supply Mate for restock-related alerts. Msg/data rates apply.</p>
                             </Form.Item>
                             <Form.Item>
-                                <Button type="primary" htmlType="submit" className={styles.registerButton} disabled={!checkbox}>
+                                <Button type="primary" htmlType="submit" className={styles.registerButton}>
                                     {registerAccount ? 'Registering...' : 'Register'}
                                 </Button>
                             </Form.Item>
