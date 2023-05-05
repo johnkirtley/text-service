@@ -131,8 +131,8 @@ export default function QRCode({
                             title="QR Code Confirmation"
                             open={showModal}
                             onOk={handleOk}
-                            closable={sending}
-                            closeIcon={sending}
+                            closable={!sending}
+                            closeIcon={!sending}
                             okText="Email & Download Codes"
                             onCancel={handleCancel}
                             okButtonProps={sending || sendingComplete ? { disabled: true } : { disabled: false }}
