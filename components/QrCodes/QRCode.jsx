@@ -3,7 +3,7 @@
 import { useState, useContext, useEffect } from 'react';
 import JSZip from 'jszip';
 import {
-    Layout, Space, Empty, Button, Modal,
+    Layout, Space, Empty, Button, Modal, Spin,
 } from 'antd';
 // import { saveAs } from 'file-saver';
 import axios from 'axios';
@@ -131,13 +131,16 @@ export default function QRCode({
                             title="QR Code Confirmation"
                             open={showModal}
                             onOk={handleOk}
+                            closable={!sending}
+                            closeIcon={!sending}
                             okText="Email & Download Codes"
                             onCancel={handleCancel}
                             okButtonProps={sending || sendingComplete ? { disabled: true } : { disabled: false }}
                             cancelButtonProps={sending || sendingComplete ? { disabled: true } : { disabled: false }}
                         >
                             {sendingComplete ? <p>Sent Successfully</p> : ''}
-                            {sending ? <p>Sending...</p>
+                            {sending ? <><span className={styles.overlay} /><Space wrap className={styles.spinnerBackground}><Spin tip="Sending..." size="large" className={styles.codesLoading} /></Space> </>
+
                                 : (
                                     <>
                                         <p><span className={styles.highlight}>Client:</span> {clientInfo}</p>
