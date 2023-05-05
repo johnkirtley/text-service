@@ -10,6 +10,7 @@ import {
 } from 'firebase/firestore';
 import { Layout, Button, Spin, Alert } from 'antd';
 import { uuidv4 } from '@firebase/util';
+import logger from '../utils/logger';
 // import axios from 'axios';
 import { firestore } from '../firebase/clientApp';
 import usePremiumStatus from '../stripe/usePremiumStatus';
@@ -144,6 +145,7 @@ export default function Submit() {
                 await updateDoc(restockRef, { pendingOrders: arrayUnion(reqRestockProduct) });
                 await updateDoc(restockRef, { analytics: arrayUnion(addAnalyticsRestock) });
 
+                logger('action', 'Restock Requested', { clientName });
                 // const data = {
                 //     message,
                 //     number: num,
@@ -188,6 +190,7 @@ export default function Submit() {
             return;
         }
 
+        logger('action', 'Direct Text Clicked', { client: clientName, owner: ownerId });
         window.location.href = `sms:${num}&body=${trimmedMessage}`;
     };
 

@@ -9,6 +9,7 @@ import Link from 'next/link';
 // import createCheckoutSession from '../../stripe/createCheckoutSession';
 import usePremiumStatus from '../../stripe/usePremiumStatus';
 import { useAuth } from '../../Context/AuthContext';
+import logger from '../../utils/logger';
 import generatePortal from '../../stripe/createPortal';
 
 import stripeIcon from '../../public/icons/stripe.png';
@@ -57,6 +58,7 @@ export default function PlansPage() {
                 body: JSON.stringify({ product, successUrl: window.location.origin, email }),
             });
 
+            logger('action', 'Checkout Session Created', { userId: user.uid });
             data = await response.json();
         }
 
@@ -77,6 +79,7 @@ export default function PlansPage() {
                 window.location.assign(url);
             });
         } else {
+            logger('action', 'User Visited Stripe Portal', { userId: user.uid });
             generatePortal(user.email);
         }
     };

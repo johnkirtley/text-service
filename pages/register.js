@@ -12,6 +12,7 @@ import {
 } from 'antd';
 import Link from 'next/link';
 import { v4 as uuidv4 } from 'uuid';
+import logger from '../utils/logger';
 import { firebaseAuth, firestore } from '../firebase/clientApp';
 // import LoginImage from '../public/login.png';
 
@@ -94,10 +95,14 @@ export default function SignIn() {
             }).then(() => {
                 createStripeSubscription(user.email).then((res) => {
                     addToSib(user.email);
+                    logger('action', 'SSO Sign Up', { userId: user.uid });
                     router.push('/');
-                }).catch((err) => console.log(err));
+                }).catch((err) => {
+                    logger('error', 'SSO Sign Up', { error: err });
+                });
             });
         } else {
+            logger('action', 'SSO Sign In', { userId: user.uid });
             router.push('/');
         }
     }).catch((error) => {
@@ -167,8 +172,11 @@ export default function SignIn() {
                 createStripeSubscription(user.email).then((res) => {
                     setRegisterAccount(false);
                     addToSib(user.email);
+                    logger('action', 'Manual Sign Up', { userId: user.uid });
                     router.push('/');
-                }).catch((err) => console.log(err));
+                }).catch((err) => {
+                    logger('error', 'Manual Sign Up', { error: err });
+                });
             }).catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
