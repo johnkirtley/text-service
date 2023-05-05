@@ -9,6 +9,7 @@
     flex-flow: column;
     background-color: var(--primary-white);
     width: 100%;
+    gap: 15px;
 }
 
 .billingContainer {
@@ -57,6 +58,7 @@
     align-items: center;
     flex-flow: column;
     text-align: center;
+    gap: 15px;
 }
 
 .repInputBox {
@@ -94,19 +96,30 @@
     font-weight: 600;
 }
 
-.repContainer {
+.repContainerTop {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 4rem;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 0;
+    padding: 0.5rem 0;
     border-bottom: 1px solid var(--primary-black);
+    text-align: left;
+}
+
+.repContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4rem;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 1rem 0;
 }
 
 .repInfo {
     margin: 0;
     display: block;
+    text-align: left;
 }
 
 .repName {
@@ -154,9 +167,10 @@
 @media (max-width: 500px) {
     .repContainer {
         display: flex;
-        flex-flow: column;
         gap: 1rem;
         width: 100%;
+        font-size: 0.75rem;
+        justify-content: space-between;
     }
 
     .repInputBox {

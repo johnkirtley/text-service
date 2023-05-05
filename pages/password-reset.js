@@ -38,7 +38,6 @@ export default function PasswordReset() {
         sendReset().then(() => {
             setTimeout(() => {
                 setSubmitting(false);
-                console.log('Email Link Sent');
                 setEmailSent(true);
             }, 1500);
         });
@@ -84,9 +83,6 @@ export default function PasswordReset() {
                         ) : <div style={{ textAlign: 'center' }}><p>Password Reset Successfully Sent. Please Check Email. </p><Link href="/">Return to Login</Link></div>}
                     </Card>
                 </div>
-                {/* <div style={{ position: 'absolute', bottom: '-23px' }}>
-                    <Image src={forgotPasswordImage} alt="forgot password image" height={250} width={400} />
-                </div> */}
             </Content>
         </>
     );

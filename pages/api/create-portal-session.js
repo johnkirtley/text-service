@@ -10,7 +10,6 @@ export default async function handler(req, res) {
             customer: customer.data[0].id,
             return_url: returnUrl,
         });
-        console.log('session', session);
         const { url } = session;
         res.status(200).json({ message: 'Portal Session Created', url });
     } else {

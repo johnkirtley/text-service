@@ -80,7 +80,6 @@ export default function MainComponent() {
         querySnapshot.forEach((document) => {
             if (document.data().email === user.email) {
                 const newArr = document.data().products.map((product) => ({ product, isChecked: false }));
-                console.log('firebase query', document.data());
                 setCustomerInfo(document.data());
                 setBusinessName(document.data().businessName);
                 setRepInfo(document.data().repNumbers);
@@ -107,10 +106,6 @@ export default function MainComponent() {
         router.push('/login');
     }
 
-    // if (user) {
-    //     router.push('/');
-    // }
-
     function getItem(label, key, icon, children) {
         return { key, icon, children, label };
     }
@@ -125,8 +120,6 @@ export default function MainComponent() {
     const saveBusinessName = async (val) => {
         const nameUpdateRef = doc(firestore, 'users', user.email);
 
-        console.log('bus', val);
-
         await updateDoc(nameUpdateRef, { businessName: val });
     };
 
@@ -140,8 +133,6 @@ export default function MainComponent() {
     const saveContact = async (rep) => {
         // backend api call to store phone number in DB
         const { number } = rep;
-
-        console.log('rep', rep);
 
         const sanitizedNum = number.replace(/^(\+)|\D/g, '$1');
 
@@ -212,7 +203,7 @@ export default function MainComponent() {
                                     {getStarted === 0 ? (
                                         <>
                                             <div>
-                                                <Input maxLength={40} placeholder="Company Name..." value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
+                                                <Input maxLength={40} placeholder="Business Name..." value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
                                                 <p className={styles.newUserLabels}>This can be updated under Settings.</p>
                                             </div>
                                             <div className={styles.prevNextButtons}>

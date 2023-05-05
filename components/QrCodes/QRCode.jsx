@@ -55,7 +55,8 @@ export default function QRCode({
         const fileGeneration = () => new Promise((resolve) => {
             qrCodes.forEach((code, idx) => {
                 canvas[idx].toBlob((data) => {
-                    codeFolder.file(`Code-${idx}.png`, data);
+                    const formattedName = code.name.replace(/ /g, '-');
+                    codeFolder.file(`${formattedName}.png`, data);
                 });
             });
             resolve();
@@ -64,7 +65,6 @@ export default function QRCode({
         fileGeneration().then(() => {
             setTimeout(() => {
                 codeFolder.generateAsync({ type: 'base64' }).then((content) => {
-                    console.log(content, `${sanitizedFileName}-Codes.zip`);
                     const data = {
                         base64Codes: content,
                         clientName: `${sanitizedFileName}`,
@@ -72,25 +72,39 @@ export default function QRCode({
                     };
 
                     axios.post('https://text-service-mailer.herokuapp.com/api/code_submission/send', data)
-                        .then((res) => {
-                            console.log(res);
-                            window.location = `data:application/zip;base64,${content}`;
+                        .then(() => {
+                            const dataUrl = `data:application/zip;base64,${content}`;
+                            const link = document.createElement('a');
+                            link.href = dataUrl;
+                            link.download = `${sanitizedFileName}`;
+
+                            // Append the link to the document body
+                            document.body.appendChild(link);
+
+                            // Simulate a click on the link
+                            link.click();
+
+                            // Remove the link from the document body
+                            document.body.removeChild(link);
+
+                            setSending(false);
+                            setSendingComplete(true);
+                            // reset all qr code state after codes sent
+                            setTimeout(() => {
+                                makeInactive();
+                                setCurrent(0);
+                                setClientInfo('');
+                                setSelectedProducts([]);
+                                setSelectedRep('');
+                                setQRCodes([]);
+                                setShowModal(false);
+                                setSendingComplete(false);
+                            }, 1000);
                         })
-                        .catch((err) => console.log(err));
+                        .catch((err) => {
+                            console.log(err);
+                        });
                 });
-                setSending(false);
-                setSendingComplete(true);
-                // reset all qr code state after codes sent
-                setTimeout(() => {
-                    makeInactive();
-                    setCurrent(0);
-                    setClientInfo('');
-                    setSelectedProducts([]);
-                    setSelectedRep('');
-                    setQRCodes([]);
-                    setShowModal(false);
-                    setSendingComplete(false);
-                }, 1000);
             }, 2000);
         });
     };
@@ -117,6 +131,7 @@ export default function QRCode({
                             title="QR Code Confirmation"
                             open={showModal}
                             onOk={handleOk}
+                            okText="Email & Download Codes"
                             onCancel={handleCancel}
                             okButtonProps={sending || sendingComplete ? { disabled: true } : { disabled: false }}
                             cancelButtonProps={sending || sendingComplete ? { disabled: true } : { disabled: false }}
@@ -151,7 +166,7 @@ export default function QRCode({
                             </Space>
 
                             <Button onClick={sendEmail} type="primary" className={styles.sendForPrintingButton}>
-                            Confirm and Download
+                            Confirm
                             </Button>
                         </Content>
                     </div>

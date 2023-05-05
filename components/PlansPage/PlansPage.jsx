@@ -43,7 +43,6 @@ export default function PlansPage() {
         });
 
         const data = await response.json();
-        console.log('Customer:', data);
         const trial = data.customer.data[0].metadata.usedFreeTrial !== 'true';
         setShowTrialText(trial);
         return data;
@@ -59,7 +58,6 @@ export default function PlansPage() {
             });
 
             data = await response.json();
-            console.log('Success:', data);
         }
 
         return data;

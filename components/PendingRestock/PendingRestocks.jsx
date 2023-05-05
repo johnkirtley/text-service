@@ -53,8 +53,6 @@ export default function PendingRestocks() {
 
                 setPendingRestocks(sortedPending);
 
-                console.log('pending', pendingRestocks);
-
                 const arr = document.data().completedOrders;
                 const sortedCompleted = arr.sort((a, b) => {
                     const dateA = new Date(a.dateCompleted);
@@ -87,7 +85,6 @@ export default function PendingRestocks() {
         const docRef = doc(firestore, 'users', email);
         const completedDate = getDate();
 
-        console.log('completed', completedDate);
         const newObject = { ...data, dateCompleted: completedDate };
 
         getDoc(docRef).then((docSnapshot) => {
@@ -111,10 +108,6 @@ export default function PendingRestocks() {
             client: `${client}`,
             requestedProduct: `${item}`,
         };
-
-        // await updateDoc(restockRef, { pendingOrders: arrayRemove(dataToRemove) });
-
-        // const filtered = pendingRestocks.filter((order, idx) => idx !== id);
 
         getDoc(restockRef).then((docSnapshot) => {
             if (docSnapshot.exists()) {

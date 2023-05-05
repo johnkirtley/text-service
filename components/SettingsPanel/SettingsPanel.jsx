@@ -33,12 +33,6 @@ const credentials = {
     confirmPassword: '',
 };
 
-// const defaultPremiumSettings = {
-//     directText: false,
-//     pendingEmails: false,
-//     monthlyEmails: true,
-// };
-
 export default function SettingsPanel() {
     const { repInfo, setRepInfo } = useContext(RepContext);
     // const { customerInfo } = useContext(CustomerContext);
@@ -65,10 +59,6 @@ export default function SettingsPanel() {
     const { premiumContext, setPremiumContext } = useContext(PremiumSettingsContext);
     const { user } = useAuth();
     const isUserPremium = usePremiumStatus(user.email);
-
-    console.log('user', user);
-
-    // const plans = ['silver', 'bronze', 'gold'];
 
     const { Panel } = Collapse;
 
@@ -107,11 +97,9 @@ export default function SettingsPanel() {
     }
 
     const deleteStripeUser = async (email) => {
-        console.log('email', email);
         const customerData = await getCustomer(email);
         const customerId = customerData.customer.data[0]?.id;
 
-        console.log('id', customerId);
         const response = await fetch('/api/delete-customer', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -173,6 +161,15 @@ export default function SettingsPanel() {
         }
     };
 
+    const handleContactDelete = async (ref, data, num) => {
+        await updateDoc(ref, { repNumbers: arrayRemove(data) });
+
+        const filtered = repInfo.filter((rep) => rep.number !== num);
+
+        setRepInfo(filtered);
+        setNewRep(defaultRep);
+    };
+
     const removeRep = async (name, num, id) => {
         const repAddRef = doc(firestore, 'users', user.email);
         const dataToRemove = {
@@ -189,18 +186,17 @@ export default function SettingsPanel() {
             return;
         }
 
-        await updateDoc(repAddRef, { repNumbers: arrayRemove(dataToRemove) });
-
-        const filtered = repInfo.filter((rep) => rep.number !== num);
-
-        setRepInfo(filtered);
-        setNewRep(defaultRep);
+        Modal.confirm({
+            title: 'Contact Delete Confirmation',
+            content: <div><p>Warning: If this contact is connected to any active QR Codes, you must regenerate new codes with an existing contact to continue receiving mobile alerts for those products.</p><br /><p>Confirming Deletion of: <b>{name}</b></p></div>,
+            okText: 'Delete',
+            okType: 'primary',
+            cancelText: 'Cancel',
+            onOk() {
+                handleContactDelete(repAddRef, dataToRemove, num);
+            },
+        });
     };
-
-    // const handleBilling = (planType) => {
-    //     setPlanClicked(true);
-    //     createCheckoutSession(user.uid, planType);
-    // };
 
     const confirmAccountDelete = async () => {
         setAccountDeleteModal(true);
@@ -247,7 +243,6 @@ export default function SettingsPanel() {
                 await updateDoc(premiumSettingsRef, { premiumSettings: newObj });
 
                 setPremiumContext(newObj);
-                console.log('update', premiumContext);
             }
 
             if (state === 'disable') {
@@ -255,7 +250,6 @@ export default function SettingsPanel() {
                 await updateDoc(premiumSettingsRef, { premiumSettings: newObj });
 
                 setPremiumContext(newObj);
-                console.log('update', premiumContext);
             }
         }
 
@@ -265,7 +259,6 @@ export default function SettingsPanel() {
                 await updateDoc(premiumSettingsRef, { premiumSettings: newObj });
 
                 setPremiumContext(newObj);
-                console.log('update', premiumContext);
             }
 
             if (state === 'disable') {
@@ -273,7 +266,6 @@ export default function SettingsPanel() {
                 await updateDoc(premiumSettingsRef, { premiumSettings: newObj });
 
                 setPremiumContext(newObj);
-                console.log('update', premiumContext);
             }
         }
 
@@ -283,14 +275,12 @@ export default function SettingsPanel() {
                 await updateDoc(premiumSettingsRef, { premiumSettings: newObj });
 
                 setPremiumContext(newObj);
-                console.log('update', premiumContext);
             }
 
             if (state === 'disable') {
                 const newObj = { ...premiumContext, monthlyEmails: false };
                 await updateDoc(premiumSettingsRef, { premiumSettings: newObj });
                 setPremiumContext(newObj);
-                console.log('update', premiumContext);
             }
         }
 
@@ -355,8 +345,8 @@ export default function SettingsPanel() {
                 <Modal centered title="Reauthentication Required" open={showReAuthModal} onOk={() => signOut(firebaseAuth)} okText="Sign Out" onCancel={() => setShowReAuthModal(false)}>
                     <p style={{ fontSize: '1.1rem', margin: '0' }}>Please Sign Back In To Make Account Changes</p>
                 </Modal>
-                <Space className={styles.settingsContainer} style={{ gap: '15px' }}>
-                    <Space className={styles.repListContainer} style={{ gap: '15px' }}>
+                <Space className={styles.settingsContainer}>
+                    <Space className={styles.repListContainer}>
                         <Card title="Add Contact">
                             <div className={styles.repInputBox}>
                                 <div>
@@ -380,6 +370,13 @@ export default function SettingsPanel() {
                                 <Panel header="Contact List">
                                     <div className={styles.repScroll}>
                                         <Input placeholder="Search Contacts..." value={searchRep} name="repSearch" onChange={handleRepSearch} className={styles.searchRepsInput} />
+                                        <div
+                                            className={styles.repContainerTop}
+                                        >
+                                            <p>Name</p>
+                                            <p>Number</p>
+                                            <p>Action</p>
+                                        </div>
                                         {contactAlert ? <Alert message="Must Have At Least 1 Contact" type="error" /> : ''}
                                         {filteredSearch && filteredSearch.length > 0
                                             ? filteredSearch.map((num, idx) => (
@@ -387,12 +384,10 @@ export default function SettingsPanel() {
                                                     className={styles.repContainer}
                                                     key={idx}
                                                 >
-                                                    <p className={styles.repName}>{num?.name}</p>
-
                                                     <div className={styles.repInfo}>
-                                                        <p className={styles.repBold}>
-                                                    Phone Number:
-                                                        </p>
+                                                        <p className={styles.repName}>{num?.name}</p>
+                                                    </div>
+                                                    <div className={styles.repInfo}>
                                                         <p>{num?.number}</p>
                                                     </div>
                                                     <Button type="primary" danger onClick={() => removeRep(num?.name, num?.number, num?.id)}>Remove</Button>
@@ -471,7 +466,7 @@ export default function SettingsPanel() {
 
                                     <div className={styles.businessNameContainer}>
                                         <p style={{ marginBottom: '0' }}>Company Name</p>
-                                        <Input placeholder="Company Name..." value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
+                                        <Input placeholder="Business Name..." value={businessName} name="companyname" onChange={(e) => handleTextChange(e, setBusinessName)} />
                                         <Button type="primary" onClick={() => saveBusinessName(businessName)}>Update</Button>
                                     </div>
                                     {user.providerData[0].providerId.includes('google') ? '' : (
@@ -508,16 +503,6 @@ export default function SettingsPanel() {
                                 <div className={styles.currentPlan}>
                             Current Plan: {isUserPremium.planName || 'No Active Plan'}
                                 </div>
-                                {/* {planClicked ? <Button type="primary" loading>Redirecting To Stripe...</Button>
-                                    : (
-                                        <div className={styles.plans}>
-                                            {plans.map((plan, idx) => (
-                                                isUserPremium.planName === plan ? <Button type="primary" key={idx} className={styles.planButton} disabled>Current Plan</Button>
-                                                    : <Button type="primary" key={idx} className={styles.planButton} onClick={() => handleBilling(plan)}>Select {plan} Plan</Button>
-                                            ))}
-
-                                        </div>
-                                    )} */}
                                 <Space>
                                     <Button className={styles.viewPlansLink}>
                                         <Link href="/plans">{isUserPremium.planName !== '' ? 'View Plans' : 'Choose A Plan'}</Link>

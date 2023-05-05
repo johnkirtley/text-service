@@ -11,7 +11,7 @@ async function createPortalSession(email) {
         });
 
         data = await response.json();
-        console.log('Success:', data);
+        console.log('Success:', data.message);
     }
 
     return data;
