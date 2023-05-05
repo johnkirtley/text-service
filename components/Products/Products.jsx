@@ -11,6 +11,7 @@ import {
     RepContext, ClientContext, BusinessNameContext, ProductContext, OwnerIdContext, SelectedContext,
 } from '../../Context/Context';
 import { useAuth } from '../../Context/AuthContext';
+import logger from '../../utils/logger';
 // Helper Functions
 import { handleTextChange, generateCanvasImg } from '../../utils/helpers';
 import QRCode from '../QrCodes/QRCode';
@@ -89,6 +90,7 @@ export default function Products() {
 
                 await updateDoc(productRef, { products: arrayUnion(val) });
 
+                logger('action', 'Product Added', { userId: user.uid, product: val });
                 setCurProducts((oldProducts) => [{ product: val, isChecked: false }, ...oldProducts]);
                 setProductAdded(true);
 
@@ -112,6 +114,7 @@ export default function Products() {
 
         await updateDoc(prodRemoveRef, { products: arrayRemove(dataToRemove) });
 
+        logger('action', 'Product Removed', { userId: user.uid, product: val });
         // const filteredCur = curProducts.filter((prod) => prod !== val);
         const filteredSelect = curProducts.filter((prod) => prod.product.toLowerCase() !== val.toLowerCase());
 
@@ -192,6 +195,7 @@ export default function Products() {
 
         setQRCodes(links);
 
+        logger('action', 'Generated Codes', { userId: user.uid, codeCount: links.length });
         setTimeout(() => {
             document.querySelector('#qr-code-container').innerHTML = '';
 
