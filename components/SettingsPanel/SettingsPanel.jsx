@@ -12,6 +12,7 @@ import { deleteUser, signOut, updatePassword } from 'firebase/auth';
 import { v4 as uuidv4 } from 'uuid';
 import { RepContext, BusinessNameContext, PremiumSettingsContext } from '../../Context/Context';
 import { firestore, firebaseAuth } from '../../firebase/clientApp';
+import logger from '../../utils/logger';
 // import createCheckoutSession from '../../stripe/createCheckoutSession';
 import usePremiumStatus from '../../stripe/usePremiumStatus';
 import { useAuth } from '../../Context/AuthContext';
@@ -67,6 +68,8 @@ export default function SettingsPanel() {
 
         await updateDoc(nameUpdateRef, { businessName: val });
 
+        logger('action', 'Updated Business Name', { userId: user.uid });
+
         setDisplayAlert(true);
 
         setTimeout(() => {
@@ -107,6 +110,7 @@ export default function SettingsPanel() {
         });
 
         const data = await response.json();
+        logger('action', 'User Deleted Account', { email });
         console.log('Customer Deleted:', data);
         return data;
     };
@@ -155,6 +159,7 @@ export default function SettingsPanel() {
 
             await updateDoc(repAddRef, { repNumbers: arrayUnion(data) });
 
+            logger('action', 'New Contact Added', { userId: user.uid });
             setRepInfo((oldInfo) => [...oldInfo, data]);
 
             setNewRep(defaultRep);
@@ -164,6 +169,7 @@ export default function SettingsPanel() {
     const handleContactDelete = async (ref, data, num) => {
         await updateDoc(ref, { repNumbers: arrayRemove(data) });
 
+        logger('action', 'User Deleted Contact', { userId: user.uid });
         const filtered = repInfo.filter((rep) => rep.number !== num);
 
         setRepInfo(filtered);
@@ -213,6 +219,7 @@ export default function SettingsPanel() {
                     .catch((error) => {
                         if (error.message.includes('auth/requires-recent-login')) {
                             console.log('error', error.message);
+                            logger('error', 'Reauth Required For Account Delete', { email: storeEmail });
                             setShowReAuthModal(true);
                             setAccountDeleteModal(false);
                         }
@@ -223,6 +230,7 @@ export default function SettingsPanel() {
 
     const handleManageBilling = () => {
         setCustomerPortal(true);
+        logger('action', 'Manage Billing From Settings', { userId: user.uid });
         generatePortal(user.email);
     };
 
@@ -241,14 +249,14 @@ export default function SettingsPanel() {
             if (state === 'enable') {
                 const newObj = { ...premiumContext, directText: true };
                 await updateDoc(premiumSettingsRef, { premiumSettings: newObj });
-
+                logger('action', 'User Turned Direct Text On', { userId: user.uid });
                 setPremiumContext(newObj);
             }
 
             if (state === 'disable') {
                 const newObj = { ...premiumContext, directText: false };
                 await updateDoc(premiumSettingsRef, { premiumSettings: newObj });
-
+                logger('action', 'User Turned Direct Text Off', { userId: user.uid });
                 setPremiumContext(newObj);
             }
         }
@@ -319,7 +327,7 @@ export default function SettingsPanel() {
         updatePassword(user, changePassword.changePassword).then(() => {
             setPasswordChangeSuccess(true);
             setChangePasswordSubmitting(false);
-
+            logger('action', 'User Updated Password', { userId: user.uid });
             setTimeout(() => {
                 setPasswordChangeSuccess(false);
             }, 1000);
@@ -328,8 +336,8 @@ export default function SettingsPanel() {
 
             if (error.message.includes('auth/requires-recent-login')) {
                 setShowReAuthModal(true);
+                logger('error', 'Reauth Required For PW Change', { userId: user.uid });
             }
-
             setTimeout(() => {
                 setChangePasswordError(false);
             }, 2000);

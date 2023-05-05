@@ -7,6 +7,7 @@ import {
 } from 'antd';
 // import { saveAs } from 'file-saver';
 import axios from 'axios';
+import logger from '../../utils/logger';
 import ClientContext from '../../Context/ClientContext';
 import ProductContext from '../../Context/ProductContext';
 import { useAuth } from '../../Context/AuthContext';
@@ -87,6 +88,7 @@ export default function QRCode({
                             // Remove the link from the document body
                             document.body.removeChild(link);
 
+                            logger('action', 'Codes Downloaded', { userId: user.uid, client: clientInfo, codeCount: qrCodes.length });
                             setSending(false);
                             setSendingComplete(true);
                             // reset all qr code state after codes sent
@@ -102,6 +104,7 @@ export default function QRCode({
                             }, 1000);
                         })
                         .catch((err) => {
+                            logger('error', 'Error Downloading Codes', { userId: user.uid, client: clientInfo, codeCount: qrCodes.length, error: err });
                             console.log(err);
                         });
                 });
