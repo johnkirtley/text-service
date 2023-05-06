@@ -40,6 +40,7 @@ export default function SettingsPanel() {
     const { businessName, setBusinessName } = useContext(BusinessNameContext);
     const [newRep, setNewRep] = useState(defaultRep);
     const [displayAlert, setDisplayAlert] = useState(false);
+    const [contactAdded, setContactAdded] = useState(false);
     const [changePassword, setChangePassword] = useState(credentials);
     const [changePasswordSubmitting, setChangePasswordSubmitting] = useState(false);
     const [passwordMatchInvalid, setPasswordMatchInvalid] = useState(false);
@@ -158,7 +159,11 @@ export default function SettingsPanel() {
             const repAddRef = doc(firestore, 'users', user.email);
 
             await updateDoc(repAddRef, { repNumbers: arrayUnion(data) });
+            setContactAdded(true);
 
+            setTimeout(() => {
+                setContactAdded(false);
+            }, 1500);
             logger('action', 'New Contact Added', { userId: user.uid });
             setRepInfo((oldInfo) => [...oldInfo, data]);
 
@@ -355,6 +360,8 @@ export default function SettingsPanel() {
                 </Modal>
                 <Space className={styles.settingsContainer}>
                     <Space className={styles.repListContainer}>
+                        {contactAdded ? <Alert message="Contact Added" type="success" /> : ''}
+
                         <Card title="Add Contact">
                             <div className={styles.repInputBox}>
                                 <div>
