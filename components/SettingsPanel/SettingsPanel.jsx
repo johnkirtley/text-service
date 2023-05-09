@@ -362,20 +362,23 @@ export default function SettingsPanel() {
                     <Space className={styles.repListContainer}>
                         {contactAdded ? <Alert message="Contact Added" type="success" /> : ''}
 
-                        <Card title="Add Contact">
-                            <div className={styles.repInputBox}>
-                                <div>
-                                    <p>Name</p>
-                                    <Input maxLength={40} value={newRep.name} name="name" onChange={handleRepChange} />
+                        <Card title="Add New Contact">
+                            <div style={{ display: 'flex', flexFlow: 'column' }}>
+                                <p className={styles.newUserLabels} style={{ marginBottom: '2rem', fontStyle: 'italic' }}>This contact can be linked to future QR Codes to receive restock notifications.</p>
+                                <div className={styles.repInputBox}>
+                                    <div>
+                                        <p>Name</p>
+                                        <Input maxLength={40} value={newRep.name} name="name" onChange={handleRepChange} />
+                                    </div>
+                                    <div>
+                                        <p>Phone Number For Notifications</p>
+                                        <Input placeholder="(xxx)-xxx-xxxx" maxLength={18} value={newRep.number} name="number" onChange={handleRepChange} />
+                                    </div>
+                                    <Button className={styles.addButton} type="primary" disabled={disableAddRep} onClick={() => saveContact(newRep)}>Add</Button>
+                                    <Space>
+                                        {dupeNum ? <Alert message="Number Already Exists" type="error" /> : ''}
+                                    </Space>
                                 </div>
-                                <div>
-                                    <p>Phone Number</p>
-                                    <Input placeholder="(xxx)-xxx-xxxx" maxLength={18} value={newRep.number} name="number" onChange={handleRepChange} />
-                                </div>
-                                <Button className={styles.addButton} type="primary" disabled={disableAddRep} onClick={() => saveContact(newRep)}>Add</Button>
-                                <Space>
-                                    {dupeNum ? <Alert message="Number Already Exists" type="error" /> : ''}
-                                </Space>
                             </div>
                         </Card>
                         {/* input to add additional reps to contact list

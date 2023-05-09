@@ -4,7 +4,7 @@ import Head from 'next/head';
 function MetaHead() {
     return (
         <Head>
-            <title>Text Service | Automate Distributor Contact</title>
+            <title>Supply Mate | QR Code Restock Requests</title>
             <meta
                 name="description"
                 content="Text Service | Automate Distributor Contact"

@@ -214,8 +214,8 @@ export default function MainComponent() {
                                     {getStarted === 1 ? (
                                         <>
                                             <div className={styles.newUserRepInputContainer}>
-                                                <p className={styles.newUserLabels} style={{ marginBottom: '0' }}>Contacts are those who will receive product restock requests.</p>
-                                                <p className={styles.newUserLabels}>They can be managed under Settings.</p>
+                                                <p className={styles.newUserLabels} style={{ marginBottom: '0' }}>This name and number can be linked to your QR Codes to receive restock notifications.</p>
+                                                <p className={styles.newUserLabels}>Additional contacts can be managed under Settings.</p>
                                                 <div className={styles.newUserRepInputs}>
                                                     <div>
                                                         <Input maxLength={40} placeholder="Name..." value={newRep.name} name="name" onChange={handleRepChange} />

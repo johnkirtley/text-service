@@ -142,7 +142,7 @@ export default function PendingRestocks() {
             key: 'requestedProduct',
         },
         {
-            title: 'Fulfilled',
+            title: 'Fulfilled?',
             key: 'action',
             render: (_, record, rowIndex) => (
                 <Space size="middle">
