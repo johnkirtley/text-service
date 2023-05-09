@@ -11,6 +11,7 @@ import logger from '../../utils/logger';
 import ClientContext from '../../Context/ClientContext';
 import ProductContext from '../../Context/ProductContext';
 import { useAuth } from '../../Context/AuthContext';
+import usePremiumStatus from '../../stripe/usePremiumStatus';
 
 // styles
 import styles from './QrCode.module.css';
@@ -27,6 +28,8 @@ export default function QRCode({
     const [repName, setRepName] = useState('');
     const { curProducts, setCurProducts } = useContext(ProductContext);
     const { user } = useAuth();
+
+    const { planName } = usePremiumStatus(user?.email);
 
     const makeInactive = () => {
         const newArr = [...curProducts];
@@ -146,21 +149,35 @@ export default function QRCode({
 
                                 : (
                                     <>
-                                        <p><span className={styles.highlight}>Client:</span> {clientInfo}</p>
-                                        <p><span className={styles.highlight}>Selected Rep:</span> {repName}</p>
-                                        <p><span className={styles.highlight}>Total Codes:</span> {qrCodes.length}</p>
-                                        <p><span className={styles.highlight}>Selected Products:</span></p>
-                                        <div className={qrCodes.length > 10 ? styles.codeConfirmScroll : ''}>
-                                            {qrCodes.map((code, idx) => (
-                                                <p key={idx}>- {code.name}</p>
-                                            ))}
+                                        {planName === '' ? (
+                                            <div className={styles.signUpAlert} style={{ marginBottom: '2rem' }}>
+                                                <div
+                                                    className="ant-alert ant-alert-warning"
+                                                    style={{
+                                                        display: 'flex', justifyContent: 'center', alignItems: 'center', flexFlow: 'column', textAlign: 'center',
+                                                    }}
+                                                >
+                                                    <span role="img" aria-label="info-circle" className="anticon anticon-info-circle ant-alert-icon"><svg viewBox="64 64 896 896" focusable="false" data-icon="info-circle" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm32 664c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V456c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272zm-32-344a48.01 48.01 0 010-96 48.01 48.01 0 010 96z" /></svg></span>
+                                                    <p style={{ margin: '0' }}>Looks Like You Don&apos;t Have An Active Plan. <br />You Can Still Download Your Codes, But Restock Features Will Not Be Available.</p>
+                                                </div>
+                                            </div>
+                                        ) : ''}
+                                        <div style={{ textAlign: 'center' }}>
+                                            <p><span className={styles.highlight}>Client:</span> {clientInfo}</p>
+                                            <p><span className={styles.highlight}>Selected Rep:</span> {repName}</p>
+                                            <p><span className={styles.highlight}>Total Codes:</span> {qrCodes.length}</p>
+                                            <p><span className={styles.highlight}>Selected Products:</span></p>
+                                            <div className={qrCodes.length > 10 ? styles.codeConfirmScroll : ''}>
+                                                {qrCodes.map((code, idx) => (
+                                                    <p key={idx}>- {code.name}</p>
+                                                ))}
+                                            </div>
                                         </div>
                                     </>
                                 )}
                         </Modal>
 
                         <Content className={styles.codesGenerated}>
-
                             <Space className={styles.codeSpacer} size="large">
                                 {/* <p className={styles.generatedCodes}>
                             Preview Panel
