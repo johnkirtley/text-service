@@ -202,13 +202,15 @@ export default function Submit() {
                     <p className={styles.logoText}>SUPPLY MATE</p>
                 </div>
             </Header>
-            <Layout style={{ minHeight: '100vh' }}>
+            <Layout style={{ minHeight: '90vh' }}>
                 <Content className={styles.requestContainer}>
                     {alreadyAdded ? <Alert message="Product Already Requested and In Process of Being Fulfilled." type="warning" /> : '' }
                     {numAlert ? <Alert message="Number No Longer Active. Please Contact Owner." type="warning" /> : ''}
-                    <div>You Are About To Request A Restock For The Following Product:</div>
-                    <div className={styles.requestProduct}>{product}</div>
-                    {!gettingData && plan === '' ? <Button disabled>Plan Not Active. Please Contact Account Owner.</Button> : (
+                    <div style={{ marginBottom: '6rem' }}>
+                        <div style={{ fontSize: '1.5rem' }}>You Are About To Request A Restock For:</div>
+                        <div className={styles.requestProduct}>{product}</div>
+                    </div>
+                    {!gettingData && plan === '' ? <Button disabled style={{ fontSize: '1.25rem' }}>Plan Not Active. Please Contact Account Owner.</Button> : (
                         <Button
                             type="primary"
                             loading={loading}
@@ -217,7 +219,7 @@ export default function Submit() {
                         >{success ? 'Request Sent Successfully. You May Close This Page' : 'Request Restock'}
                         </Button>
                     )}
-                    {plan === 'bronze' || plan === '' || !premiumSettings?.directText ? '' : <Button className={styles.textRep} type="default" onClick={() => checkForRep(repText)}>Text Rep Directly</Button> }
+                    {plan === 'bronze' || plan === '' || !premiumSettings?.directText ? '' : <Button className={styles.textRep} style={{ fontSize: '1.25rem' }} type="default" onClick={() => checkForRep(repText)}>Text Rep Directly</Button> }
                     {/* <div className={styles.poweredBy}>
                         Powered By Supply Mate
                     </div> */}
