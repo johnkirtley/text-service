@@ -1,13 +1,13 @@
 const planInfo = [
     {
         name: 'bronze',
-        features: ['Order Request Portal', 'SMS Notifications'],
+        features: ['Order Request Portal', 'SMS Notifications', 'Unlimited QR Codes', 'Code Generation Tool'],
         price: '$29',
         id: 'price_1N1xAxCHTaDRPPC844MvHeCm',
     },
     {
         name: 'silver',
-        features: ['All Features From Bronze', 'Customer Usage Analytics', 'Direct Customer Communication'],
+        features: ['All Features From Bronze', 'Code Usage Analytics', 'Direct SMS With Customers'],
         price: '$39',
         id: 'price_1N1xBgCHTaDRPPC8VRwxQaBe',
     },
