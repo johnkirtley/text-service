@@ -7,7 +7,7 @@ function MetaHead() {
             <title>Supply Mate | QR Code Restock Requests</title>
             <meta
                 name="description"
-                content="Text Service | Automate Distributor Contact"
+                content="Supply Mate | QR Code Restock Requests"
             />
             <link rel="icon" href="/favicon.ico" />
             <link rel="preconnect" href="https://fonts.googleapis.com" />
