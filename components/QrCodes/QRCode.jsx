@@ -2,7 +2,6 @@
 /* eslint-disable max-len */
 import { useState, useContext, useEffect } from 'react';
 import JSZip from 'jszip';
-import Link from 'next/link';
 import {
     Layout, Space, Empty, Button, Modal, Spin,
 } from 'antd';
