@@ -149,19 +149,6 @@ export default function QRCode({
 
                                 : (
                                     <>
-                                        {planName === '' ? (
-                                            <div className={styles.signUpAlert} style={{ marginBottom: '2rem' }}>
-                                                <div
-                                                    className="ant-alert ant-alert-warning"
-                                                    style={{
-                                                        display: 'flex', justifyContent: 'center', alignItems: 'center', flexFlow: 'column', textAlign: 'center',
-                                                    }}
-                                                >
-                                                    <span role="img" aria-label="info-circle" className="anticon anticon-info-circle ant-alert-icon"><svg viewBox="64 64 896 896" focusable="false" data-icon="info-circle" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm32 664c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V456c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272zm-32-344a48.01 48.01 0 010-96 48.01 48.01 0 010 96z" /></svg></span>
-                                                    <p style={{ margin: '0' }}>Looks Like You Don&apos;t Have An Active Plan. <br />You Can Still Download Your Codes, But Restock Features Will Not Be Available.</p>
-                                                </div>
-                                            </div>
-                                        ) : ''}
                                         <div style={{ textAlign: 'center' }}>
                                             <p><span className={styles.highlight}>Client:</span> {clientInfo}</p>
                                             <p><span className={styles.highlight}>Selected Rep:</span> {repName}</p>
@@ -173,6 +160,18 @@ export default function QRCode({
                                                 ))}
                                             </div>
                                         </div>
+                                        {planName === '' ? (
+                                            <div className={styles.signUpAlert} style={{ marginTop: '2rem' }}>
+                                                <div
+                                                    className="ant-alert ant-alert-warning"
+                                                    style={{
+                                                        display: 'flex', justifyContent: 'center', alignItems: 'center', flexFlow: 'column', textAlign: 'center',
+                                                    }}
+                                                >
+                                                    <p style={{ margin: '0', fontWeight: '500' }}>Looks Like You Don&apos;t Have An Active Plan. <br />No Worries, You Can Still Download This Batch, But <a href="/plans" target="_blank">Choosing A Plan</a> Activates Your Codes.</p>
+                                                </div>
+                                            </div>
+                                        ) : ''}
                                     </>
                                 )}
                         </Modal>

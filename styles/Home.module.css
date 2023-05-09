@@ -352,6 +352,8 @@ margin-bottom: 0.5rem;
     text-align: center;
     gap: 2rem;
     background-color: var(--primary-white);
+    width: 90%;
+    margin: auto;
 }
 
 .poweredBy{
@@ -362,6 +364,7 @@ margin-bottom: 0.5rem;
 
 .requestProduct {
     font-weight: bold;
+    font-size: 1.5rem;
 }
 
 .signUpAlert {
