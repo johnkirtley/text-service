@@ -15,7 +15,7 @@ import logger from '../../utils/logger';
 // Helper Functions
 import { handleTextChange, generateCanvasImg } from '../../utils/helpers';
 import QRCode from '../QrCodes/QRCode';
-import usePremiumStatus from '../../stripe/usePremiumStatus';
+// import usePremiumStatus from '../../stripe/usePremiumStatus';
 
 // styles
 
@@ -44,7 +44,7 @@ export default function Products() {
     const { clientInfo, setClientInfo } = useContext(ClientContext);
     const { ownerId } = useContext(OwnerIdContext);
 
-    const { planName } = usePremiumStatus(user?.email);
+    // const { planName } = usePremiumStatus(user?.email);
 
     const next = () => {
         setCurrent(current + 1);
@@ -179,9 +179,9 @@ export default function Products() {
             return;
         }
 
-        if (planName === '') {
-            return;
-        }
+        // if (planName === '') {
+        //     return;
+        // }
 
         setLoading(true);
         const checkedItems = curProducts.filter((product) => product.isChecked === true);
@@ -336,7 +336,7 @@ export default function Products() {
                             setQRCodes={setQRCodes}
                             setSelectedProducts={setSelectedProducts}
                         />
-                        {loading ? '' : <Button type="primary" onClick={generateCodes} disabled={planName === '' ? true : ''} className={styles.generateCodesButton}>{!checkActive() || qrCodes.length > 0 ? '' : 'Generate QR Codes'}</Button> }
+                        {loading ? '' : <Button type="primary" onClick={generateCodes} className={styles.generateCodesButton}>{!checkActive() || qrCodes.length > 0 ? '' : 'Generate QR Codes'}</Button> }
                     </div>
                 </Space>
             ) : ''}
