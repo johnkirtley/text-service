@@ -215,6 +215,7 @@ export default function Submit() {
                             type="primary"
                             loading={loading}
                             disabled={success || alreadyAdded ? true : ''}
+                            style={{ fontSize: '1.25rem' }}
                             onClick={() => addPendingRestock({ uid: uuidv4(), dateAdded: getDate(), client: clientName, requestedProduct: product }, fullMessage, repText)}
                         >{success ? 'Request Sent Successfully. You May Close This Page' : 'Request Restock'}
                         </Button>
