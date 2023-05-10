@@ -255,9 +255,9 @@ export default function SignIn() {
                             <Form.Item label="Confirm Password" name="confirmPass" rules={[{ required: true, message: 'Please input password' }]} className={styles.formRow} required={false}>
                                 <Input.Password name="confirmPass" value={credentials.confirmPass} onChange={handleChange} />
                             </Form.Item>
-                            <Form.Item>
+                            {/* <Form.Item>
                                 <p style={{ fontSize: '.75rem' }}>By registering, I authorize Supply Mate for restock-related alerts. Msg/data rates apply.</p>
-                            </Form.Item>
+                            </Form.Item> */}
                             <Form.Item>
                                 <Button type="primary" htmlType="submit" className={styles.registerButton}>
                                     {registerAccount ? 'Registering...' : 'Register'}
