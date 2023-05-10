@@ -4,7 +4,7 @@ import { useState, useContext, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import {
-    Layout, Menu, Modal, Button, Input, Steps,
+    Layout, Menu, Modal, Button, Input, Steps, Checkbox,
 } from 'antd';
 import { LineChartOutlined, BarcodeOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import {
@@ -34,6 +34,7 @@ export default function MainComponent() {
     const [view, setView] = useState('1');
     const { setCustomerInfo } = useContext(CustomerContext);
     const { businessName, setBusinessName } = useContext(BusinessNameContext);
+    const [checkBox, setCheckbox] = useState(false);
     // const { authContext } = useContext(AuthContext);
     const { setRepInfo } = useContext(RepContext);
     const { setPremiumContext } = useContext(PremiumSettingsContext);
@@ -58,12 +59,12 @@ export default function MainComponent() {
     };
 
     useEffect(() => {
-        if (newRep.name.length < 1 || newRep.number.length < 1 || businessName.length < 1) {
+        if (newRep.name.length < 1 || newRep.number.length < 1 || businessName.length < 1 || !checkBox) {
             setDisableWalkthroughButton(true);
         } else {
             setDisableWalkthroughButton(false);
         }
-    }, [newRep, businessName]);
+    }, [newRep, businessName, checkBox]);
 
     useEffect(() => {
         if (planName === '') {
@@ -176,6 +177,10 @@ export default function MainComponent() {
         { title: 'Add First Contact' },
     ];
 
+    const checkBoxChange = (e) => {
+        setCheckbox(e.target.checked);
+    };
+
     return (
         <div>
             {user === null ? '' : (
@@ -223,6 +228,13 @@ export default function MainComponent() {
                                                     <div>
                                                         <Input maxLength={40} placeholder="Phone Number..." value={newRep.number} name="number" onChange={handleRepChange} />
                                                     </div>
+                                                </div>
+                                                <div style={{
+                                                    display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center', gap: '1rem', marginTop: '1rem',
+                                                }}
+                                                >
+                                                    <Checkbox onChange={checkBoxChange} />
+                                                    <p style={{ fontSize: '.75rem' }}>I authorize Supply Mate for restock-related SMS alerts. <br /> Msg/data rates apply.</p>
                                                 </div>
                                             </div>
                                             <div className={styles.prevNextButtons}>
