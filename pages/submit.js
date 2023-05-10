@@ -10,8 +10,8 @@ import {
 } from 'firebase/firestore';
 import { Layout, Button, Spin, Alert } from 'antd';
 import { uuidv4 } from '@firebase/util';
+import axios from 'axios';
 import logger from '../utils/logger';
-// import axios from 'axios';
 import { firestore } from '../firebase/clientApp';
 import usePremiumStatus from '../stripe/usePremiumStatus';
 
@@ -146,29 +146,29 @@ export default function Submit() {
                 await updateDoc(restockRef, { analytics: arrayUnion(addAnalyticsRestock) });
 
                 logger('action', 'Restock Requested', { clientName });
-                // const data = {
-                //     message,
-                //     number: num,
-                // };
-
-                if (num.length < 1) {
-                    setNumAlert(true);
-                    setTimeout(() => {
-                        setNumAlert(false);
-                    }, 2500);
-                    return;
-                }
-
-                // axios.post('https://text-service-mailer.herokuapp.com/api/code_submission/text', data)
-                //     .then((res) => {
-                //         console.log(res);
-                //     })
-                //     .catch((err) => console.log(err));
+                const data = {
+                    message,
+                    number: num,
+                };
 
                 setTimeout(() => {
                     setLoading(false);
                     setSuccess(true);
                 }, 1000);
+
+                if (num.length < 1) {
+                    // setNumAlert(true);
+                    // setTimeout(() => {
+                    //     setNumAlert(false);
+                    // }, 2500);
+                    return;
+                }
+
+                axios.post('https://text-service-mailer.herokuapp.com/api/code_submission/text', data)
+                    .then((res) => {
+                        console.log(res);
+                    })
+                    .catch((err) => console.log(err));
             }
         }
     };
