@@ -156,13 +156,13 @@ export default function Submit() {
                     setSuccess(true);
                 }, 1000);
 
-                // if (num.length < 1) {
-                //     setNumAlert(true);
-                //     setTimeout(() => {
-                //         setNumAlert(false);
-                //     }, 2500);
-                //     return;
-                // }
+                if (num.length < 1) {
+                    setNumAlert(true);
+                    setTimeout(() => {
+                        setNumAlert(false);
+                    }, 2500);
+                    // add return here when twilio is working
+                }
 
                 // axios.post('https://text-service-mailer.herokuapp.com/api/code_submission/text', data)
                 //     .then((res) => {
