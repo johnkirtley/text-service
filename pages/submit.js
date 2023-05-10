@@ -156,19 +156,19 @@ export default function Submit() {
                     setSuccess(true);
                 }, 1000);
 
-                if (num.length < 1) {
-                    // setNumAlert(true);
-                    // setTimeout(() => {
-                    //     setNumAlert(false);
-                    // }, 2500);
-                    return;
-                }
+                // if (num.length < 1) {
+                //     setNumAlert(true);
+                //     setTimeout(() => {
+                //         setNumAlert(false);
+                //     }, 2500);
+                //     return;
+                // }
 
-                axios.post('https://text-service-mailer.herokuapp.com/api/code_submission/text', data)
-                    .then((res) => {
-                        console.log(res);
-                    })
-                    .catch((err) => console.log(err));
+                // axios.post('https://text-service-mailer.herokuapp.com/api/code_submission/text', data)
+                //     .then((res) => {
+                //         console.log(res);
+                //     })
+                //     .catch((err) => console.log(err));
             }
         }
     };
