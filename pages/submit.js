@@ -146,10 +146,10 @@ export default function Submit() {
                 await updateDoc(restockRef, { analytics: arrayUnion(addAnalyticsRestock) });
 
                 logger('action', 'Restock Requested', { clientName });
-                const data = {
-                    message,
-                    number: num,
-                };
+                // const data = {
+                //     message,
+                //     number: num,
+                // };
 
                 setTimeout(() => {
                     setLoading(false);
