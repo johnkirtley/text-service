@@ -41,28 +41,29 @@ export default function MyApp({ Component, pageProps }) {
     const [premiumContext, setPremiumContext] = useState(defaultPremiumSettings);
 
     return (
-        <SelectedContext.Provider value={{ selectedProducts, setSelectedProducts }}>
-            <ProductContext.Provider value={{ curProducts, setCurProducts }}>
-                <CustomerContext.Provider value={{ customerInfo, setCustomerInfo }}>
-                    <BusinessNameContext.Provider value={{ businessName, setBusinessName }}>
-                        <OwnerIdContext.Provider value={{ ownerId, setOwnerId }}>
-                            <RepContext.Provider value={{ repInfo, setRepInfo }}>
-                                <ClientContext.Provider value={{ clientInfo, setClientInfo }}>
-                                    <PremiumSettingsContext.Provider
-                                        value={{ premiumContext, setPremiumContext }}
-                                    >
-                                        <AuthProvider>
-                                            <PostHogProvider client={posthog}>
+        <PostHogProvider client={posthog}>
+            <SelectedContext.Provider value={{ selectedProducts, setSelectedProducts }}>
+                <ProductContext.Provider value={{ curProducts, setCurProducts }}>
+                    <CustomerContext.Provider value={{ customerInfo, setCustomerInfo }}>
+                        <BusinessNameContext.Provider value={{ businessName, setBusinessName }}>
+                            <OwnerIdContext.Provider value={{ ownerId, setOwnerId }}>
+                                <RepContext.Provider value={{ repInfo, setRepInfo }}>
+                                    <ClientContext.Provider value={{ clientInfo, setClientInfo }}>
+                                        <PremiumSettingsContext.Provider
+                                            value={{ premiumContext, setPremiumContext }}
+                                        >
+                                            <AuthProvider>
                                                 <Component {...pageProps} />
-                                            </PostHogProvider>
-                                        </AuthProvider>
-                                    </PremiumSettingsContext.Provider>
-                                </ClientContext.Provider>
-                            </RepContext.Provider>
-                        </OwnerIdContext.Provider>
-                    </BusinessNameContext.Provider>
-                </CustomerContext.Provider>
-            </ProductContext.Provider>
-        </SelectedContext.Provider>
+                                            </AuthProvider>
+                                        </PremiumSettingsContext.Provider>
+                                    </ClientContext.Provider>
+                                </RepContext.Provider>
+                            </OwnerIdContext.Provider>
+                        </BusinessNameContext.Provider>
+                    </CustomerContext.Provider>
+                </ProductContext.Provider>
+            </SelectedContext.Provider>
+        </PostHogProvider>
+
     );
 }
