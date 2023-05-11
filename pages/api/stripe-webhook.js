@@ -4,7 +4,15 @@ import { buffer } from 'micro';
 // This is your Stripe CLI webhook secret for testing your endpoint locally.
 const endpointSecret = process.env.NEXT_PUBLIC_STRIPE_WEBHOOK_SECRET;
 
-const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SK);
+let stripeKey;
+
+if (process.env.NEXT_PUBLIC_ENV === 'prod') {
+    stripeKey = process.env.NEXT_PUBLIC_STRIPE_SK_PROD;
+} else {
+    stripeKey = process.env.NEXT_PUBLIC_STRIPE_SK;
+}
+
+const stripe = new Stripe(stripeKey);
 
 export const config = { api: { bodyParser: false } };
 

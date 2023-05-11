@@ -7,9 +7,10 @@ import { Card, Button, Modal } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 // import createCheckoutSession from '../../stripe/createCheckoutSession';
+import { usePostHog } from 'posthog-js/react';
 import usePremiumStatus from '../../stripe/usePremiumStatus';
 import { useAuth } from '../../Context/AuthContext';
-import logger from '../../utils/logger';
+// import logger from '../../utils/logger';
 import generatePortal from '../../stripe/createPortal';
 
 import stripeIcon from '../../public/icons/stripe.png';
@@ -21,6 +22,7 @@ export default function PlansPage() {
     const [planClicked, setPlanClicked] = useState(false);
     const [showTrialText, setShowTrialText] = useState(false);
     const { user } = useAuth();
+    const posthog = usePostHog();
 
     const isUserPremium = usePremiumStatus(user.email);
 
@@ -58,7 +60,8 @@ export default function PlansPage() {
                 body: JSON.stringify({ product, successUrl: window.location.origin, email }),
             });
 
-            logger('action', 'Checkout Session Created', { userId: user.uid });
+            posthog.capture('Checkout Session Created', { user: user.email });
+            // logger('action', 'Checkout Session Created', { userId: user.uid });
             data = await response.json();
         }
 
@@ -79,7 +82,8 @@ export default function PlansPage() {
                 window.location.assign(url);
             });
         } else {
-            logger('action', 'User Visited Stripe Portal', { userId: user.uid });
+            posthog.capture('User Visited Stripe Portal', { user: user.email });
+            // logger('action', 'User Visited Stripe Portal', { userId: user.uid });
             generatePortal(user.email);
         }
     };

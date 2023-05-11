@@ -11,8 +11,9 @@ import {
 } from 'firebase/firestore';
 import Link from 'next/link';
 import { v4 as uuidv4 } from 'uuid';
+import { usePostHog } from 'posthog-js/react';
 import { firebaseAuth, firestore } from '../firebase/clientApp';
-import logger from '../utils/logger';
+// import logger from '../utils/logger';
 import sampleDashboard from '../public/sampleDashboard.jpg';
 // styles
 import styles from '../styles/Home.module.css';
@@ -31,6 +32,7 @@ export default function Login() {
     const [notFound, setNotFound] = useState(false);
     const provider = new GoogleAuthProvider();
     const router = useRouter();
+    const posthog = usePostHog();
 
     const auth = firebaseAuth;
 
@@ -45,7 +47,8 @@ export default function Login() {
         if (!userSnap.exists()) {
             setNotFound(true);
         } else {
-            logger('action', 'SSO Sign In', { userId: user.uid });
+            // logger('action', 'SSO Sign In', { userId: user.uid });
+            posthog.capture('SSO Sign In', { email: user.email });
             router.push('/');
         }
     }).catch((error) => {
@@ -68,13 +71,13 @@ export default function Login() {
             .then((userCredential) => {
                 const { user } = userCredential;
                 setLoggingIn(false);
-                logger('action', 'Manual Sign In Success', { userId: user.uid });
+                posthog.capture('Manual Sign In Success', { user: user.email });
                 router.push('/');
             }).catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
                 setLoggingIn(false);
-                logger('error', 'Manual Sign In Error', { error });
+                posthog.capture('Manual Sign In Error', { error });
                 if (errorMessage) {
                     setShowError(true);
 

@@ -5,13 +5,14 @@ import {
     Layout, Input, PageHeader, Space, Button, Checkbox, Spin, Select, Collapse, Steps, Empty, Alert,
 } from 'antd';
 import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
+import { usePostHog } from 'posthog-js/react';
 import styles from './Products.module.css';
 import { firestore } from '../../firebase/clientApp';
 import {
     RepContext, ClientContext, BusinessNameContext, ProductContext, OwnerIdContext, SelectedContext,
 } from '../../Context/Context';
 import { useAuth } from '../../Context/AuthContext';
-import logger from '../../utils/logger';
+// import logger from '../../utils/logger';
 // Helper Functions
 import { handleTextChange, generateCanvasImg } from '../../utils/helpers';
 import QRCode from '../QrCodes/QRCode';
@@ -39,6 +40,7 @@ export default function Products() {
     const { businessName } = useContext(BusinessNameContext);
     const { curProducts, setCurProducts } = useContext(ProductContext);
     const { user } = useAuth();
+    const posthog = usePostHog();
 
     const { repInfo } = useContext(RepContext);
     const { clientInfo, setClientInfo } = useContext(ClientContext);
@@ -89,8 +91,8 @@ export default function Products() {
                 const productRef = doc(firestore, 'users', user.email);
 
                 await updateDoc(productRef, { products: arrayUnion(val) });
-
-                logger('action', 'Product Added', { userId: user.uid, product: val });
+                posthog.capture('Product Added', { user: user.email, product: val });
+                // logger('action', 'Product Added', { userId: user.uid, product: val });
                 setCurProducts((oldProducts) => [{ product: val, isChecked: false }, ...oldProducts]);
                 setProductAdded(true);
 
@@ -114,7 +116,7 @@ export default function Products() {
 
         await updateDoc(prodRemoveRef, { products: arrayRemove(dataToRemove) });
 
-        logger('action', 'Product Removed', { userId: user.uid, product: val });
+        posthog.capture('Product Removed', { user: user.email, product: val });
         // const filteredCur = curProducts.filter((prod) => prod !== val);
         const filteredSelect = curProducts.filter((prod) => prod.product.toLowerCase() !== val.toLowerCase());
 
@@ -195,7 +197,7 @@ export default function Products() {
 
         setQRCodes(links);
 
-        logger('action', 'Generated Codes', { userId: user.uid, codeCount: links.length });
+        posthog.capture('Generated Codes', { user: user.email, codeCount: links.length });
         setTimeout(() => {
             document.querySelector('#qr-code-container').innerHTML = '';
 

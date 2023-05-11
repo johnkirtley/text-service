@@ -10,8 +10,9 @@ import {
 } from 'firebase/firestore';
 import { Layout, Button, Spin, Alert } from 'antd';
 import { uuidv4 } from '@firebase/util';
-// import axios from 'axios';
-import logger from '../utils/logger';
+import axios from 'axios';
+// import logger from '../utils/logger';
+import { usePostHog } from 'posthog-js/react';
 import { firestore } from '../firebase/clientApp';
 import usePremiumStatus from '../stripe/usePremiumStatus';
 
@@ -32,6 +33,7 @@ export default function Submit() {
     const [alreadyAdded, setAlreadyAdded] = useState(false);
     const [premiumSettings, setPremiumSettings] = useState(null);
     const [numAlert, setNumAlert] = useState(false);
+    const posthog = usePostHog();
 
     const { planName } = usePremiumStatus(email);
 
@@ -145,11 +147,11 @@ export default function Submit() {
                 await updateDoc(restockRef, { pendingOrders: arrayUnion(reqRestockProduct) });
                 await updateDoc(restockRef, { analytics: arrayUnion(addAnalyticsRestock) });
 
-                logger('action', 'Restock Requested', { clientName });
-                // const data = {
-                //     message,
-                //     number: num,
-                // };
+                posthog.capture('Restock Requested', { clientName });
+                const data = {
+                    message,
+                    number: num,
+                };
 
                 setTimeout(() => {
                     setLoading(false);
@@ -157,18 +159,19 @@ export default function Submit() {
                 }, 1000);
 
                 if (num.length < 1) {
-                    setNumAlert(true);
-                    setTimeout(() => {
-                        setNumAlert(false);
-                    }, 2500);
+                    // setNumAlert(true);
+                    // setTimeout(() => {
+                    //     setNumAlert(false);
+                    // }, 2500);
                     // add return here when twilio is working
+                    return;
                 }
 
-                // axios.post('https://text-service-mailer.herokuapp.com/api/code_submission/text', data)
-                //     .then((res) => {
-                //         console.log(res);
-                //     })
-                //     .catch((err) => console.log(err));
+                axios.post('https://text-service-mailer.herokuapp.com/api/code_submission/text', data)
+                    .then((res) => {
+                        console.log(res);
+                    })
+                    .catch((err) => console.log(err));
             }
         }
     };
@@ -190,7 +193,7 @@ export default function Submit() {
             return;
         }
 
-        logger('action', 'Direct Text Clicked', { client: clientName, owner: ownerId });
+        posthog.capture('Direct Text Clicked', { client: clientName, owner: ownerId });
         window.location.href = `sms:${num}&body=${trimmedMessage}`;
     };
 

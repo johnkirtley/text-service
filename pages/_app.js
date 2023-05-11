@@ -1,4 +1,7 @@
+/* eslint-disable no-shadow */
 import { useState } from 'react';
+import posthog from 'posthog-js';
+import { PostHogProvider } from 'posthog-js/react';
 import {
     RepContext, CustomerContext, ClientContext, BusinessNameContext, ProductContext,
     OwnerIdContext, SelectedContext, PremiumSettingsContext,
@@ -15,6 +18,17 @@ const defaultPremiumSettings = {
     monthlyEmails: false,
 };
 
+if (typeof window !== 'undefined') {
+    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
+        api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://app.posthog.com',
+        // Enable debug mode in development
+        loaded: (posthog) => {
+            if (process.env.NODE_ENV === 'development') posthog.debug();
+        },
+
+    });
+}
+
 export default function MyApp({ Component, pageProps }) {
     const [repInfo, setRepInfo] = useState([]);
     const [customerInfo, setCustomerInfo] = useState('');
@@ -27,26 +41,29 @@ export default function MyApp({ Component, pageProps }) {
     const [premiumContext, setPremiumContext] = useState(defaultPremiumSettings);
 
     return (
-        <SelectedContext.Provider value={{ selectedProducts, setSelectedProducts }}>
-            <ProductContext.Provider value={{ curProducts, setCurProducts }}>
-                <CustomerContext.Provider value={{ customerInfo, setCustomerInfo }}>
-                    <BusinessNameContext.Provider value={{ businessName, setBusinessName }}>
-                        <OwnerIdContext.Provider value={{ ownerId, setOwnerId }}>
-                            <RepContext.Provider value={{ repInfo, setRepInfo }}>
-                                <ClientContext.Provider value={{ clientInfo, setClientInfo }}>
-                                    <PremiumSettingsContext.Provider
-                                        value={{ premiumContext, setPremiumContext }}
-                                    >
-                                        <AuthProvider>
-                                            <Component {...pageProps} />
-                                        </AuthProvider>
-                                    </PremiumSettingsContext.Provider>
-                                </ClientContext.Provider>
-                            </RepContext.Provider>
-                        </OwnerIdContext.Provider>
-                    </BusinessNameContext.Provider>
-                </CustomerContext.Provider>
-            </ProductContext.Provider>
-        </SelectedContext.Provider>
+        <PostHogProvider client={posthog}>
+            <SelectedContext.Provider value={{ selectedProducts, setSelectedProducts }}>
+                <ProductContext.Provider value={{ curProducts, setCurProducts }}>
+                    <CustomerContext.Provider value={{ customerInfo, setCustomerInfo }}>
+                        <BusinessNameContext.Provider value={{ businessName, setBusinessName }}>
+                            <OwnerIdContext.Provider value={{ ownerId, setOwnerId }}>
+                                <RepContext.Provider value={{ repInfo, setRepInfo }}>
+                                    <ClientContext.Provider value={{ clientInfo, setClientInfo }}>
+                                        <PremiumSettingsContext.Provider
+                                            value={{ premiumContext, setPremiumContext }}
+                                        >
+                                            <AuthProvider>
+                                                <Component {...pageProps} />
+                                            </AuthProvider>
+                                        </PremiumSettingsContext.Provider>
+                                    </ClientContext.Provider>
+                                </RepContext.Provider>
+                            </OwnerIdContext.Provider>
+                        </BusinessNameContext.Provider>
+                    </CustomerContext.Provider>
+                </ProductContext.Provider>
+            </SelectedContext.Provider>
+        </PostHogProvider>
+
     );
 }
