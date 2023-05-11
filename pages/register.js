@@ -12,7 +12,8 @@ import {
 } from 'antd';
 import Link from 'next/link';
 import { v4 as uuidv4 } from 'uuid';
-import logger from '../utils/logger';
+// import logger from '../utils/logger';
+import { usePostHog } from 'posthog-js/react';
 import { firebaseAuth, firestore } from '../firebase/clientApp';
 // import LoginImage from '../public/login.png';
 
@@ -38,6 +39,7 @@ export default function SignIn() {
     const [registerAccount, setRegisterAccount] = useState(false);
     const provider = new GoogleAuthProvider();
     const router = useRouter();
+    const posthog = usePostHog();
 
     const auth = firebaseAuth;
 
@@ -95,14 +97,14 @@ export default function SignIn() {
             }).then(() => {
                 createStripeSubscription(user.email).then((res) => {
                     addToSib(user.email);
-                    logger('action', 'SSO Sign Up', { userId: user.uid });
+                    posthog.capture('SSO Sign Up', { user: user.email });
                     router.push('/');
                 }).catch((err) => {
-                    logger('error', 'SSO Sign Up', { error: err });
+                    posthog.capture('SSO Sign Up', { error: err });
                 });
             });
         } else {
-            logger('action', 'SSO Sign In', { userId: user.uid });
+            posthog.capture('SSO Sign In', { user: user.email });
             router.push('/');
         }
     }).catch((error) => {
@@ -172,10 +174,10 @@ export default function SignIn() {
                 createStripeSubscription(user.email).then((res) => {
                     setRegisterAccount(false);
                     addToSib(user.email);
-                    logger('action', 'Manual Sign Up', { userId: user.uid });
+                    posthog.capture('Manual Sign Up', { user: user.email });
                     router.push('/');
                 }).catch((err) => {
-                    logger('error', 'Manual Sign Up', { error: err });
+                    posthog.capture('Manual Sign Up', { error: err });
                 });
             }).catch((error) => {
                 const errorCode = error.code;

@@ -14,6 +14,7 @@ async function createCheckoutSession(uid, planType) {
             cancel_url: window.location.origin,
             timestamp: serverTimestamp(),
             allow_promotion_codes: true,
+            automatic_tax: { enabled: true },
         });
     }
 
@@ -24,6 +25,7 @@ async function createCheckoutSession(uid, planType) {
             cancel_url: window.location.origin,
             timestamp: serverTimestamp(),
             allow_promotion_codes: true,
+            automatic_tax: { enabled: true },
 
         });
     }
@@ -35,7 +37,7 @@ async function createCheckoutSession(uid, planType) {
             cancel_url: window.location.origin,
             timestamp: serverTimestamp(),
             allow_promotion_codes: true,
-
+            automatic_tax: { enabled: true },
         });
     }
 

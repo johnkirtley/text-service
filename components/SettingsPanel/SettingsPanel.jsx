@@ -10,9 +10,10 @@ import {
 } from 'firebase/firestore';
 import { deleteUser, signOut, updatePassword } from 'firebase/auth';
 import { v4 as uuidv4 } from 'uuid';
+import { usePostHog } from 'posthog-js/react';
 import { RepContext, BusinessNameContext, PremiumSettingsContext } from '../../Context/Context';
 import { firestore, firebaseAuth } from '../../firebase/clientApp';
-import logger from '../../utils/logger';
+// import logger from '../../utils/logger';
 // import createCheckoutSession from '../../stripe/createCheckoutSession';
 import usePremiumStatus from '../../stripe/usePremiumStatus';
 import { useAuth } from '../../Context/AuthContext';
@@ -60,6 +61,7 @@ export default function SettingsPanel() {
     // const [premiumSettings, setPremiumSettings] = useState(defaultPremiumSettings);
     const { premiumContext, setPremiumContext } = useContext(PremiumSettingsContext);
     const { user } = useAuth();
+    const posthog = usePostHog();
     const isUserPremium = usePremiumStatus(user.email);
 
     const { Panel } = Collapse;
@@ -69,7 +71,7 @@ export default function SettingsPanel() {
 
         await updateDoc(nameUpdateRef, { businessName: val });
 
-        logger('action', 'Updated Business Name', { userId: user.uid });
+        posthog.capture('Updated Business Name', { user: user.email });
 
         setDisplayAlert(true);
 
@@ -111,7 +113,7 @@ export default function SettingsPanel() {
         });
 
         const data = await response.json();
-        logger('action', 'User Deleted Account', { email });
+        posthog.capture('User Deleted Account', { email });
         console.log('Customer Deleted:', data);
         return data;
     };
@@ -164,7 +166,7 @@ export default function SettingsPanel() {
             setTimeout(() => {
                 setContactAdded(false);
             }, 1500);
-            logger('action', 'New Contact Added', { userId: user.uid });
+            posthog.capture('New Contact Added', { user: user.email });
             setRepInfo((oldInfo) => [...oldInfo, data]);
 
             setNewRep(defaultRep);
@@ -174,7 +176,7 @@ export default function SettingsPanel() {
     const handleContactDelete = async (ref, data, num) => {
         await updateDoc(ref, { repNumbers: arrayRemove(data) });
 
-        logger('action', 'User Deleted Contact', { userId: user.uid });
+        posthog.capture('User Deleted Contact', { user: user.email });
         const filtered = repInfo.filter((rep) => rep.number !== num);
 
         setRepInfo(filtered);
@@ -224,7 +226,7 @@ export default function SettingsPanel() {
                     .catch((error) => {
                         if (error.message.includes('auth/requires-recent-login')) {
                             console.log('error', error.message);
-                            logger('error', 'Reauth Required For Account Delete', { email: storeEmail });
+                            posthog.capture('Reauth Required For Account Delete', { email: storeEmail });
                             setShowReAuthModal(true);
                             setAccountDeleteModal(false);
                         }
@@ -235,7 +237,7 @@ export default function SettingsPanel() {
 
     const handleManageBilling = () => {
         setCustomerPortal(true);
-        logger('action', 'Manage Billing From Settings', { userId: user.uid });
+        posthog.capture('Manage Billing From Settings', { user: user.email });
         generatePortal(user.email);
     };
 
@@ -254,14 +256,14 @@ export default function SettingsPanel() {
             if (state === 'enable') {
                 const newObj = { ...premiumContext, directText: true };
                 await updateDoc(premiumSettingsRef, { premiumSettings: newObj });
-                logger('action', 'User Turned Direct Text On', { userId: user.uid });
+                posthog.capture('User Turned Direct Text On', { user: user.email });
                 setPremiumContext(newObj);
             }
 
             if (state === 'disable') {
                 const newObj = { ...premiumContext, directText: false };
                 await updateDoc(premiumSettingsRef, { premiumSettings: newObj });
-                logger('action', 'User Turned Direct Text Off', { userId: user.uid });
+                posthog.capture('User Turned Direct Text Off', { user: user.email });
                 setPremiumContext(newObj);
             }
         }
@@ -332,7 +334,7 @@ export default function SettingsPanel() {
         updatePassword(user, changePassword.changePassword).then(() => {
             setPasswordChangeSuccess(true);
             setChangePasswordSubmitting(false);
-            logger('action', 'User Updated Password', { userId: user.uid });
+            posthog.capture('User Updated Password', { user: user.email });
             setTimeout(() => {
                 setPasswordChangeSuccess(false);
             }, 1000);
@@ -341,7 +343,7 @@ export default function SettingsPanel() {
 
             if (error.message.includes('auth/requires-recent-login')) {
                 setShowReAuthModal(true);
-                logger('error', 'Reauth Required For PW Change', { userId: user.uid });
+                posthog.capture('Reauth Required For PW Change', { user: user.email });
             }
             setTimeout(() => {
                 setChangePasswordError(false);
