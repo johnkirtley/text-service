@@ -7,7 +7,8 @@ import {
 } from 'antd';
 // import { saveAs } from 'file-saver';
 import axios from 'axios';
-import logger from '../../utils/logger';
+// import logger from '../../utils/logger';
+import { usePostHog } from 'posthog-js/react';
 import ClientContext from '../../Context/ClientContext';
 import ProductContext from '../../Context/ProductContext';
 import { useAuth } from '../../Context/AuthContext';
@@ -28,6 +29,7 @@ export default function QRCode({
     const [repName, setRepName] = useState('');
     const { curProducts, setCurProducts } = useContext(ProductContext);
     const { user } = useAuth();
+    const posthog = usePostHog();
 
     const { planName } = usePremiumStatus(user?.email);
 
@@ -91,7 +93,7 @@ export default function QRCode({
                             // Remove the link from the document body
                             document.body.removeChild(link);
 
-                            logger('action', 'Codes Downloaded', { userId: user.uid, client: clientInfo, codeCount: qrCodes.length });
+                            posthog.capture('Codes Downloaded', { user: user.email, client: clientInfo, codeCount: qrCodes.length });
                             setSending(false);
                             setSendingComplete(true);
                             // reset all qr code state after codes sent
@@ -107,7 +109,7 @@ export default function QRCode({
                             }, 1000);
                         })
                         .catch((err) => {
-                            logger('error', 'Error Downloading Codes', { userId: user.uid, client: clientInfo, codeCount: qrCodes.length, error: err });
+                            posthog.capture('Error Downloading Codes', { user: user.email, client: clientInfo, codeCount: qrCodes.length, error: err });
                             console.log(err);
                         });
                 });

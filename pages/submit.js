@@ -11,7 +11,8 @@ import {
 import { Layout, Button, Spin, Alert } from 'antd';
 import { uuidv4 } from '@firebase/util';
 import axios from 'axios';
-import logger from '../utils/logger';
+// import logger from '../utils/logger';
+import { usePostHog } from 'posthog-js/react';
 import { firestore } from '../firebase/clientApp';
 import usePremiumStatus from '../stripe/usePremiumStatus';
 
@@ -32,6 +33,7 @@ export default function Submit() {
     const [alreadyAdded, setAlreadyAdded] = useState(false);
     const [premiumSettings, setPremiumSettings] = useState(null);
     const [numAlert, setNumAlert] = useState(false);
+    const posthog = usePostHog();
 
     const { planName } = usePremiumStatus(email);
 
@@ -145,7 +147,7 @@ export default function Submit() {
                 await updateDoc(restockRef, { pendingOrders: arrayUnion(reqRestockProduct) });
                 await updateDoc(restockRef, { analytics: arrayUnion(addAnalyticsRestock) });
 
-                logger('action', 'Restock Requested', { clientName });
+                posthog.capture('Restock Requested', { clientName });
                 const data = {
                     message,
                     number: num,
@@ -191,7 +193,7 @@ export default function Submit() {
             return;
         }
 
-        logger('action', 'Direct Text Clicked', { client: clientName, owner: ownerId });
+        posthog.capture('Direct Text Clicked', { client: clientName, owner: ownerId });
         window.location.href = `sms:${num}&body=${trimmedMessage}`;
     };
 
