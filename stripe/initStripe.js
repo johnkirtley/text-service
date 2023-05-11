@@ -4,7 +4,11 @@ let stripePromise;
 
 const initStripe = async () => {
     if (!stripePromise) {
-        stripePromise = await loadStripe(`${process.env.NEXT_PUBLIC_STRIPE_PK}`);
+        if (process.env.NEXT_PUBLIC_ENV === 'prod') {
+            stripePromise = await loadStripe(`${process.env.NEXT_PUBLIC_STRIPE_PK_PROD}`);
+        } else {
+            stripePromise = await loadStripe(`${process.env.NEXT_PUBLIC_STRIPE_PK}`);
+        }
     }
 
     return stripePromise;
