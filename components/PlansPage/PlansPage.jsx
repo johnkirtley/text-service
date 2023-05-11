@@ -15,7 +15,7 @@ import generatePortal from '../../stripe/createPortal';
 
 import stripeIcon from '../../public/icons/stripe.png';
 
-import planInfo from './planInfo';
+import { devPlanInfo, prodPlanInfo } from './planInfo';
 import styles from './plans.module.css';
 
 export default function PlansPage() {
@@ -25,6 +25,14 @@ export default function PlansPage() {
     const posthog = usePostHog();
 
     const isUserPremium = usePremiumStatus(user.email);
+
+    let planInfo;
+
+    if (process.env.NEXT_PUBLIC_ENV === 'prod') {
+        planInfo = prodPlanInfo;
+    } else {
+        planInfo = devPlanInfo;
+    }
 
     async function getSubscriber(email) {
         const response = await fetch('/api/get-subscriber', {
