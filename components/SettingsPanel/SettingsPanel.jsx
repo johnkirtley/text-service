@@ -35,7 +35,7 @@ const credentials = {
     confirmPassword: '',
 };
 
-export default function SettingsPanel() {
+export default function SettingsPanel({ setShowTutorial }) {
     const { repInfo, setRepInfo } = useContext(RepContext);
     // const { customerInfo } = useContext(CustomerContext);
     const { businessName, setBusinessName } = useContext(BusinessNameContext);
@@ -360,6 +360,12 @@ export default function SettingsPanel() {
                 <Modal centered title="Reauthentication Required" open={showReAuthModal} onOk={() => signOut(firebaseAuth)} okText="Sign Out" onCancel={() => setShowReAuthModal(false)}>
                     <p style={{ fontSize: '1.1rem', margin: '0' }}>Please Sign Back In To Make Account Changes</p>
                 </Modal>
+                <Button
+                    onClick={() => setShowTutorial(true)}
+                    className={styles.tutorialButton}
+                >
+                    View Tutorials
+                </Button>
                 <Space className={styles.settingsContainer}>
                     <Space className={styles.repListContainer}>
                         {contactAdded ? <Alert message="Contact Added" type="success" /> : ''}

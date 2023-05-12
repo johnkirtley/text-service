@@ -7,8 +7,9 @@ import SettingsPanel from './SettingsPanel/SettingsPanel';
 import PlansPage from './PlansPage/PlansPage';
 import MetaHead from './Main/MetaHead';
 import MainFooter from './Main/MainFooter';
+import Tutorial from './Tutorial/Tutorial';
 
 export {
     Home, MainHeader, Products, QRCode, PendingRestocks,
-    SettingsPanel, PlansPage, MetaHead, MainFooter,
+    SettingsPanel, PlansPage, MetaHead, MainFooter, Tutorial,
 };

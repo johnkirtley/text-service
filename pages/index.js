@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable max-len */
 /* eslint-disable import/no-extraneous-dependencies */
 import { useState, useContext, useEffect, useCallback } from 'react';
@@ -14,7 +15,7 @@ import { v4 as uuidv4 } from 'uuid';
 import {
     BusinessNameContext, CustomerContext, RepContext, ProductContext, OwnerIdContext, PremiumSettingsContext,
 } from '../Context/Context';
-import { MetaHead, MainHeader, MainFooter } from '../components';
+import { MetaHead, MainHeader, MainFooter, Tutorial } from '../components';
 import MainView from '../components/Main/MainView';
 import { firestore } from '../firebase/clientApp';
 import { useAuth } from '../Context/AuthContext';
@@ -40,6 +41,7 @@ export default function MainComponent() {
     const { setPremiumContext } = useContext(PremiumSettingsContext);
     const [newRep, setNewRep] = useState(defaultRep);
     const [getStarted, setGetStarted] = useState(0);
+    const [showTutorial, setShowTutorial] = useState(false);
     const { setCurProducts } = useContext(ProductContext);
     const { setOwnerId } = useContext(OwnerIdContext);
     const { user, loading } = useAuth();
@@ -170,6 +172,7 @@ export default function MainComponent() {
         await updateDoc(userRef, { firstLoad: false });
 
         setFirstLoad(false);
+        setShowTutorial(true);
     };
 
     const steps = [
@@ -247,6 +250,7 @@ export default function MainComponent() {
                                 </div>
                             </Modal>
                         ) : ''}
+
                         {newUserAlert ? (
                             <div className={styles.signUpAlert}>
                                 <div className="ant-alert ant-alert-info" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -255,7 +259,8 @@ export default function MainComponent() {
                                 </div>
                             </div>
                         ) : ''}
-                        <MainView view={view} />
+                        <MainView view={view} setShowTutorial={setShowTutorial} />
+                        <Tutorial showTutorial={showTutorial} setShowTutorial={setShowTutorial} />
                     </Layout>
                     <MainFooter />
                 </div>
