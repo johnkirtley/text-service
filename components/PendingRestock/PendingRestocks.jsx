@@ -13,9 +13,10 @@ import { firestore } from '../../firebase/clientApp';
 import styles from './PendingRestock.module.css';
 
 import OwnerIdContext from '../../Context/OwnerIdContext';
+import PendingContext from '../../Context/PendingContext';
 
 export default function PendingRestocks() {
-    const [pendingRestocks, setPendingRestocks] = useState([]);
+    const { pendingRestocks, setPendingRestocks } = useContext(PendingContext);
     const [completedRestocks, setCompletedRestocks] = useState([]);
     const { ownerId } = useContext(OwnerIdContext);
     const [email, setEmail] = useState('');

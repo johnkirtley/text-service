@@ -65,6 +65,10 @@ canvas {
     background-color: var(--background-blue) !important;
 }
 
+.ant-badge-count {
+    background: var(--highlight-yellow) !important;
+}
+
 .signOut-button {
     background: none;
     border: 1px solid var(--highlight-yellow);
