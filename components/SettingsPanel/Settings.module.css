@@ -1,3 +1,18 @@
+.tutorialButton {
+    width: 40%;
+    margin: auto;
+    margin-bottom: 2rem;
+    background-color: var(--secondary-blue);
+    border-color: var(--secondary-blue) !important;
+    color: var(--primary-blue) !important
+}
+
+.tutorialButton:hover {
+    background-color: var(--secondary-blue) !important;
+    border-color: var(--secondary-blue) !important;
+    color: var(--primary-blue) !important
+}
+
 .successAlert {
     text-align: center;
     border-radius: 10px;
