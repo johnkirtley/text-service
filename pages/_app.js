@@ -1,10 +1,11 @@
+/* eslint-disable max-len */
 /* eslint-disable no-shadow */
 import { useState } from 'react';
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
 import {
     RepContext, CustomerContext, ClientContext, BusinessNameContext, ProductContext,
-    OwnerIdContext, SelectedContext, PremiumSettingsContext,
+    OwnerIdContext, SelectedContext, PremiumSettingsContext, PendingContext,
 } from '../Context/Context';
 import { AuthProvider } from '../Context/AuthContext';
 
@@ -38,6 +39,7 @@ export default function MyApp({ Component, pageProps }) {
     const [curProducts, setCurProducts] = useState([]);
     const [ownerId, setOwnerId] = useState(null);
     const [selectedProducts, setSelectedProducts] = useState([]);
+    const [pendingRestocks, setPendingRestocks] = useState([]);
     const [premiumContext, setPremiumContext] = useState(defaultPremiumSettings);
 
     return (
@@ -48,15 +50,17 @@ export default function MyApp({ Component, pageProps }) {
                         <BusinessNameContext.Provider value={{ businessName, setBusinessName }}>
                             <OwnerIdContext.Provider value={{ ownerId, setOwnerId }}>
                                 <RepContext.Provider value={{ repInfo, setRepInfo }}>
-                                    <ClientContext.Provider value={{ clientInfo, setClientInfo }}>
-                                        <PremiumSettingsContext.Provider
-                                            value={{ premiumContext, setPremiumContext }}
-                                        >
-                                            <AuthProvider>
-                                                <Component {...pageProps} />
-                                            </AuthProvider>
-                                        </PremiumSettingsContext.Provider>
-                                    </ClientContext.Provider>
+                                    <PendingContext.Provider value={{ pendingRestocks, setPendingRestocks }}>
+                                        <ClientContext.Provider value={{ clientInfo, setClientInfo }}>
+                                            <PremiumSettingsContext.Provider
+                                                value={{ premiumContext, setPremiumContext }}
+                                            >
+                                                <AuthProvider>
+                                                    <Component {...pageProps} />
+                                                </AuthProvider>
+                                            </PremiumSettingsContext.Provider>
+                                        </ClientContext.Provider>
+                                    </PendingContext.Provider>
                                 </RepContext.Provider>
                             </OwnerIdContext.Provider>
                         </BusinessNameContext.Provider>

@@ -5,15 +5,15 @@ import { useState, useContext, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import {
-    Layout, Menu, Modal, Button, Input, Steps, Checkbox,
+    Layout, Menu, Modal, Button, Input, Steps, Checkbox, Badge,
 } from 'antd';
-import { LineChartOutlined, BarcodeOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
+import { LineChartOutlined, BarcodeOutlined, SettingOutlined } from '@ant-design/icons';
 import {
     getDocs, collection, query, where, doc, updateDoc, arrayUnion,
 } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 import {
-    BusinessNameContext, CustomerContext, RepContext, ProductContext, OwnerIdContext, PremiumSettingsContext,
+    BusinessNameContext, CustomerContext, RepContext, ProductContext, OwnerIdContext, PremiumSettingsContext, PendingContext,
 } from '../Context/Context';
 import { MetaHead, MainHeader, MainFooter, Tutorial } from '../components';
 import MainView from '../components/Main/MainView';
@@ -41,6 +41,7 @@ export default function MainComponent() {
     const { setPremiumContext } = useContext(PremiumSettingsContext);
     const [newRep, setNewRep] = useState(defaultRep);
     const [getStarted, setGetStarted] = useState(0);
+    const { pendingRestocks, setPendingRestocks } = useContext(PendingContext);
     const [showTutorial, setShowTutorial] = useState(false);
     const { setCurProducts } = useContext(ProductContext);
     const { setOwnerId } = useContext(OwnerIdContext);
@@ -90,9 +91,14 @@ export default function MainComponent() {
                 setOwnerId(document.data().uid);
                 setFirstLoad(document.data().firstLoad);
                 setPremiumContext(document.data().premiumSettings);
+
+                const pendingArr = document.data().pendingOrders;
+                const sortedPending = pendingArr.sort((a, b) => b.dateAdded - a.dateAdded);
+
+                setPendingRestocks(sortedPending);
             }
         });
-    }, [user, setCustomerInfo, setBusinessName, setRepInfo, setCurProducts, setOwnerId, setPremiumContext]);
+    }, [user, setCustomerInfo, setBusinessName, setRepInfo, setCurProducts, setOwnerId, setPremiumContext, setPendingRestocks]);
 
     useEffect(() => {
         if (user) {
@@ -115,7 +121,7 @@ export default function MainComponent() {
 
     const items = [
         getItem('Generate Codes', '1', <BarcodeOutlined />),
-        getItem('Pending Restocks', '2', <PlusCircleOutlined />),
+        getItem('Pending Restocks', '2', <Badge count={pendingRestocks.length} showZero />),
         getItem('Insights', '3', <LineChartOutlined />),
         getItem('Settings', '4', <SettingOutlined />),
     ];
@@ -188,10 +194,8 @@ export default function MainComponent() {
         <div>
             {user === null ? '' : (
                 <div>
-                    <MainHeader companyName={businessName} />
-                    <Layout style={{ minHeight: '100vh' }}>
-                        <MetaHead />
-
+                    <div style={{ position: 'sticky', top: '0', zIndex: '9999' }}>
+                        <MainHeader companyName={businessName} />
                         <Menu
                             theme="light"
                             defaultSelectedKeys={['1']}
@@ -200,6 +204,9 @@ export default function MainComponent() {
                             onSelect={(key) => setView(key.key)}
                             className={styles.navMenu}
                         />
+                    </div>
+                    <Layout style={{ minHeight: '100vh' }}>
+                        <MetaHead />
                         {firstLoad ? (
                             <Modal title="Welcome To Supply Mate!" open={firstLoad} footer={null} centered closable={false}>
                                 <Steps current={getStarted} className={styles.stepsGetStarted}>
