@@ -21,7 +21,7 @@ function Tutorial({ showTutorial, setShowTutorial }) {
                         <Collapse>
                             <Panel header="Adding a Contact">
                                 <div style={{ height: '36rem' }}>
-                                    <iframe style={{ overflow: 'hidden', width: '100%', height: '100%' }} src="https://scribehow.com/embed/Add_and_Remove_Contacts_in_Localhost_Settings__XajLvzpZQHG7DE-E47FdFA?skipIntro=true" title="test" frameborder="0" />
+                                    <iframe style={{ overflow: 'hidden', width: '100%', height: '100%' }} src="https://scribehow.com/embed/Adding_a_Contact_for_Notifications__nyj_GtSBRmCiY5TlY22cEA?skipIntro=true" title="test" frameborder="0" />
                                 </div>
                             </Panel>
                         </Collapse>
@@ -30,7 +30,16 @@ function Tutorial({ showTutorial, setShowTutorial }) {
                         <Collapse>
                             <Panel header="Choose/Manage a Plan">
                                 <div style={{ height: '36rem' }}>
-                                    <iframe style={{ overflow: 'hidden', width: '100%', height: '100%' }} src="https://scribehow.com/embed/Selecting_Silver_Plan_for_Localhost_Site__7gyFnbOoTQekey9tidIYXg?skipIntro=true" title="test" frameborder="0" />
+                                    <iframe style={{ overflow: 'hidden', width: '100%', height: '100%' }} src="https://scribehow.com/embed/How_to_Upgrade_or_Change_Plan__HR-1Y9DNRnKtA8i83ire7Q?skipIntro=true" title="test" frameborder="0" />
+                                </div>
+                            </Panel>
+                        </Collapse>
+                    </div>
+                    <div>
+                        <Collapse>
+                            <Panel header="Allow Requestor To Text You Directly">
+                                <div style={{ height: '36rem' }}>
+                                    <iframe style={{ overflow: 'hidden', width: '100%', height: '100%' }} src="https://scribehow.com/embed/Allow_Requestors_to_Text_You_Directly___y1NLps5QKK3lMDbUGMoxA?skipIntro=true" title="test" frameborder="0" />
                                 </div>
                             </Panel>
                         </Collapse>

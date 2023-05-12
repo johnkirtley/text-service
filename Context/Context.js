@@ -6,9 +6,10 @@ import ProductContext from './ProductContext';
 import OwnerIdContext from './OwnerIdContext';
 import SelectedContext from './SelectedContext';
 import PremiumSettingsContext from './PremiumSettingsContext';
+import PendingContext from './PendingContext';
 import { AuthProvider } from './AuthContext';
 
 export {
     RepContext, CustomerContext, ClientContext, AuthProvider, BusinessNameContext, ProductContext,
-    OwnerIdContext, SelectedContext, PremiumSettingsContext,
+    OwnerIdContext, SelectedContext, PremiumSettingsContext, PendingContext,
 };
