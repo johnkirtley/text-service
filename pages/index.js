@@ -259,7 +259,7 @@ export default function MainComponent() {
                                 </div>
                             </div>
                         ) : ''}
-                        <MainView view={view} />
+                        <MainView view={view} setShowTutorial={setShowTutorial} />
                         <Tutorial showTutorial={showTutorial} setShowTutorial={setShowTutorial} />
                     </Layout>
                     <MainFooter />

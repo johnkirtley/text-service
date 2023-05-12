@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { Modal, Collapse } from 'antd';
 
 const { Panel } = Collapse;
@@ -5,7 +6,7 @@ const { Panel } = Collapse;
 function Tutorial({ showTutorial, setShowTutorial }) {
     return (
         <div>
-            <Modal open={showTutorial} title="Quick Walkthroughs..." footer={null} centered closable onCancel={() => setShowTutorial(false)}>
+            <Modal open={showTutorial} title="Tutorials" footer={null} centered closable onCancel={() => setShowTutorial(false)}>
                 <div style={{ display: 'flex', flexFlow: 'column', gap: '1rem' }}>
                     <div>
                         <Collapse>
