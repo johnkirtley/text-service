@@ -2,14 +2,16 @@ import Stripe from 'stripe';
 import { buffer } from 'micro';
 
 // This is your Stripe CLI webhook secret for testing your endpoint locally.
-const endpointSecret = process.env.NEXT_PUBLIC_STRIPE_WEBHOOK_SECRET;
 
 let stripeKey;
+let endpointSecret;
 
 if (process.env.NEXT_PUBLIC_ENV === 'prod') {
     stripeKey = process.env.NEXT_PUBLIC_STRIPE_SK_PROD;
+    endpointSecret = process.env.NEXT_PUBLIC_STRIPE_WEBHOOK_SECRET_PROD;
 } else {
     stripeKey = process.env.NEXT_PUBLIC_STRIPE_SK;
+    endpointSecret = process.env.NEXT_PUBLIC_STRIPE_WEBHOOK_SECRET;
 }
 
 const stripe = new Stripe(stripeKey);
