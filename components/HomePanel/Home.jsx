@@ -174,18 +174,18 @@ export default function Home() {
             const labelArr = [];
             const chartVals = {};
             const dateVals = {
-                1: 1,
-                2: 4,
+                1: 0,
+                2: 0,
                 3: 0,
-                4: 2,
-                5: 9,
-                6: 4,
-                7: 12,
-                8: 3,
-                9: 15,
+                4: 0,
+                5: 0,
+                6: 0,
+                7: 0,
+                8: 0,
+                9: 0,
                 10: 0,
-                11: 2,
-                12: 1,
+                11: 0,
+                12: 0,
             };
             restockArr.forEach((restock) => {
                 if (!labelArr.includes(restock.product)) {

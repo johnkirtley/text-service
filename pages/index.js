@@ -194,7 +194,7 @@ export default function MainComponent() {
         <div>
             {user === null ? '' : (
                 <div>
-                    <div style={{ position: 'sticky', top: '0', zIndex: '9999' }}>
+                    <div style={{ position: 'sticky', top: '0', zIndex: '999' }}>
                         <MainHeader companyName={businessName} />
                         <Menu
                             theme="light"
