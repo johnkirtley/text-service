@@ -264,7 +264,7 @@ export default function SignIn() {
                                 <Button type="primary" htmlType="submit" className={styles.registerButton}>
                                     {registerAccount ? 'Registering...' : 'Register'}
                                 </Button>
-                                <p style={{ paddingTop: '10px' }}>By registering, you agree to our <a target="_blank" href="https://supplymate.io/termsofservice/" rel="noreferrer">terms and conditions.</a></p>
+                                <p style={{ paddingTop: '10px' }}>By registering, you agree to our <a target="_blank" href="https://supplymate.io/termsofservice/" rel="noreferrer">terms & conditions.</a></p>
                             </Form.Item>
                         </Form>
                     </Card>
