@@ -1,14 +1,8 @@
 /** @type {import('next').NextConfig} */
-
-const withPWA = require('next-pwa')({
-    dest: 'public',
-    register: true,
-    disable: process.env.NODE_ENV === 'development',
-});
-
-const nextConfig = withPWA({
+const nextConfig = {
+    reactStrictMode: true,
     swcMinify: false,
     images: { domains: ['api.qrserver.com'] },
-});
+};
 
 module.exports = nextConfig;
